@@ -1,5 +1,5 @@
 {
-    "name": "thaikolja/yoast-seo-premium",
+    "name": "thaikolja/wordpress-seo-premium",
     "type": "wordpress-plugin",
 	"version": "11.6",
     "require": {
