@@ -1,0 +1,8 @@
+{
+    "name": "thaikolja/yoast-seo-premium",
+    "type": "wordpress-plugin",
+	"version": "11.6",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}

@@ -1,2 +1,0 @@
-# Yoast SEO Premium
-
