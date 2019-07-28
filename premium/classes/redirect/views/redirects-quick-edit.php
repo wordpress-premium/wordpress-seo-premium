@@ -3,19 +3,27 @@
  * WPSEO Premium plugin file.
  *
  * @package WPSEO\Premium\Views
+ *
+ * @uses array $display_data {
+ *     @type int                           total_columns  The number of columns.
+ *     @type WPSEO_Redirect_Form_Presenter form_presenter Instance of the WPSEO_Redirect_Form_Presenter class.
+ * }
  */
+
+$yoast_premium_total_columns  = $display_data['total_columns'];
+$yoast_premium_form_presenter = $display_data['form_presenter'];
 
 ?>
 	<script type="text/plain" id="tmpl-redirects-inline-edit">
 			<tr id="inline-edit" class="inline-edit-row hidden">
-				<td colspan="<?php echo (int) $total_columns; ?>" class="colspanchange">
+				<td colspan="<?php echo (int) $yoast_premium_total_columns; ?>" class="colspanchange">
 
 					<fieldset>
 						<legend class="inline-edit-legend"><?php esc_html_e( 'Edit redirect', 'wordpress-seo-premium' ); ?></legend>
 						<div class="inline-edit-col">
 							<div class="wpseo_redirect_form">
 								<?php
-								$form_presenter->display(
+								$yoast_premium_form_presenter->display(
 									array(
 										'input_suffix' => '{{data.suffix}}',
 										'values'       => array(

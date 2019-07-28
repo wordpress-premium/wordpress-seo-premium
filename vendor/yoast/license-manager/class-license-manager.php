@@ -128,19 +128,7 @@ if ( ! class_exists( 'Yoast_License_Manager', false ) ) {
 				return;
 			}
 
-			// show notice if license is invalid
-			if ( $this->show_license_notice() && ! $this->license_is_valid() ) {
-				if ( $this->get_license_key() == '' ) {
-					$message = __( '<b>Warning!</b> You didn\'t set your %s license key yet, which means you\'re missing out on updates and support! <a href="%s">Enter your license key</a> or <a href="%s" target="_blank">get a license here</a>.' );
-				} else {
-					$message = __( '<b>Warning!</b> Your %s license is inactive which means you\'re missing out on updates and support! <a href="%s">Activate your license</a> or <a href="%s" target="_blank">get a license here</a>.' );
-				}
-				?>
-                <div class="notice notice-error yoast-notice-error">
-                    <p><?php printf( __( $message, $this->product->get_text_domain() ), $this->product->get_item_name(), $this->product->get_license_page_url(), $this->product->get_tracking_url( 'activate-license-notice' ) ); ?></p>
-                </div>
-				<?php
-			}
+	
 
 			// show notice if external requests are blocked through the WP_HTTP_BLOCK_EXTERNAL constant
 			if ( defined( "WP_HTTP_BLOCK_EXTERNAL" ) && WP_HTTP_BLOCK_EXTERNAL === true ) {
@@ -371,7 +359,7 @@ if ( ! class_exists( 'Yoast_License_Manager', false ) ) {
 		 * @return boolean True if license is active
 		 */
 		public function license_is_valid() {
-			return true;
+			return true; 
 		}
 
 		/**

@@ -102,7 +102,7 @@ class WPSEO_Frontend {
 
 		add_action( 'wp', array( $this, 'page_redirect' ), 99 );
 
-		add_action( 'template_redirect', array( $this, 'noindex_feed' ) );
+		add_action( 'template_redirect', array( $this, 'noindex_robots' ) );
 
 		add_filter( 'loginout', array( $this, 'nofollow_link' ) );
 		add_filter( 'register', array( $this, 'nofollow_link' ) );
@@ -600,16 +600,7 @@ class WPSEO_Frontend {
 	 * @return string The generated marker.
 	 */
 	public function get_debug_mark() {
-		return sprintf(
-			'<!-- This site is optimized with the %1$s %2$s - https://yoast.com/wordpress/plugins/seo/ -->',
-			esc_html( $this->head_product_name() ),
-			/**
-			 * Filter: 'wpseo_hide_version' - can be used to hide the Yoast SEO version in the debug marker (only available in Yoast SEO Premium).
-			 *
-			 * @api bool
-			 */
-			( ( apply_filters( 'wpseo_hide_version', false ) && $this->is_premium() ) ? '' : 'v' . WPSEO_VERSION )
-		);
+		return;
 	}
 
 	/**
@@ -1330,9 +1321,9 @@ class WPSEO_Frontend {
 	 * @since 1.1.7
 	 * @return boolean Boolean indicating whether the noindex header was sent.
 	 */
-	public function noindex_feed() {
+	public function noindex_robots() {
 
-		if ( ( is_feed() || is_robots() ) && headers_sent() === false ) {
+		if ( ( is_robots() ) && headers_sent() === false ) {
 			header( 'X-Robots-Tag: noindex, follow', true );
 
 			return true;

@@ -13,14 +13,11 @@ class WPSEO_Redirect_Quick_Edit_Presenter implements WPSEO_Redirect_Presenter {
 	/**
 	 * Displays the table
 	 *
-	 * @param array $display Data to display on the table.
+	 * @param array $display_data Data to display on the table.
 	 *
 	 * @return void
 	 */
-	public function display( array $display = array() ) {
-
-		extract( $display );
-
+	public function display( array $display_data = array() ) {
 		require WPSEO_PREMIUM_PATH . 'classes/redirect/views/redirects-quick-edit.php';
 	}
 }

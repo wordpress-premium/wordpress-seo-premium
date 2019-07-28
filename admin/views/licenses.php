@@ -236,6 +236,7 @@ $new_tab_message         = '<span class="screen-reader-text">' . esc_html__( '(O
 								<div class="yoast-button yoast-button--noarrow yoast-button--extension yoast-button--extension-activated"><?php esc_html_e( 'Activated', 'wordpress-seo' ); ?></div>
 							<?php endif; ?>
 						<?php else : ?>
+
 							<a target="_blank" class="yoast-link--more-info"
 								href="<?php echo esc_url( $extension->get_info_url() ); ?>">
 								<?php

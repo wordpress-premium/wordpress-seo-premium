@@ -284,8 +284,8 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 			throw new WPSEO_Redirect_Import_Exception( $error_message );
 		}
 
-		// If it's not a CSV file.
-		$filetype = wp_check_filetype( $csv_file['name'] );
+		// If it's not a CSV file (send the csv mimetype along for multisite installations).
+		$filetype = wp_check_filetype( $csv_file['name'], array( 'csv' => 'text/csv' ) );
 		if ( strtolower( $filetype['ext'] ) !== 'csv' ) {
 			$error_message = __( 'CSV import failed: the provided file is not a CSV file.', 'wordpress-seo-premium' );
 			throw new WPSEO_Redirect_Import_Exception( $error_message );
