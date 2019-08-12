@@ -1204,6 +1204,7 @@ SVG;
 			return false;
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput -- Escaping happens in WPSEO_Utils::schema_tag, which should be whitelisted.
 		echo self::schema_tag( $graph, $class );
 		return true;
 	}

@@ -25,7 +25,7 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	}
 
 	/**
-	 * Add field in which we can save multiple keywords
+	 * Add field in which we can save multiple keywords.
 	 *
 	 * @param array $field_defs The current fields definitions.
 	 *
@@ -43,7 +43,7 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	}
 
 	/**
-	 * Add field in which we can save multiple keyword synonyms
+	 * Add field in which we can save multiple keyword synonyms.
 	 *
 	 * @param array $field_defs The current fields definitions.
 	 *

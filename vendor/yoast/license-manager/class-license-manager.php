@@ -128,8 +128,6 @@ if ( ! class_exists( 'Yoast_License_Manager', false ) ) {
 				return;
 			}
 
-	
-
 			// show notice if external requests are blocked through the WP_HTTP_BLOCK_EXTERNAL constant
 			if ( defined( "WP_HTTP_BLOCK_EXTERNAL" ) && WP_HTTP_BLOCK_EXTERNAL === true ) {
 
@@ -359,7 +357,7 @@ if ( ! class_exists( 'Yoast_License_Manager', false ) ) {
 		 * @return boolean True if license is active
 		 */
 		public function license_is_valid() {
-			return true; 
+			return true;
 		}
 
 		/**
