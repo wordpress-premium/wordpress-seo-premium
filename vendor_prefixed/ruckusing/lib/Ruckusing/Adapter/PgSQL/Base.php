@@ -12,7 +12,7 @@ namespace YoastSEO_Vendor;
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
 // max length of an identifier like a column or index name
-\define(__NAMESPACE__ . '\PG_MAX_IDENTIFIER_LENGTH', 64);
+\define('YoastSEO_Vendor\\PG_MAX_IDENTIFIER_LENGTH', 64);
 /**
  * Implementation of Ruckusing_Adapter_PgSQL_Base
  *

@@ -12,7 +12,7 @@ namespace YoastSEO_Vendor;
  * @author    Piotr Olaszewski <piotroo89 % gmail dot com>
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
-\define(__NAMESPACE__ . '\SQLITE3_MAX_IDENTIFIER_LENGTH', 64);
+\define('YoastSEO_Vendor\\SQLITE3_MAX_IDENTIFIER_LENGTH', 64);
 /**
  * Ruckusing_Adapter_Sqlite3_Base
  *

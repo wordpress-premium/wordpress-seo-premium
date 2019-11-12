@@ -128,6 +128,16 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 			return true;
 		}
 
+		/**
+		 * Certain plugins use multisite context switching when saving terms. This can lead to incorrect redirects being
+		 * created.
+		 *
+		 * See https://github.com/Yoast/bugreports/issues/437.
+		 */
+		if ( is_multisite() && ms_is_switched() ) {
+			return false;
+		}
+
 		$old_url = $this->get_old_url();
 
 		if ( ! $old_url ) {

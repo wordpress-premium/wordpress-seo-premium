@@ -12,7 +12,7 @@ namespace YoastSEO_Vendor;
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
 // max length of an identifier like a column or index name
-\define(__NAMESPACE__ . '\MYSQL_MAX_IDENTIFIER_LENGTH', 64);
+\define('YoastSEO_Vendor\\MYSQL_MAX_IDENTIFIER_LENGTH', 64);
 /**
  * Ruckusing_Adapter_MySQL_Base
  *

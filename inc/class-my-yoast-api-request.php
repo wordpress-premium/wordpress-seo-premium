@@ -25,7 +25,6 @@ class WPSEO_MyYoast_Api_Request {
 	protected $args = array(
 		'method'    => 'GET',
 		'timeout'   => 5,
-		'sslverify' => false,
 		'headers'   => array(
 			'Accept-Encoding' => '*',
 		),
@@ -72,8 +71,8 @@ class WPSEO_MyYoast_Api_Request {
 	 */
 	public function fire() {
 		try {
-			//$response       = $this->do_request( $this->url, $this->args );
-			//$this->response = $this->decode_response( $response );
+			$response       = $this->do_request( $this->url, $this->args );
+			$this->response = $this->decode_response( $response );
 
 			return true;
 		}
@@ -151,14 +150,24 @@ class WPSEO_MyYoast_Api_Request {
 		$request_arguments = $this->enrich_request_arguments( $request_arguments );
 		$response          = wp_remote_request( $url, $request_arguments );
 
+		if ( is_wp_error( $response ) ) {
+			throw new WPSEO_MyYoast_Bad_Request_Exception( $response->get_error_message() );
+		}
 
 		$response_code    = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 
 		// Do nothing, response code is okay.
+		if ( $response_code === 200 || strpos( $response_code, '200' ) !== false ) {
 			return wp_remote_retrieve_body( $response );
+		}
 
+		// Authentication failed, throw an exception.
+		if ( strpos( $response_code, '401' ) && $this->has_oauth_support() ) {
+			throw new WPSEO_MyYoast_Authentication_Exception( esc_html( $response_message ), 401 );
+		}
 
+		throw new WPSEO_MyYoast_Bad_Request_Exception( esc_html( $response_message ), (int) $response_code );
 	}
 
 	/**

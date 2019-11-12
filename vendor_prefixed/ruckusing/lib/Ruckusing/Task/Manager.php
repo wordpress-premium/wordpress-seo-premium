@@ -10,7 +10,7 @@ namespace YoastSEO_Vendor;
  * @author    Cody Caughlan <codycaughlan % gmail . com>
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
-\define(__NAMESPACE__ . '\RUCKUSING_TASK_DIR', \YoastSEO_Vendor\RUCKUSING_BASE . \DIRECTORY_SEPARATOR . 'lib' . \DIRECTORY_SEPARATOR . 'Task');
+\define('YoastSEO_Vendor\\RUCKUSING_TASK_DIR', \YoastSEO_Vendor\RUCKUSING_BASE . \DIRECTORY_SEPARATOR . 'lib' . \DIRECTORY_SEPARATOR . 'Task');
 /**
  * Ruckusing_Task_Manager
  *

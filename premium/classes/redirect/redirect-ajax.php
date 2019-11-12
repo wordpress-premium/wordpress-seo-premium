@@ -69,7 +69,8 @@ class WPSEO_Redirect_Ajax {
 		}
 
 		// Response.
-		wp_die( wp_json_encode( $response ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
+		wp_die( WPSEO_Utils::format_json_encode( $response ) );
 	}
 
 	/**
@@ -102,7 +103,8 @@ class WPSEO_Redirect_Ajax {
 		}
 
 		// Response.
-		wp_die( wp_json_encode( $response ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
+		wp_die( WPSEO_Utils::format_json_encode( $response ) );
 	}
 
 	/**
@@ -124,7 +126,8 @@ class WPSEO_Redirect_Ajax {
 
 		if ( $error->get_type() === 'error' || ( $error->get_type() === 'warning' && $ignore_warning === 'false' ) ) {
 			wp_die(
-				wp_json_encode( array( 'error' => $error->to_array() ) )
+				// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
+				WPSEO_Utils::format_json_encode( array( 'error' => $error->to_array() ) )
 			);
 		}
 	}

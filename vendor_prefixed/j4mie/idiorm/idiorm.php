@@ -745,10 +745,10 @@ class ORM implements \ArrayAccess
         if ($result !== \false && isset($result->{$alias})) {
             if (!\is_numeric($result->{$alias})) {
                 $return_value = $result->{$alias};
-            } elseif ((int) $result->{$alias} == (double) $result->{$alias}) {
+            } elseif ((int) $result->{$alias} == (float) $result->{$alias}) {
                 $return_value = (int) $result->{$alias};
             } else {
-                $return_value = (double) $result->{$alias};
+                $return_value = (float) $result->{$alias};
             }
         }
         return $return_value;

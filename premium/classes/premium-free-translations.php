@@ -58,7 +58,7 @@ class WPSEO_Premium_Free_Translations implements WPSEO_WordPress_Integration {
 		$plugins['plugins']['wordpress-seo/wp-seo.php']['Version'] = '9999.0';
 
 		// Overwrite the plugins argument in the body to be sent in the upgrade request.
-		$args['body']['plugins'] = wp_json_encode( $plugins );
+		$args['body']['plugins'] = WPSEO_Utils::format_json_encode( $plugins );
 
 		return $args;
 	}

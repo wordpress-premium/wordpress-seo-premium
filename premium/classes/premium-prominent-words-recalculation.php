@@ -214,7 +214,7 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 				<?php endif; ?>
 			</div>
 
-			<button id="yoast-js-abort-analysis" onclick="tb_remove(); window.location.reload();" type="button" class="button"><?php esc_html_e( 'Resume later', 'wordpress-seo-premium' ); ?></button>
+			<button id="yoast-js-abort-analysis" onclick="tb_remove(); window.location.replace( 'admin.php?page=wpseo_tools' );" type="button" class="button"><?php esc_html_e( 'Resume later', 'wordpress-seo-premium' ); ?></button>
 		</div>
 
 		<?php

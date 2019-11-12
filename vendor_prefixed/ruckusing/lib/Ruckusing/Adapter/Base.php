@@ -10,17 +10,17 @@ namespace YoastSEO_Vendor;
  * @author    Cody Caughlan <codycaughlan % gmail . com>
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
-\define(__NAMESPACE__ . '\SQL_UNKNOWN_QUERY_TYPE', 1);
-\define(__NAMESPACE__ . '\SQL_SELECT', 2);
-\define(__NAMESPACE__ . '\SQL_INSERT', 4);
-\define(__NAMESPACE__ . '\SQL_UPDATE', 8);
-\define(__NAMESPACE__ . '\SQL_DELETE', 16);
-\define(__NAMESPACE__ . '\SQL_ALTER', 32);
-\define(__NAMESPACE__ . '\SQL_DROP', 64);
-\define(__NAMESPACE__ . '\SQL_CREATE', 128);
-\define(__NAMESPACE__ . '\SQL_SHOW', 256);
-\define(__NAMESPACE__ . '\SQL_RENAME', 512);
-\define(__NAMESPACE__ . '\SQL_SET', 1024);
+\define('YoastSEO_Vendor\\SQL_UNKNOWN_QUERY_TYPE', 1);
+\define('YoastSEO_Vendor\\SQL_SELECT', 2);
+\define('YoastSEO_Vendor\\SQL_INSERT', 4);
+\define('YoastSEO_Vendor\\SQL_UPDATE', 8);
+\define('YoastSEO_Vendor\\SQL_DELETE', 16);
+\define('YoastSEO_Vendor\\SQL_ALTER', 32);
+\define('YoastSEO_Vendor\\SQL_DROP', 64);
+\define('YoastSEO_Vendor\\SQL_CREATE', 128);
+\define('YoastSEO_Vendor\\SQL_SHOW', 256);
+\define('YoastSEO_Vendor\\SQL_RENAME', 512);
+\define('YoastSEO_Vendor\\SQL_SET', 1024);
 /**
  * Ruckusing_Adapter_Base
  *

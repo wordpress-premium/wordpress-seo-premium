@@ -60,7 +60,8 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 			);
 		}
 
-		wp_die( wp_json_encode( $result ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
+		wp_die( WPSEO_Utils::format_json_encode( $result ) );
 	}
 
 	/**

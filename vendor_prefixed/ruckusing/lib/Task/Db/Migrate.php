@@ -11,8 +11,8 @@ namespace YoastSEO_Vendor;
  * @author    Cody Caughlan <codycaughlan % gmail . com>
  * @link      https://github.com/ruckus/ruckusing-migrations
  */
-\define(__NAMESPACE__ . '\STYLE_REGULAR', 1);
-\define(__NAMESPACE__ . '\STYLE_OFFSET', 2);
+\define('YoastSEO_Vendor\\STYLE_REGULAR', 1);
+\define('YoastSEO_Vendor\\STYLE_OFFSET', 2);
 /**
  * Task_DB_Migrate.
  * This is the primary work-horse method, it runs all migrations available,

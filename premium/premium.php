@@ -35,7 +35,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '11.8';
+	const PLUGIN_VERSION_NAME = '12.4';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -117,7 +117,13 @@ class WPSEO_Premium {
 			'request-free-translations'              => new WPSEO_Premium_Free_Translations(),
 			'expose-javascript-shortlinks'           => new WPSEO_Premium_Expose_Shortlinks(),
 			'multi-keyword'                          => new WPSEO_Multi_Keyword(),
-			'post-data'                              => new WPSEO_Premium_Post_Data_Endpoint( new WPSEO_Premium_Post_Data_Service() ),
+			'post-data'                              => new WPSEO_Premium_Post_Data_Endpoint(
+				new WPSEO_Premium_Post_Data_Service(
+					new WPSEO_Replace_Vars(),
+					new WPSEO_Premium_Prominent_Words_Unindexed_Post_Query(),
+					new WPSEO_Premium_Prominent_Words_Support()
+				)
+			),
 		);
 
 		if ( WPSEO_Options::get( 'enable_cornerstone_content' ) ) {
@@ -181,7 +187,7 @@ class WPSEO_Premium {
 				$this->register_i18n_promo_class();
 			}
 
-			add_action( 'admin_init', array( $this, 'initialize_tracking' ), 1 );
+			add_filter( 'wpseo_enable_tracking', '__return_true', 1 );
 
 			// Disable Yoast SEO.
 			add_action( 'admin_init', array( $this, 'disable_wordpress_seo' ), 1 );
@@ -191,10 +197,21 @@ class WPSEO_Premium {
 			add_filter( 'wpseo_submenu_pages', array( $this, 'add_submenu_pages' ), 9 );
 
 			// Add input fields to page meta post types.
-			add_action( 'wpseo_admin_page_meta_post_types', array( $this, 'admin_page_meta_post_types_checkboxes' ), 10, 2 );
+			add_action(
+				'wpseo_admin_page_meta_post_types',
+				array(
+					$this,
+					'admin_page_meta_post_types_checkboxes',
+				),
+				10,
+				2
+			);
 
 			// Add page analysis fields to variable array key patterns.
-			add_filter( 'wpseo_option_titles_variable_array_key_patterns', array( $this, 'add_variable_array_key_pattern' ) );
+			add_filter(
+				'wpseo_option_titles_variable_array_key_patterns',
+				array( $this, 'add_variable_array_key_pattern' )
+			);
 
 			// Settings.
 			add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -410,6 +427,7 @@ class WPSEO_Premium {
 	 * Change premium indicator to green when premium is enabled
 	 *
 	 * @param string[] $classes The current classes for the indicator.
+	 *
 	 * @returns string[] The new classes for the indicator.
 	 */
 	public function change_premium_indicator( $classes ) {
@@ -428,6 +446,7 @@ class WPSEO_Premium {
 	 * Replaces the screen reader text for the premium indicator.
 	 *
 	 * @param string $text The original text.
+	 *
 	 * @return string The new text.
 	 */
 	public function change_premium_indicator_text( $text ) {
@@ -500,32 +519,6 @@ class WPSEO_Premium {
 	 */
 	public function enqueue_contact_support() {
 		wp_enqueue_script( 'yoast-contact-support' );
-	}
-
-	/**
-	 * Initializes the tracking class, for sending data.
-	 *
-	 * @return void
-	 */
-	public function initialize_tracking() {
-		global $pagenow;
-
-		/**
-		 * Filter: 'wpseo_disable_tracking' - Disables the data tracking of Yoast SEO Premium.
-		 *
-		 * @api string $is_disabled The disabled state. Default is false.
-		 */
-		if ( apply_filters( 'wpseo_disable_tracking', false ) === true ) {
-			return;
-		}
-
-		// Because we don't want to possibly block plugin actions with our routines.
-		if ( in_array( $pagenow, array( 'plugins.php', 'plugin-install.php', 'plugin-editor.php' ), true ) ) {
-			return;
-		}
-
-		// $tracker = new WPSEO_Tracking( 'https://search-yoast-poc-gdaxpa7udbwtvpgxqaufa3dejm.eu-central-1.es.amazonaws.com/yoast/tracking', ( WEEK_IN_SECONDS * 2 ) );
-		// $tracker->send();
 	}
 
 	/**

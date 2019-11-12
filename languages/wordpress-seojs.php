@@ -43,10 +43,10 @@ $generated_i18n_strings = array(
 	// Reference: js/src/components/SettingsReplacementVariableEditor.js:35
 	__( 'Modify your meta description by editing it right here', 'wordpress-seo' ),
 
-	// Reference: js/src/components/SnippetPreviewModal.js:52
+	// Reference: js/src/components/SnippetPreviewModal.js:53
 	__( 'Snippet preview', 'wordpress-seo' ),
 
-	// Reference: js/src/components/SnippetPreviewModal.js:57
+	// Reference: js/src/components/SnippetPreviewModal.js:59
 	// Reference: js/src/components/modals/Modal.js:78
 	__( 'Close', 'wordpress-seo' ),
 
@@ -162,9 +162,6 @@ $generated_i18n_strings = array(
 	// Reference: js/src/containers/SnippetEditor.js:105
 	__( 'Please provide a meta description by editing the snippet below.', 'wordpress-seo' ),
 
-	// Reference: js/src/courses-overview.js:114
-	__( 'Free', 'wordpress-seo' ),
-
 	// Reference: js/src/structured-data-blocks/faq/block.js:13
 	__( 'List your Frequently Asked Questions in an SEO-friendly way. You can only use one FAQ block per post.', 'wordpress-seo' ),
 
@@ -173,6 +170,10 @@ $generated_i18n_strings = array(
 
 	// Reference: js/src/structured-data-blocks/faq/block.js:18
 	__( 'Frequently Asked Questions', 'wordpress-seo' ),
+
+	// Reference: js/src/structured-data-blocks/faq/block.js:19
+	// Reference: js/src/structured-data-blocks/how-to/block.js:57
+	__( 'Schema', 'wordpress-seo' ),
 
 	// Reference: js/src/structured-data-blocks/faq/components/FAQ.js:158
 	__( 'New question added', 'wordpress-seo' ),

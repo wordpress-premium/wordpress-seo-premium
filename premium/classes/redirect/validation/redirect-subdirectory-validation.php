@@ -57,7 +57,8 @@ class WPSEO_Redirect_Subdirectory_Validation extends WPSEO_Redirect_Abstract_Val
 		}
 
 		// Strips the site_url from the home_url. substr is used because we want it from the start.
-		return mb_substr( $home_url, mb_strlen( $site_url ) );
+		$encoding = get_bloginfo( 'charset' );
+		return mb_substr( $home_url, mb_strlen( $site_url, $encoding ), null, $encoding );
 	}
 
 	/**

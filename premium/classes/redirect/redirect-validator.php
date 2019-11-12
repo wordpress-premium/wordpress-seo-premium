@@ -100,7 +100,7 @@ class WPSEO_Redirect_Validator {
 	 * @param array  $validations    Array with the validations.
 	 * @param string $rule_to_remove The rule that will be removed.
 	 */
-	protected function remove_rule( & $validations, $rule_to_remove ) {
+	protected function remove_rule( &$validations, $rule_to_remove ) {
 		if ( array_key_exists( $rule_to_remove, $validations ) ) {
 			unset( $validations[ $rule_to_remove ] );
 		}

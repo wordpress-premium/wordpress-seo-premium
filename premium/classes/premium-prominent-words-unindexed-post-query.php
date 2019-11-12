@@ -184,7 +184,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	 *
 	 * @return array The supported post statuses.
 	 */
-	public static function get_supported_post_statuses() {
+	public function get_supported_post_statuses() {
 		return array( 'future', 'draft', 'pending', 'private', 'publish' );
 	}
 }
