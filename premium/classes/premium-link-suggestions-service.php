@@ -173,7 +173,7 @@ class WPSEO_Premium_Link_Suggestions_Service {
 	 * Increments post counts in $posts for posts that are present in the query.
 	 *
 	 * @param WP_Query $posts_query A query for posts in a specific prominent word.
-	 * @param array    $posts A list of currently counted posts.
+	 * @param array    $posts       A list of currently counted posts.
 	 *
 	 * @return array A new list of counted posts.
 	 */

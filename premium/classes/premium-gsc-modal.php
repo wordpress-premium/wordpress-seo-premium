@@ -7,55 +7,41 @@
 
 /**
  * Represents a premium Google Search Console modal.
+ *
+ * @deprecated 12.5
+ *
+ * @codeCoverageIgnore
  */
 class WPSEO_Premium_GSC_Modal {
-
-	/**
-	 * Instance of the WPSEO_Redirect_Manager.
-	 *
-	 * @var WPSEO_Redirect_Manager
-	 */
-	protected $redirect_manager;
 
 	const EXISTING_REDIRECT_HEIGHT = 160;
 	const CREATE_REDIRECT_HEIGHT   = 380;
 
 	/**
 	 * Constructor, sets the redirect manager instance.
+	 *
+	 * @deprecated 12.5
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
-		// Adding the thickbox.
-		add_thickbox();
-
-		$this->redirect_manager = new WPSEO_Redirect_Manager();
+		_deprecated_function( __METHOD__, 'WPSEO 12.5' );
 	}
 
 	/**
 	 * Returns a GSC modal for the given URL.
 	 *
+	 * @deprecated 12.5
+	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @param string $url The URL to get the modal for.
 	 *
-	 * @return WPSEO_GSC_Modal Instance of GSC Modal.
+	 * @return null
 	 */
 	public function show( $url ) {
-		$redirect = $this->redirect_manager->get_redirect( $url );
-		if ( $redirect ) {
-			return new WPSEO_GSC_Modal(
-				dirname( __FILE__ ) . '/views/gsc-redirect-exists.php',
-				self::EXISTING_REDIRECT_HEIGHT,
-				array(
-					'redirect' => $redirect,
-					'url'      => $url,
-				)
-			);
-		}
+		_deprecated_function( __METHOD__, 'WPSEO 12.5' );
 
-		return new WPSEO_GSC_Modal(
-			dirname( __FILE__ ) . '/views/gsc-redirect-create.php',
-			self::CREATE_REDIRECT_HEIGHT,
-			array(
-				'url' => $url,
-			)
-		);
+		return null;
 	}
 }

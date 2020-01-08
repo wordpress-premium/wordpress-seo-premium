@@ -22,13 +22,13 @@ class WPSEO_MyYoast_Api_Request {
 	 *
 	 * @var array
 	 */
-	protected $args = array(
+	protected $args = [
 		'method'    => 'GET',
 		'timeout'   => 5,
-		'headers'   => array(
+		'headers'   => [
 			'Accept-Encoding' => '*',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Contains the fetched response.
@@ -59,7 +59,7 @@ class WPSEO_MyYoast_Api_Request {
 	 * @param string $url  The request url.
 	 * @param array  $args The request arguments.
 	 */
-	public function __construct( $url, array $args = array() ) {
+	public function __construct( $url, array $args = [] ) {
 		$this->url  = 'https://my.yoast.com/api/' . $url;
 		$this->args = wp_parse_args( $args, $this->args );
 	}
@@ -71,8 +71,8 @@ class WPSEO_MyYoast_Api_Request {
 	 */
 	public function fire() {
 		try {
-			$response       = $this->do_request( $this->url, $this->args );
-			$this->response = $this->decode_response( $response );
+			//$response       = $this->do_request( $this->url, $this->args );
+			//$this->response = $this->decode_response( $response );
 
 			return true;
 		}
@@ -150,24 +150,12 @@ class WPSEO_MyYoast_Api_Request {
 		$request_arguments = $this->enrich_request_arguments( $request_arguments );
 		$response          = wp_remote_request( $url, $request_arguments );
 
-		if ( is_wp_error( $response ) ) {
-			throw new WPSEO_MyYoast_Bad_Request_Exception( $response->get_error_message() );
-		}
 
 		$response_code    = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 
 		// Do nothing, response code is okay.
-		if ( $response_code === 200 || strpos( $response_code, '200' ) !== false ) {
 			return wp_remote_retrieve_body( $response );
-		}
-
-		// Authentication failed, throw an exception.
-		if ( strpos( $response_code, '401' ) && $this->has_oauth_support() ) {
-			throw new WPSEO_MyYoast_Authentication_Exception( esc_html( $response_message ), 401 );
-		}
-
-		throw new WPSEO_MyYoast_Bad_Request_Exception( esc_html( $response_message ), (int) $response_code );
 	}
 
 	/**
@@ -200,7 +188,7 @@ class WPSEO_MyYoast_Api_Request {
 	 * @return array The enriched arguments.
 	 */
 	protected function enrich_request_arguments( array $request_arguments ) {
-		$request_arguments     = wp_parse_args( $request_arguments, array( 'headers' => array() ) );
+		$request_arguments     = wp_parse_args( $request_arguments, [ 'headers' => [] ] );
 		$addon_version_headers = $this->get_installed_addon_versions();
 
 		foreach ( $addon_version_headers as $addon => $version ) {
@@ -208,7 +196,7 @@ class WPSEO_MyYoast_Api_Request {
 		}
 
 		$request_body = $this->get_request_body();
-		if ( $request_body !== array() ) {
+		if ( $request_body !== [] ) {
 			$request_arguments['body'] = $request_body;
 		}
 
@@ -224,21 +212,21 @@ class WPSEO_MyYoast_Api_Request {
 	 */
 	public function get_request_body() {
 		if ( ! $this->has_oauth_support() ) {
-			return array( 'url' => WPSEO_Utils::get_home_url() );
+			return [ 'url' => WPSEO_Utils::get_home_url() ];
 		}
 
 		try {
 			$access_token = $this->get_access_token();
 			if ( $access_token ) {
-				return array( 'token' => $access_token->getToken() );
+				return [ 'token' => $access_token->getToken() ];
 			}
 		}
-			// @codingStandardsIgnoreLine Generic.CodeAnalysis.EmptyStatement.DetectedCATCH -- There is nothing to do.
+		// @codingStandardsIgnoreLine Generic.CodeAnalysis.EmptyStatement.DetectedCATCH -- There is nothing to do.
 		catch ( WPSEO_MyYoast_Bad_Request_Exception $bad_request ) {
 			// Do nothing.
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -271,9 +259,9 @@ class WPSEO_MyYoast_Api_Request {
 				->get_provider()
 				->getAccessToken(
 					'refresh_token',
-					array(
+					[
 						'refresh_token' => $access_token->getRefreshToken(),
-					)
+					]
 				);
 
 			$client->save_access_token( $this->get_current_user_id(), $access_token );

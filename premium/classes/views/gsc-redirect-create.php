@@ -13,6 +13,8 @@
  * @var string $url
  */
 
+_deprecated_file( __FILE__, 'WPSEO 12.5' );
+
 $unique_id      = md5( $url );
 $redirect_types = new WPSEO_Redirect_Types();
 

@@ -84,7 +84,7 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 	/**
 	 * Adds query args to the query to get all rows that needs to be recalculated.
 	 *
-	 * @param array           $args  The previous arguments.
+	 * @param array           $args    The previous arguments.
 	 * @param WP_REST_Request $request The current request object.
 	 *
 	 * @return array $args The altered arguments.

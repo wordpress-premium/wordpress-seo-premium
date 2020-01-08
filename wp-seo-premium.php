@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     12.4
+ * Version:     12.7.1
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
@@ -72,10 +72,7 @@ add_filter( 'wpseo_option_wpseo_defaults', 'wpseo_premium_add_general_option_def
 // Load the WordPress SEO plugin.
 require_once dirname( WPSEO_FILE ) . '/wp-seo-main.php';
 
-$yoast_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload_52.php';
-if ( WPSEO_NAMESPACES ) {
-	$yoast_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload.php';
-}
+$yoast_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload.php';
 
 if ( is_readable( $yoast_premium_autoload_file ) ) {
 	require $yoast_premium_autoload_file;

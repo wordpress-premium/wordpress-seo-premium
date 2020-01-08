@@ -7,6 +7,8 @@
  * @package WPSEO\Admin|Google_Search_Console
  */
 
+_deprecated_file( __FILE__, 'WPSEO 12.5' );
+
 /**
  * Instance of the WPSEO_Redirect class, containing data about the existing redirect.
  *

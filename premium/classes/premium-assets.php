@@ -85,11 +85,6 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 				'dependencies' => array( 'jquery', 'jquery-ui-core', 'yoast-seo-premium-commons', WPSEO_Admin_Asset_Manager::PREFIX . 'analysis' ),
 			),
 			array(
-				'name'         => 'yoast-contact-support',
-				'source'       => 'assets/js/dist/wpseo-premium-contact-support-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
-				'dependencies' => array( 'jquery', 'yoast-seo-premium-commons' ),
-			),
-			array(
 				'name'         => 'wp-seo-premium-custom-fields-plugin',
 				'source'       => 'assets/js/dist/wp-seo-premium-custom-fields-plugin-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
 				'dependencies' => array( 'jquery', 'yoast-seo-premium-commons' ),

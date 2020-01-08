@@ -35,7 +35,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '12.4';
+	const PLUGIN_VERSION_NAME = '12.7.1';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -106,7 +106,6 @@ class WPSEO_Premium {
 			'prominent-words-version'                => new WPSEO_Premium_Prominent_Words_Versioning(),
 			'link-suggestions'                       => new WPSEO_Metabox_Link_Suggestions(),
 			'link-suggestions-endpoint'              => new WPSEO_Premium_Link_Suggestions_Endpoint( $link_suggestions_service ),
-			'premium-search-console'                 => new WPSEO_Premium_GSC(),
 			'redirects-endpoint'                     => new WPSEO_Premium_Redirect_EndPoint( new WPSEO_Premium_Redirect_Service() ),
 			'redirect-export-manager'                => new WPSEO_Premium_Redirect_Export_Manager(),
 			'keyword-export-manager'                 => new WPSEO_Premium_Keyword_Export_Manager(),
@@ -179,7 +178,7 @@ class WPSEO_Premium {
 
 		if ( is_admin() ) {
 			// Make sure priority is below registration of other implementations of the beacon in News, Video, etc.
-			add_action( 'admin_init', array( $this, 'init_helpscout_support' ), 1 );
+			add_filter( 'wpseo_helpscout_beacon_settings', array( $this, 'init_helpscout_support' ), 1 );
 			add_filter( 'wpseo_feature_toggles', array( $this, 'add_feature_toggles' ) );
 
 			// Only register the yoast i18n when the page is a Yoast SEO page.
@@ -475,50 +474,17 @@ class WPSEO_Premium {
 	}
 
 	/**
-	 * Initializes the helpscout support modal for wpseo settings pages
-	 */
-	public function init_helpscout_support() {
-		$page      = filter_input( INPUT_GET, 'page' );
-		$query_var = '';
-		if ( isset( $page ) && $page !== false ) {
-			$query_var = $page;
-		}
-
-		$is_beacon_page = in_array( strtolower( $query_var ), $this->get_beacon_pages(), true );
-
-		// Only add the helpscout beacon on Yoast SEO pages.
-		if ( WPSEO_Metabox::is_post_edit( $GLOBALS['pagenow'] ) || $is_beacon_page ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_contact_support' ) );
-
-			$beacon = yoast_get_helpscout_beacon( $query_var, 'no_search' );
-			$beacon->add_setting( new WPSEO_Premium_Beacon_Setting() );
-			$beacon->register_hooks();
-		}
-	}
-
-	/**
-	 * Get the pages the Premium beacon should be displayed on
+	 * Initializes the HelpScout support modal for WPSEO settings pages.
 	 *
-	 * @return array
+	 * @param array $helpscout_settings The helpscout settings.
 	 */
-	private function get_beacon_pages() {
-		return array(
-			'wpseo_dashboard',
-			'wpseo_titles',
-			'wpseo_social',
-			'wpseo_xml',
-			'wpseo_advanced',
-			'wpseo_tools',
-			'wpseo_search_console',
-			'wpseo_licenses',
-		);
-	}
+	public function init_helpscout_support( $helpscout_settings ) {
+		$helpscout_settings['beacon_id']   = '1ae02e91-5865-4f13-b220-7daed946ba25';
+		$helpscout_settings['pages'][]     = 'wpseo_redirects';
+		$helpscout_settings['products'][]  = WPSEO_Addon_Manager::PREMIUM_SLUG;
+		$helpscout_settings['ask_consent'] = false;
 
-	/**
-	 * Add the Yoast contact support assets
-	 */
-	public function enqueue_contact_support() {
-		wp_enqueue_script( 'yoast-contact-support' );
+		return $helpscout_settings;
 	}
 
 	/**

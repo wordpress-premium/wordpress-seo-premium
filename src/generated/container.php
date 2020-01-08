@@ -18,7 +18,7 @@ use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ParameterBag\FrozenPar
  */
 class Cached_Container extends Container
 {
-    private $parameters;
+    private $parameters = [];
     private $targetDirs = [];
 
     public function __construct()

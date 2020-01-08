@@ -78,7 +78,7 @@ class WPSEO_Redirect_Accessible_Validation extends WPSEO_Redirect_Abstract_Valid
 	/**
 	 * Sends a HEAD request to the passed remote URL.
 	 *
-	 * @param string $url The URL to send the request to.
+	 * @param string $url     The URL to send the request to.
 	 * @param array  $options The options to send along with the request.
 	 *
 	 * @return array|WP_Error The response or WP_Error if something goes wrong.
