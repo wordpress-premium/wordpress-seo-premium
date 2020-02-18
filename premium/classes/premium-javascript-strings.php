@@ -13,7 +13,7 @@ class WPSEO_Premium_Javascript_Strings {
 	/**
 	 * List containing the localized JavaScript translations.
 	 *
-	 * @var array|null
+	 * @var string[]|null
 	 */
 	private static $strings = null;
 
@@ -21,7 +21,7 @@ class WPSEO_Premium_Javascript_Strings {
 	 * Fill the value of self::$strings with translated strings.
 	 */
 	private static function fill() {
-		self::$strings = array(
+		self::$strings = [
 			'error_circular'           => __( 'You can\'t redirect a URL to itself.', 'wordpress-seo-premium' ),
 			'error_old_url'            => __( 'The old URL field can\'t be empty.', 'wordpress-seo-premium' ),
 			'error_regex'              => __( 'The Regular Expression field can\'t be empty.', 'wordpress-seo-premium' ),
@@ -37,18 +37,18 @@ class WPSEO_Premium_Javascript_Strings {
 			/* translators: %1$s will be replaced with the from URL. */
 			'redirect_saved_no_target' => __( '410 Redirect created from %1$s!', 'wordpress-seo-premium' ),
 
-			'redirect_added'           => array(
+			'redirect_added'           => [
 				'title'   => __( 'Redirect added.', 'wordpress-seo-premium' ),
 				'message' => __( 'The redirect was added successfully.', 'wordpress-seo-premium' ),
-			),
-			'redirect_updated'         => array(
+			],
+			'redirect_updated'         => [
 				'title'   => __( 'Redirect updated.', 'wordpress-seo-premium' ),
 				'message' => __( 'The redirect was updated successfully.', 'wordpress-seo-premium' ),
-			),
-			'redirect_deleted'         => array(
+			],
+			'redirect_deleted'         => [
 				'title'   => __( 'Redirect deleted.', 'wordpress-seo-premium' ),
 				'message' => __( 'The redirect was deleted successfully.', 'wordpress-seo-premium' ),
-			),
+			],
 
 			'button_ok'                => __( 'OK', 'wordpress-seo-premium' ),
 			'button_cancel'            => __( 'Cancel', 'wordpress-seo-premium' ),
@@ -60,13 +60,13 @@ class WPSEO_Premium_Javascript_Strings {
 
 			'editAction'               => __( 'Edit', 'wordpress-seo-premium' ),
 			'deleteAction'             => __( 'Delete', 'wordpress-seo-premium' ),
-		);
+		];
 	}
 
 	/**
 	 * Returns an array with all the translated strings.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public static function strings() {
 		if ( self::$strings === null ) {

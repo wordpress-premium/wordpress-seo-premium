@@ -28,7 +28,7 @@ class WPSEO_Redirect_Page {
 	 * Display the presenter.
 	 */
 	public function display() {
-		$display_args = array( 'current_tab' => $this->get_current_tab() );
+		$display_args = [ 'current_tab' => $this->get_current_tab() ];
 
 		$redirect_presenter = new WPSEO_Redirect_Page_Presenter();
 		$redirect_presenter->display( $display_args );
@@ -42,7 +42,7 @@ class WPSEO_Redirect_Page {
 	 * A redirect-type filter.
 	 */
 	public function list_table_search() {
-		$options = array( 'options' => array( 'default' => '' ) );
+		$options = [ 'options' => [ 'default' => '' ] ];
 		$url     = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL, $options );
 
 		if ( empty( $url ) && isset( $_SERVER['REQUEST_URI'] ) ) {
@@ -112,7 +112,7 @@ class WPSEO_Redirect_Page {
 		$asset_manager = new WPSEO_Admin_Asset_Manager();
 		$version       = $asset_manager->flatten_version( WPSEO_VERSION );
 
-		$dependencies = array(
+		$dependencies = [
 			'jquery',
 			'jquery-ui-dialog',
 			'wp-util',
@@ -120,7 +120,7 @@ class WPSEO_Redirect_Page {
 			'yoast-seo-premium-commons',
 			'wp-api',
 			'wp-api-fetch',
-		);
+		];
 
 		wp_enqueue_script(
 			'wp-seo-premium-admin-redirects',
@@ -132,15 +132,15 @@ class WPSEO_Redirect_Page {
 		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoPremiumStrings', WPSEO_Premium_Javascript_Strings::strings() );
 		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoSelect2Locale', substr( WPSEO_Language_Utils::get_user_locale(), 0, 2 ) );
 
-		wp_enqueue_style( 'wpseo-premium-redirects', plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/css/dist/premium-redirects-' . $version . WPSEO_CSSJS_SUFFIX . '.css', array(), WPSEO_VERSION );
+		wp_enqueue_style( 'wpseo-premium-redirects', plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/css/dist/premium-redirects-' . $version . '.css', [], WPSEO_VERSION );
 
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 
-		$screen_option_args = array(
+		$screen_option_args = [
 			'label'   => __( 'Redirects per page', 'wordpress-seo-premium' ),
 			'default' => 25,
 			'option'  => 'redirects_per_page',
-		);
+		];
 		add_screen_option( 'per_page', $screen_option_args );
 	}
 
@@ -154,33 +154,9 @@ class WPSEO_Redirect_Page {
 	 * @return string|void
 	 */
 	public function set_screen_option( $status, $option, $value ) {
-		if ( 'redirects_per_page' === $option ) {
+		if ( $option === 'redirects_per_page' ) {
 			return $value;
 		}
-	}
-
-	/**
-	 * Get the Yoast SEO options.
-	 *
-	 * @return array
-	 */
-	public static function get_options() {
-		static $options;
-
-		if ( $options === null ) {
-			$options = apply_filters(
-				'wpseo_premium_redirect_options',
-				wp_parse_args(
-					get_option( 'wpseo_redirect', array() ),
-					array(
-						'disable_php_redirect' => 'off',
-						'separate_file'        => 'off',
-					)
-				)
-			);
-		}
-
-		return $options;
 	}
 
 	/**
@@ -191,10 +167,10 @@ class WPSEO_Redirect_Page {
 	 */
 	public function save_redirect_files( $old_value, $value ) {
 
-		$is_php = ( empty( $value['disable_php_redirect'] ) || 'on' !== $value['disable_php_redirect'] );
+		$is_php = ( empty( $value['disable_php_redirect'] ) || $value['disable_php_redirect'] !== 'on' );
 
-		$was_separate_file = ( ! empty( $old_value['separate_file'] ) && 'on' === $old_value['separate_file'] );
-		$is_separate_file  = ( ! empty( $value['separate_file'] ) && 'on' === $value['separate_file'] );
+		$was_separate_file = ( ! empty( $old_value['separate_file'] ) && $old_value['separate_file'] === 'on' );
+		$is_separate_file  = ( ! empty( $value['separate_file'] ) && $value['separate_file'] === 'on' );
 
 		// Check if the 'disable_php_redirect' option set to true/on.
 		if ( ! $is_php ) {
@@ -227,8 +203,8 @@ class WPSEO_Redirect_Page {
 	 * The server should always be apache. And the php redirects have to be enabled or in case of a separate
 	 * file it should be disabled.
 	 *
-	 * @param boolean $disable_php_redirect Are the php redirects disabled.
-	 * @param boolean $separate_file        Value of the separate file.
+	 * @param bool $disable_php_redirect Are the php redirects disabled.
+	 * @param bool $separate_file        Value of the separate file.
 	 *
 	 * @return bool
 	 */
@@ -253,17 +229,17 @@ class WPSEO_Redirect_Page {
 		$this->fetch_bulk_action();
 
 		// Check if we need to save files after updating options.
-		add_action( 'update_option_wpseo_redirect', array( $this, 'save_redirect_files' ), 10, 2 );
+		add_action( 'update_option_wpseo_redirect', [ $this, 'save_redirect_files' ], 10, 2 );
 
 		// Convert post into get on search and loading the page scripts.
 		if ( filter_input( INPUT_GET, 'page' ) === 'wpseo_redirects' ) {
 			$upgrade_manager = new WPSEO_Upgrade_Manager();
 			$upgrade_manager->retry_upgrade_31();
 
-			add_action( 'admin_init', array( $this, 'list_table_search' ) );
+			add_action( 'admin_init', [ $this, 'list_table_search' ] );
 
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-			add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 11, 3 );
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+			add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 11, 3 );
 		}
 	}
 
@@ -291,12 +267,12 @@ class WPSEO_Redirect_Page {
 				INPUT_GET,
 				'tab',
 				FILTER_VALIDATE_REGEXP,
-				array(
-					'options' => array(
+				[
+					'options' => [
 						'default' => WPSEO_Redirect_Formats::PLAIN,
 						'regexp'  => '/^(' . WPSEO_Redirect_Formats::PLAIN . '|' . WPSEO_Redirect_Formats::REGEX . '|settings)$/',
-					),
-				)
+					],
+				]
 			);
 		}
 
@@ -332,7 +308,7 @@ class WPSEO_Redirect_Page {
 		if ( wp_verify_nonce( filter_input( INPUT_POST, 'wpseo_redirects_ajax_nonce' ), 'wpseo-redirects-ajax-security' ) ) {
 			if ( filter_input( INPUT_POST, 'action' ) === 'delete' || filter_input( INPUT_POST, 'action2' ) === 'delete' ) {
 				$bulk_delete = filter_input( INPUT_POST, 'wpseo_redirects_bulk_delete', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-				$redirects   = array();
+				$redirects   = [];
 				foreach ( $bulk_delete as $origin ) {
 					$redirect = $this->get_redirect_manager()->get_redirect( $origin );
 					if ( $redirect !== false ) {
@@ -343,5 +319,21 @@ class WPSEO_Redirect_Page {
 				$this->get_redirect_manager()->delete_redirects( $redirects );
 			}
 		}
+	}
+
+	/* ********************* DEPRECATED METHODS ********************* */
+
+	/**
+	 * Get the Yoast SEO options.
+	 *
+	 * @deprecated 12.9
+	 * @codeCoverageIgnore
+	 *
+	 * @return array
+	 */
+	public static function get_options() {
+		_deprecated_function( __METHOD__, 'WPSEO 12.9' );
+
+		return [];
 	}
 }

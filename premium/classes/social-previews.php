@@ -18,8 +18,8 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'wp_ajax_retrieve_image_data_from_url', array( $this, 'ajax_retrieve_image_data_from_url' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'wp_ajax_retrieve_image_data_from_url', [ $this, 'ajax_retrieve_image_data_from_url' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
 
 	/**
@@ -47,17 +47,17 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 		if ( $attachment_id ) {
 			$image = wp_get_attachment_image_src( $attachment_id, 'full' );
 
-			$result = array(
+			$result = [
 				'status' => 'success',
 				'result' => $image[0],
-			);
+			];
 		}
 		else {
 			// Pass the original URL for consistency.
-			$result = array(
+			$result = [
 				'status' => 'success',
 				'result' => $url,
-			);
+			];
 		}
 
 		// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
@@ -82,7 +82,7 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 		$upload_dir_paths = wp_upload_dir();
 
 		// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image.
-		if ( false !== strpos( $url, $upload_dir_paths['baseurl'] ) ) {
+		if ( strpos( $url, $upload_dir_paths['baseurl'] ) !== false ) {
 
 			// If this is the URL of an auto-generated thumbnail, get the URL of the original image.
 			$url = preg_replace( '/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $url );
@@ -120,26 +120,26 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 
 		$social = WPSEO_Meta::$meta_fields['social'];
 
-		return array(
+		return [
 			'website'               => $this->get_website(),
 			'uploadImage'           => __( 'Upload image', 'wordpress-seo-premium' ),
 			'useOtherImage'         => __( 'Use other image', 'wordpress-seo-premium' ),
 			'removeImageButton'     => __( 'Remove image', 'wordpress-seo-premium' ),
 			'facebookDefaultImage'  => WPSEO_Options::get( 'og_default_image' ),
-			'i18n'                  => array(
+			'i18n'                  => [
 				'help'       => $this->get_help_translations( $social ),
-				'helpButton' => array(
+				'helpButton' => [
 					'facebookTitle'       => __( 'Show information about Facebook title', 'wordpress-seo-premium' ),
 					'facebookDescription' => __( 'Show information about Facebook description', 'wordpress-seo-premium' ),
 					'facebookImage'       => __( 'Show information about Facebook image', 'wordpress-seo-premium' ),
 					'twitterTitle'        => __( 'Show information about Twitter title', 'wordpress-seo-premium' ),
 					'twitterDescription'  => __( 'Show information about Twitter description', 'wordpress-seo-premium' ),
 					'twitterImage'        => __( 'Show information about Twitter image', 'wordpress-seo-premium' ),
-				),
+				],
 				'library'    => $this->get_translations(),
-			),
+			],
 			'facebookNonce'         => wp_create_nonce( 'get_facebook_name' ),
-		);
+		];
 	}
 
 	/**
@@ -151,7 +151,7 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 	 */
 	private function get_help_translations( $social_field ) {
 		// Default everything to empty strings.
-		$localized = array();
+		$localized = [];
 
 		if ( isset( $social_field['opengraph-title'] ) ) {
 			$localized['facebookTitle']       = $social_field['opengraph-title']['description'];
@@ -196,7 +196,7 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 			}
 		}
 
-		return array();
+		return [];
 	}
 
 	/**

@@ -38,7 +38,7 @@ class WPSEO_Premium_Redirect_Service {
 	 */
 	public function delete( WP_REST_Request $request ) {
 		$redirect  = $this->map_request_to_redirect( $request );
-		$redirects = array( $redirect );
+		$redirects = [ $redirect ];
 
 		$redirect_format = $request->get_param( 'format' );
 		if ( ! $redirect_format ) {
@@ -47,18 +47,18 @@ class WPSEO_Premium_Redirect_Service {
 
 		if ( $this->get_redirect_manager( $redirect_format )->delete_redirects( $redirects ) ) {
 			return new WP_REST_Response(
-				array(
+				[
 					'title'   => __( 'Redirect deleted.', 'wordpress-seo-premium' ),
 					'message' => __( 'The redirect was deleted successfully.', 'wordpress-seo-premium' ),
-				)
+				]
 			);
 		}
 
 		return new WP_REST_Response(
-			array(
+			[
 				'title'   => __( 'Redirect not deleted.', 'wordpress-seo-premium' ),
 				'message' => __( 'Something went wrong when deleting this redirect.', 'wordpress-seo-premium' ),
-			),
+			],
 			400
 		);
 	}

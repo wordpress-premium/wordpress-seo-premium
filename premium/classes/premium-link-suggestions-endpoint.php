@@ -35,34 +35,34 @@ class WPSEO_Premium_Link_Suggestions_Endpoint implements WPSEO_WordPress_Integra
 	 * Registers all hooks to WordPress.
 	 */
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register' ) );
+		add_action( 'rest_api_init', [ $this, 'register' ] );
 	}
 
 	/**
 	 * Register the REST endpoint to WordPress.
 	 */
 	public function register() {
-		$route_args = array(
+		$route_args = [
 			'methods'             => 'GET',
-			'args'                => array(
-				'prominent_words' => array(
+			'args'                => [
+				'prominent_words' => [
 					'required'    => true,
 					'type'        => 'array',
 					'description' => 'IDs of the prominent words we want link suggestions based on',
-					'items'       => array(
+					'items'       => [
 						'type' => 'int',
-					),
-				),
-			),
-			'callback'            => array(
+					],
+				],
+			],
+			'callback'            => [
 				$this->service,
 				'query',
-			),
-			'permission_callback' => array(
+			],
+			'permission_callback' => [
 				$this,
 				'can_retrieve_data',
-			),
-		);
+			],
+		];
 		register_rest_route( self::REST_NAMESPACE, self::ENDPOINT_QUERY, $route_args );
 	}
 

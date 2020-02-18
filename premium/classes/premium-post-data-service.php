@@ -26,33 +26,33 @@ class WPSEO_Premium_Post_Data_Service {
 	 *
 	 * @var array An array with meta key names and settings.
 	 */
-	public $meta_keys = array(
-		'focuskw' => array(
+	public $meta_keys = [
+		'focuskw' => [
 			'name'                => 'focus_keyphrase',
 			'should_decode'       => false,
 			'should_replace_vars' => false,
-		),
-		'metadesc' => array(
+		],
+		'metadesc' => [
 			'name'                => 'meta_description',
 			'should_decode'       => false,
 			'should_replace_vars' => true,
-		),
-		'focuskeywords' => array(
+		],
+		'focuskeywords' => [
 			'name'                => 'related_keyphrases',
 			'should_decode'       => true,
 			'should_replace_vars' => false,
-		),
-		'keywordsynonyms' => array(
+		],
+		'keywordsynonyms' => [
 			'name'                => 'keyphrase_synonyms',
 			'should_decode'       => true,
 			'should_replace_vars' => false,
-		),
-		'title' => array(
+		],
+		'title' => [
 			'name'                => 'meta_title',
 			'should_decode'       => false,
 			'should_replace_vars' => true,
-		),
-	);
+		],
+	];
 
 	/**
 	 * A private instance of the WPSEO_Replace_Vars.
@@ -115,7 +115,7 @@ class WPSEO_Premium_Post_Data_Service {
 
 		// If no posts have been left unindexed, return the empty array.
 		if ( ! $post_ids ) {
-			return new WP_REST_Response( array() );
+			return new WP_REST_Response( [] );
 		}
 
 		// Retrieve and set the relevant posts.
@@ -146,11 +146,11 @@ class WPSEO_Premium_Post_Data_Service {
 	public function retrieve_posts( $post_ids, $post_types ) {
 		// Retrieve post content of all the posts based on their IDs.
 		return get_posts(
-			array(
+			[
 				'include'     => $post_ids,
 				'post_type'   => $post_types,
 				'post_status' => $this->prominent_words_query->get_supported_post_statuses(),
-			)
+			]
 		);
 	}
 
@@ -165,7 +165,7 @@ class WPSEO_Premium_Post_Data_Service {
 	 * where the latter is a collection of 'key'-'value' pairs.
 	 */
 	protected function retrieve_post_data( $posts ) {
-		$results = array();
+		$results = [];
 
 		// Now retrieve meta data per post and per meta key.
 		foreach ( $posts as $post ) {
@@ -277,7 +277,7 @@ class WPSEO_Premium_Post_Data_Service {
 	 * @return array The enriched post.
 	 */
 	protected function build_post_data( $post ) {
-		$meta_data = array();
+		$meta_data = [];
 
 		foreach ( $this->get_meta_keys() as $meta_key => $meta_info ) {
 			$meta_data_for_key = $this->get_meta_value_wrapper( $meta_key, $post->ID );
@@ -317,10 +317,10 @@ class WPSEO_Premium_Post_Data_Service {
 			}
 		}
 
-		return array(
+		return [
 			'ID'           => $post->ID,
 			'post_content' => $this->process_shortcodes( $post ),
 			'meta'         => $meta_data,
-		);
+		];
 	}
 }

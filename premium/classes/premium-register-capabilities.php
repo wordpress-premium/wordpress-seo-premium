@@ -16,7 +16,7 @@ class WPSEO_Premium_Register_Capabilities implements WPSEO_WordPress_Integration
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'wpseo_register_capabilities', array( $this, 'register' ) );
+		add_action( 'wpseo_register_capabilities', [ $this, 'register' ] );
 	}
 
 	/**
@@ -27,6 +27,6 @@ class WPSEO_Premium_Register_Capabilities implements WPSEO_WordPress_Integration
 	public function register() {
 		$manager = WPSEO_Capability_Manager_Factory::get();
 
-		$manager->register( 'wpseo_manage_redirects', array( 'editor', 'wpseo_editor', 'wpseo_manager' ) );
+		$manager->register( 'wpseo_manage_redirects', [ 'editor', 'wpseo_editor', 'wpseo_manager' ] );
 	}
 }

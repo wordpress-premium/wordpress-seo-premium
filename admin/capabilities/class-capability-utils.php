@@ -26,6 +26,51 @@ class WPSEO_Capability_Utils {
 	}
 
 	/**
+	 * Retrieves the users that have the specified capability.
+	 *
+	 * @param string $capability The name of the capability.
+	 *
+	 * @return array The users that have the capability.
+	 */
+	public static function get_applicable_users( $capability ) {
+		$applicable_roles = self::get_applicable_roles( $capability );
+
+		if ( $applicable_roles === [] ) {
+			return [];
+		}
+
+		return get_users( [ 'role__in' => $applicable_roles ] );
+	}
+
+	/**
+	 * Retrieves the roles that have the specified capability.
+	 *
+	 * @param string $capability The name of the capability.
+	 *
+	 * @return array The names of the roles that have the capability.
+	 */
+	public static function get_applicable_roles( $capability ) {
+		$roles      = wp_roles();
+		$role_names = $roles->get_names();
+
+		$applicable_roles = [];
+		foreach ( array_keys( $role_names ) as $role_name ) {
+			$role = $roles->get_role( $role_name );
+
+			if ( ! $role ) {
+				continue;
+			}
+
+			// Add role if it has the capability.
+			if ( array_key_exists( $capability, $role->capabilities ) && $role->capabilities[ $capability ] === true ) {
+				$applicable_roles[] = $role_name;
+			}
+		}
+
+		return $applicable_roles;
+	}
+
+	/**
 	 * Checks if the current user has at least one of the supplied capabilities.
 	 *
 	 * @param array $capabilities Capabilities to check against.

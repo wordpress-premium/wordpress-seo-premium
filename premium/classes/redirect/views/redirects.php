@@ -10,12 +10,12 @@
 ?>
 <h2 class="nav-tab-wrapper" id="wpseo-tabs">
 	<?php
-	foreach ( $redirect_tabs['tabs'] as $tab_url => $tab_value ) :
-		$active = '';
-		if ( $redirect_tabs['current_tab'] === $tab_url ) {
-			$active = ' nav-tab-active';
+	foreach ( $redirect_tabs['tabs'] as $yoast_seo_tab_url => $yoast_seo_tab_value ) :
+		$yoast_seo_active = '';
+		if ( $redirect_tabs['current_tab'] === $yoast_seo_tab_url ) {
+			$yoast_seo_active = ' nav-tab-active';
 		}
-		echo '<a class="nav-tab' . esc_attr( $active ) . '" id="tab-url-tab" href="' . esc_url( $redirect_tabs['page_url'] . $tab_url ) . '">' . esc_html( $tab_value ) . '</a>';
+		echo '<a class="nav-tab' . esc_attr( $yoast_seo_active ) . '" id="tab-url-tab" href="' . esc_url( $redirect_tabs['page_url'] . $yoast_seo_tab_url ) . '">' . esc_html( $yoast_seo_tab_value ) . '</a>';
 	endforeach;
 	?>
 </h2>
@@ -23,9 +23,9 @@
 	<?php
 	if ( ! empty( $tab_presenter ) ) :
 		$tab_presenter->display(
-			array(
+			[
 				'nonce' => wp_create_nonce( 'wpseo-redirects-ajax-security' ),
-			)
+			]
 		);
 	endif;
 	?>

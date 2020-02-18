@@ -9,19 +9,20 @@
  * Class representing a list of redirect formats.
  */
 class WPSEO_Redirect_Formats {
+
 	const PLAIN = 'plain';
 	const REGEX = 'regex';
 
 	/**
 	 * Returns the redirect formats.
 	 *
-	 * @return array Array with the redirect formats.
+	 * @return string[] Array with the redirect formats.
 	 */
 	public function get() {
-		return array(
+		return [
 			self::PLAIN => __( 'Redirects', 'wordpress-seo-premium' ),
 			self::REGEX => __( 'Regex Redirects', 'wordpress-seo-premium' ),
-		);
+		];
 	}
 
 	/**

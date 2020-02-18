@@ -46,12 +46,12 @@ class WPSEO_Redirect_Option {
 	 *
 	 * @var WPSEO_Redirect[]
 	 */
-	private $redirects = array();
+	private $redirects = [];
 
 	/**
 	 * Constructor.
 	 *
-	 * @param boolean $retrieve_redirects Whether to retrieve the redirects on construction.
+	 * @param bool $retrieve_redirects Whether to retrieve the redirects on construction.
 	 */
 	public function __construct( $retrieve_redirects = true ) {
 		if ( $retrieve_redirects ) {
@@ -67,7 +67,7 @@ class WPSEO_Redirect_Option {
 	public function get_all() {
 		$redirects = $this->get_from_option();
 
-		array_walk( $redirects, array( $this, 'map_option_to_object' ) );
+		array_walk( $redirects, [ $this, 'map_option_to_object' ] );
 
 		return $redirects;
 	}
@@ -180,10 +180,35 @@ class WPSEO_Redirect_Option {
 			$redirects = array_merge( $redirects, $this->get_all() );
 		}
 
-		array_walk( $redirects, array( $this, 'map_object_to_option' ) );
+		array_walk( $redirects, [ $this, 'map_object_to_option' ] );
+
+		/**
+		 * Filter: 'wpseo_premium_save_redirects' - can be used to filter the redirects before saving.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\save_redirects'} filter instead.
+		 *
+		 * @api array $redirects
+		 */
+		$redirects = apply_filters_deprecated(
+			'wpseo_premium_save_redirects',
+			[ $redirects ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\save_redirects'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\save_redirects' - can be used to filter the redirects before saving.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array $redirects
+		 */
+		$redirects = apply_filters( 'Yoast\WP\SEO\save_redirects', $redirects );
 
 		// Update the database option.
-		update_option( self::OPTION, apply_filters( 'wpseo_premium_save_redirects', $redirects ), false );
+		update_option( self::OPTION, $redirects, false );
 	}
 
 	/**
@@ -194,9 +219,33 @@ class WPSEO_Redirect_Option {
 	 * @return array
 	 */
 	public function get_from_option( $option_name = self::OPTION ) {
-		$redirects = apply_filters( 'wpseo_premium_get_redirects', get_option( $option_name ) );
+		/**
+		 * Filter: 'wpseo_premium_get_redirects' - can be used to filter the redirects on option retrieval.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\get_redirects'} filter instead.
+		 *
+		 * @api array $redirects
+		 */
+		$redirects = apply_filters_deprecated(
+			'wpseo_premium_get_redirects',
+			[ get_option( $option_name ) ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\get_redirects'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\get_redirects' - can be used to filter the redirects on option retrieval.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array $redirects
+		 */
+		$redirects = apply_filters( 'Yoast\WP\SEO\get_redirects', $redirects );
+
 		if ( ! is_array( $redirects ) ) {
-			$redirects = array();
+			$redirects = [];
 		}
 
 		return $redirects;
@@ -211,13 +260,33 @@ class WPSEO_Redirect_Option {
 	 */
 	protected function run_redirects_modified_action( WPSEO_Redirect $redirect ) {
 		/**
-		 * Filter: wpseo_premium_redirects_modified - Allow developers run actions when the redirects are modified.
+		 * Filter: wpseo_premium_redirects_modified - Allow developers to run actions when the redirects are modified.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\redirects_modified'} action instead.
 		 *
 		 * @api   string $origin The redirect origin.
 		 * @param string $target The redirect target.
 		 * @param int    $type   The redirect type (301, 404, 410, etc).
 		 */
-		do_action( 'wpseo_premium_redirects_modified', $redirect->get_origin(), $redirect->get_target(), $redirect->get_type() );
+		do_action_deprecated(
+			'wpseo_premium_redirects_modified',
+			[ $redirect->get_origin(), $redirect->get_target(), $redirect->get_type() ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\redirects_modified'
+		);
+
+		/**
+		 * Filter: Yoast\WP\SEO\redirects_modified - Allow developers to run actions when the redirects are modified.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api   string $origin The redirect origin.
+		 * @param string $target The redirect target.
+		 * @param int    $type   The redirect type (301, 404, 410, etc).
+		 */
+		do_action( 'Yoast\WP\SEO\redirects_modified', $redirect->get_origin(), $redirect->get_target(), $redirect->get_type() );
 	}
 
 	/**
@@ -235,11 +304,11 @@ class WPSEO_Redirect_Option {
 	 * @param WPSEO_Redirect $redirect The redirect to map.
 	 */
 	private function map_object_to_option( WPSEO_Redirect &$redirect ) {
-		$redirect = array(
+		$redirect = [
 			'origin' => $redirect->get_origin(),
 			'url'    => $redirect->get_target(),
 			'type'   => $redirect->get_type(),
 			'format' => $redirect->get_format(),
-		);
+		];
 	}
 }

@@ -72,7 +72,7 @@ class WPSEO_Rewrite {
 		 * Remove initial slash, if there is one (we remove the trailing slash
 		 * in the regex replacement and don't want to end up short a slash).
 		 */
-		if ( '/' === substr( $category_base, 0, 1 ) ) {
+		if ( substr( $category_base, 0, 1 ) === '/' ) {
 			$category_base = substr( $category_base, 1 );
 		}
 
@@ -125,7 +125,7 @@ class WPSEO_Rewrite {
 		$permalink_structure = get_option( 'permalink_structure' );
 
 		$blog_prefix = '';
-		if ( is_multisite() && ! is_subdomain_install() && is_main_site() && 0 === strpos( $permalink_structure, '/blog/' ) ) {
+		if ( is_multisite() && ! is_subdomain_install() && is_main_site() && strpos( $permalink_structure, '/blog/' ) === 0 ) {
 			$blog_prefix = 'blog/';
 		}
 
@@ -232,7 +232,6 @@ class WPSEO_Rewrite {
 	protected function redirect( $category_redirect ) {
 		$catlink = trailingslashit( get_option( 'home' ) ) . user_trailingslashit( $category_redirect, 'category' );
 
-		header( 'X-Redirect-By: Yoast SEO' );
 		wp_redirect( $catlink, 301, 'Yoast SEO' );
 		exit;
 	}

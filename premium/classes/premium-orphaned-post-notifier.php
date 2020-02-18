@@ -38,14 +38,14 @@ class WPSEO_Premium_Orphaned_Post_Notifier implements WPSEO_WordPress_Integratio
 		return;
 
 		if ( filter_input( INPUT_GET, 'page' ) === 'wpseo_dashboard' ) {
-			add_action( 'admin_init', array( $this, 'notify' ) );
+			add_action( 'admin_init', [ $this, 'notify' ] );
 		}
 
 		if ( ! wp_next_scheduled( 'wpseo-premium-orphaned-content' ) ) {
 			wp_schedule_event( time(), 'daily', 'wpseo-premium-orphaned-content' );
 		}
 
-		add_action( 'wpseo-premium-orphaned-content', array( $this, 'notify' ) );
+		add_action( 'wpseo-premium-orphaned-content', [ $this, 'notify' ] );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class WPSEO_Premium_Orphaned_Post_Notifier implements WPSEO_WordPress_Integratio
 		$post_types = $this->format_post_types( $post_types );
 
 		// Walks over the posts types and handle the notification.
-		array_walk( $post_types, array( $this, 'notify_for_post_type' ) );
+		array_walk( $post_types, [ $this, 'notify_for_post_type' ] );
 	}
 
 	/**
@@ -163,12 +163,12 @@ class WPSEO_Premium_Orphaned_Post_Notifier implements WPSEO_WordPress_Integratio
 
 		return new Yoast_Notification(
 			$message,
-			array(
+			[
 				'type'         => Yoast_Notification::WARNING,
 				'id'           => $notification_id,
 				'capabilities' => 'wpseo_manage_options',
 				'priority'     => 0.8,
-			)
+			]
 		);
 	}
 
@@ -201,10 +201,10 @@ class WPSEO_Premium_Orphaned_Post_Notifier implements WPSEO_WordPress_Integratio
 	 * @return string The URL containing the required filter.
 	 */
 	protected function get_filter_url( $post_type_name ) {
-		$query_args = array(
+		$query_args = [
 			'post_type'    => $post_type_name,
 			'yoast_filter' => 'orphaned',
-		);
+		];
 
 		return add_query_arg( $query_args, admin_url( 'edit.php' ) );
 	}

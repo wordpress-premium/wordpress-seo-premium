@@ -15,7 +15,7 @@ class WPSEO_Premium_Orphaned_Post_Query {
 	 *
 	 * @param array $post_types The post types to get the counts for.
 	 *
-	 * @return array The counts for all post types.
+	 * @return int[] The counts for all post types.
 	 */
 	public static function get_counts( array $post_types ) {
 		global $wpdb;

@@ -5,6 +5,8 @@
  * @package WPSEO\Premium\Classes
  */
 
+use Yoast\WP\SEO\Helpers\Home_Url_Helper;
+
 /**
  * Represents a single redirect
  */
@@ -95,6 +97,13 @@ class WPSEO_Redirect implements ArrayAccess {
 	protected $validation_error;
 
 	/**
+	 * The home URL helper.
+	 *
+	 * @var Home_Url_Helper
+	 */
+	protected static $home_url;
+
+	/**
 	 * WPSEO_Redirect constructor.
 	 *
 	 * @param string $origin The origin of the redirect.
@@ -103,6 +112,10 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * @param string $format The format of the redirect.
 	 */
 	public function __construct( $origin, $target = '', $type = WPSEO_Redirect_Types::PERMANENT, $format = WPSEO_Redirect_Formats::PLAIN ) {
+		if ( static::$home_url === null ) {
+			static::$home_url = new Home_Url_Helper();
+		}
+
 		$this->origin = ( $format === WPSEO_Redirect_Formats::PLAIN ) ? $this->sanitize_origin_url( $origin ) : $origin;
 		$this->target = $this->sanitize_target_url( $target );
 		$this->format = $format;
@@ -152,12 +165,12 @@ class WPSEO_Redirect implements ArrayAccess {
 	 *
 	 * @param string $offset An offset to check for.
 	 *
-	 * @return boolean true on success or false on failure.
+	 * @return bool True on success or false on failure.
 	 *
 	 * The return value will be casted to boolean if non-boolean was returned.
 	 */
 	public function offsetExists( $offset ) {
-		return in_array( $offset, array( 'url', 'type' ), true );
+		return in_array( $offset, [ 'url', 'type' ], true );
 	}
 
 	/**
@@ -229,7 +242,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	public function origin_is( $url ) {
 		// Sanitize the slash in case of plain redirect.
 		if ( $this->format === WPSEO_Redirect_Formats::PLAIN ) {
-			$url = $this->sanitize_slash( $url );
+			$url = $this->sanitize_slash( $url, $this->parse_url( $url ) );
 		}
 
 		return (string) $this->origin === (string) $url;
@@ -239,14 +252,16 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * Strip the trailing slashes for relative URLs.
 	 *
 	 * @param string $url_to_sanitize The URL to sanitize.
+	 * @param array  $url_pieces      The url pieces.
 	 *
 	 * @return string The sanitized url.
 	 */
-	private function sanitize_slash( $url_to_sanitize ) {
+	private function sanitize_slash( $url_to_sanitize, array $url_pieces = [] ) {
 		$url = $url_to_sanitize;
-		if ( $url !== '/' && WPSEO_Redirect_Util::is_relative_url( $url_to_sanitize ) ) {
-			$url = trim( $url_to_sanitize, '/' );
+		if ( $url !== '/' && ! isset( $url_pieces['scheme'] ) ) {
+			return trim( $url_to_sanitize, '/' );
 		}
+
 
 		return $url;
 	}
@@ -271,18 +286,20 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * @return string The sanitized url.
 	 */
 	private function sanitize_origin_url( $url ) {
-		$home_url        = get_home_url();
-		$home_url_pieces = wp_parse_url( $home_url );
-		$url_pieces      = wp_parse_url( $url );
+		$home_url        = static::$home_url->get();
+		$home_url_pieces = static::$home_url->get_parsed();
+		$url_pieces      = $this->parse_url( $url );
 
 		if ( $this->match_home_url( $home_url_pieces, $url_pieces ) ) {
 			$url = substr(
 				$this->strip_scheme_from_url( $url_pieces['scheme'], $url ),
 				strlen( $this->strip_scheme_from_url( $home_url_pieces['scheme'], $home_url ) )
 			);
+
+			$url_pieces['scheme'] = null;
 		}
 
-		return $this->sanitize_slash( $url );
+		return $this->sanitize_slash( $url, $url_pieces );
 	}
 
 	/**
@@ -293,18 +310,19 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * @return string The sanitized url.
 	 */
 	private function sanitize_target_url( $url ) {
-		$home_url        = get_home_url();
-		$home_url_pieces = wp_parse_url( $home_url );
-		$url_pieces      = wp_parse_url( $url );
+		$home_url_pieces = static::$home_url->get_parsed();
+		$url_pieces      = $this->parse_url( $url );
 
 		if ( $this->match_home_url( $home_url_pieces, $url_pieces ) ) {
 			$url = substr(
 				$this->strip_scheme_from_url( $url_pieces['scheme'], $url ),
 				strlen( $home_url_pieces['host'] )
 			);
+
+			$url_pieces['scheme'] = null;
 		}
 
-		return $this->sanitize_slash( $url );
+		return $this->sanitize_slash( $url, $url_pieces );
 	}
 
 	/**
@@ -358,5 +376,21 @@ class WPSEO_Redirect implements ArrayAccess {
 		}
 
 		return strpos( trim( $url_path, '/' ), $home_url_path ) === 0;
+	}
+
+	/**
+	 * Parses the URL into separate pieces.
+	 *
+	 * @param string $url The URL string.
+	 *
+	 * @return array Array of URL pieces.
+	 */
+	private function parse_url( $url ) {
+		$parsed_url = wp_parse_url( $url );
+		if ( is_array( $parsed_url ) ) {
+			return $parsed_url;
+		}
+
+		return [];
 	}
 }

@@ -15,11 +15,11 @@ class WPSEO_Premium_Redirect_Export_Manager implements WPSEO_WordPress_Integrati
 	 */
 	public function register_hooks() {
 		// Add export CSV block, the import and export settings are confusingly named only import.
-		add_action( 'wpseo_import_tab_content', array( $this, 'add_redirect_export_block' ) );
-		add_action( 'wpseo_import_tab_header', array( $this, 'redirects_export_header' ) );
+		add_action( 'wpseo_import_tab_content', [ $this, 'add_redirect_export_block' ] );
+		add_action( 'wpseo_import_tab_header', [ $this, 'redirects_export_header' ] );
 
 		// Hijack the request in case of CSV download and return our generated CSV instead.
-		add_action( 'admin_init', array( $this, 'redirects_csv_export' ) );
+		add_action( 'admin_init', [ $this, 'redirects_csv_export' ] );
 	}
 
 	/**

@@ -35,7 +35,7 @@ class WPSEO_Redirect_Form_Presenter implements WPSEO_Redirect_Presenter {
 	 *
 	 * @return void
 	 */
-	public function display( array $display = array() ) {
+	public function display( array $display = [] ) {
 		$display_vars = $this->view_vars;
 		if ( ! empty( $display ) ) {
 			$display_vars = array_merge_recursive( $display_vars, $display );

@@ -19,11 +19,30 @@ class WPSEO_Premium_Orphaned_Content_Support {
 		/**
 		 * Filter: 'wpseo_orphaned_post_types' - Allows changes for the accessible post types.
 		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\orphaned_post_types'} filter instead.
+		 *
 		 * @api array The accessible post types.
 		 */
-		$orphaned_post_types = apply_filters( 'wpseo_orphaned_post_types', WPSEO_Post_Type::get_accessible_post_types() );
+		$orphaned_post_types = apply_filters_deprecated(
+			'wpseo_orphaned_post_types',
+			[ WPSEO_Post_Type::get_accessible_post_types() ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\orphaned_post_types'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\orphaned_post_types' - Allows changes for the accessible post types.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array The accessible post types.
+		 */
+		$orphaned_post_types = apply_filters( 'Yoast\WP\SEO\orphaned_post_types', $orphaned_post_types );
+
 		if ( ! is_array( $orphaned_post_types ) || empty( $orphaned_post_types ) ) {
-			$orphaned_post_types = array();
+			$orphaned_post_types = [];
 		}
 
 		return $orphaned_post_types;

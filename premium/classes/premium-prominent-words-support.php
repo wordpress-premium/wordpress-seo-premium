@@ -19,16 +19,37 @@ class WPSEO_Premium_Prominent_Words_Support {
 		/**
 		 * Filter: 'wpseo_prominent_words_post_types' - Allows changes for the accessible post types.
 		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\prominent_words_post_types'} filter instead.
+		 *
 		 * @api array The accessible post types.
 		 */
-		$prominent_words_post_types = apply_filters( 'wpseo_prominent_words_post_types', WPSEO_Post_Type::get_accessible_post_types() );
+		$prominent_words_post_types = apply_filters_deprecated(
+			'wpseo_prominent_words_post_types',
+			[ WPSEO_Post_Type::get_accessible_post_types() ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\prominent_words_post_types'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\prominent_words_post_types' - Allows changes for the accessible post types.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array The accessible post types.
+		 */
+		$prominent_words_post_types = apply_filters(
+			'Yoast\WP\SEO\prominent_words_post_types',
+			$prominent_words_post_types
+		);
 
 		if ( ! is_array( $prominent_words_post_types ) || empty( $prominent_words_post_types ) ) {
-			$prominent_words_post_types = array();
+			$prominent_words_post_types = [];
 		}
 
 		$prominent_words_post_types = WPSEO_Post_Type::filter_attachment_post_type( $prominent_words_post_types );
-		$prominent_words_post_types = array_filter( $prominent_words_post_types, array( 'WPSEO_Post_Type', 'has_metabox_enabled' ) );
+		$prominent_words_post_types = array_filter( $prominent_words_post_types, [ 'WPSEO_Post_Type', 'has_metabox_enabled' ] );
 
 		return $prominent_words_post_types;
 	}

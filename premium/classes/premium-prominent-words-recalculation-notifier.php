@@ -19,15 +19,15 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 	 */
 	public function register_hooks() {
 		if ( filter_input( INPUT_GET, 'page' ) === 'wpseo_dashboard' ) {
-			add_action( 'admin_init', array( $this, 'cleanup_notification' ) );
+			add_action( 'admin_init', [ $this, 'cleanup_notification' ] );
 		}
 
 		if ( ! wp_next_scheduled( self::NOTIFICATION_ID ) ) {
 			wp_schedule_event( time(), 'daily', self::NOTIFICATION_ID );
 		}
 
-		add_action( self::NOTIFICATION_ID, array( $this, 'manage_notification' ) );
-		add_action( 'update_option_wpseo', array( $this, 'handle_option_change' ), 10, 2 );
+		add_action( self::NOTIFICATION_ID, [ $this, 'manage_notification' ] );
+		add_action( 'update_option_wpseo', [ $this, 'handle_option_change' ], 10, 2 );
 	}
 
 	/**
@@ -38,7 +38,11 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 			return;
 		}
 
-		$this->remove_notification( $this->get_notification() );
+		$users = WPSEO_Capability_Utils::get_applicable_users( 'wpseo_manage_options' );
+
+		foreach ( $users as $user ) {
+			$this->remove_notification( $this->get_notification( $user ) );
+		}
 	}
 
 	/**
@@ -50,7 +54,11 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 			return;
 		}
 
-		$this->add_notification( $this->get_notification() );
+		$users = WPSEO_Capability_Utils::get_applicable_users( 'wpseo_manage_options' );
+
+		foreach ( $users as $user ) {
+			$this->add_notification( $this->get_notification( $user ) );
+		}
 	}
 
 	/**
@@ -61,7 +69,12 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 	 */
 	public function handle_option_change( $old_value, $new_value ) {
 		if ( ! empty( $old_value['enable_link_suggestions'] ) && empty( $new_value['enable_link_suggestions'] ) ) {
-			$this->remove_notification( $this->get_notification() );
+
+			$users = WPSEO_Capability_Utils::get_applicable_users( 'wpseo_manage_options' );
+
+			foreach ( $users as $user ) {
+				$this->remove_notification( $this->get_notification( $user ) );
+			}
 		}
 	}
 
@@ -101,9 +114,11 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 	/**
 	 * Returns an instance of the notification.
 	 *
+	 * @param WP_User $user The user to show the notification for.
+	 *
 	 * @return Yoast_Notification The notification to show.
 	 */
-	protected function get_notification() {
+	protected function get_notification( $user ) {
 		return new Yoast_Notification(
 			sprintf(
 				/* translators: 1: link to yoast.com post about internal linking suggestion. 2: is anchor closing. 3: button to the recalculation option. 4: closing button */
@@ -121,12 +136,13 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 				),
 				'</a>'
 			),
-			array(
+			[
 				'type'         => Yoast_Notification::WARNING,
 				'id'           => self::NOTIFICATION_ID,
 				'capabilities' => 'wpseo_manage_options',
 				'priority'     => 0.8,
-			)
+				'user'         => $user,
+			]
 		);
 	}
 
@@ -148,5 +164,19 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Notifier implements WPSEO_Word
 	 */
 	protected function has_enabled_link_suggestions() {
 		return WPSEO_Options::get( 'enable_link_suggestions', false );
+	}
+
+	/**
+	 * Migration for removing the persistent notification.
+	 */
+	public static function upgrade_12_8() {
+		$notification_manager = Yoast_Notification_Center::get();
+
+		// We need to remove the dismissal first, to clean up better but also as otherwise the remove won't work.
+		delete_metadata( 'user', false, self::NOTIFICATION_ID, '', true );
+		$notification_manager->remove_notification_by_id( self::NOTIFICATION_ID, true );
+
+		// Remove the cronjob if present.
+		wp_clear_scheduled_hook( self::NOTIFICATION_ID );
 	}
 }

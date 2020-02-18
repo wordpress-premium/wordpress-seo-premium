@@ -13,11 +13,11 @@
  * }
  */
 
-$yoast_premium_redirect_table   = $view_vars['redirect_table'];
-$yoast_premium_nonce            = $view_vars['nonce'];
-$yoast_premium_form_presenter   = $view_vars['form_presenter'];
-$yoast_premium_origin_from_url  = $view_vars['origin_from_url'];
-$yoast_premium_quick_edit_table = $view_vars['quick_edit_table'];
+$yoast_seo_redirect_table   = $view_vars['redirect_table'];
+$yoast_seo_nonce            = $view_vars['nonce'];
+$yoast_seo_form_presenter   = $view_vars['form_presenter'];
+$yoast_seo_origin_from_url  = $view_vars['origin_from_url'];
+$yoast_seo_quick_edit_table = $view_vars['quick_edit_table'];
 
 ?>
 
@@ -37,15 +37,15 @@ $yoast_premium_quick_edit_table = $view_vars['quick_edit_table'];
 	<form class='wpseo-new-redirect-form' method='post'>
 		<div class='wpseo_redirect_form'>
 <?php
-$yoast_premium_form_presenter->display(
-	array(
+$yoast_seo_form_presenter->display(
+	[
 		'input_suffix' => '',
-		'values'       => array(
-			'origin' => $yoast_premium_origin_from_url,
+		'values'       => [
+			'origin' => $yoast_seo_origin_from_url,
 			'target' => '',
 			'type'   => '',
-		),
-	)
+		],
+	]
 );
 ?>
 
@@ -56,21 +56,21 @@ $yoast_premium_form_presenter->display(
 	<p class='desc'>&nbsp;</p>
 
 	<?php
-	$yoast_premium_quick_edit_table->display(
-		array(
-			'form_presenter' => $yoast_premium_form_presenter,
-			'total_columns'  => $yoast_premium_redirect_table->count_columns(),
-		)
+	$yoast_seo_quick_edit_table->display(
+		[
+			'form_presenter' => $yoast_seo_form_presenter,
+			'total_columns'  => $yoast_seo_redirect_table->count_columns(),
+		]
 	);
 	?>
 
 	<form id='regex' class='wpseo-redirects-table-form' method='post'>
-		<input type='hidden' class="wpseo_redirects_ajax_nonce" name='wpseo_redirects_ajax_nonce' value='<?php echo esc_attr( $yoast_premium_nonce ); ?>' />
+		<input type='hidden' class="wpseo_redirects_ajax_nonce" name='wpseo_redirects_ajax_nonce' value='<?php echo esc_attr( $yoast_seo_nonce ); ?>' />
 		<?php
 		// The list table.
-		$yoast_premium_redirect_table->prepare_items();
-		$yoast_premium_redirect_table->search_box( __( 'Search', 'wordpress-seo-premium' ), 'wpseo-redirect-search' );
-		$yoast_premium_redirect_table->display();
+		$yoast_seo_redirect_table->prepare_items();
+		$yoast_seo_redirect_table->search_box( __( 'Search', 'wordpress-seo-premium' ), 'wpseo-redirect-search' );
+		$yoast_seo_redirect_table->display();
 		?>
 	</form>
 </div>

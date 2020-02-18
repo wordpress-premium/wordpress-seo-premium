@@ -32,8 +32,8 @@ class WPSEO_Redirect_Sitemap_Filter implements WPSEO_WordPress_Integration {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'wpseo_sitemap_entry', array( $this, 'filter_sitemap_entry' ) );
-		add_action( 'wpseo_premium_redirects_modified', array( $this, 'clear_sitemap_cache' ) );
+		add_filter( 'wpseo_sitemap_entry', [ $this, 'filter_sitemap_entry' ] );
+		add_action( 'Yoast\WP\SEO\redirects_modified', [ $this, 'clear_sitemap_cache' ] );
 	}
 
 	/**

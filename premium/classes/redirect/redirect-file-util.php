@@ -42,7 +42,7 @@ class WPSEO_Redirect_File_Util {
 				new Yoast_Notification(
 					/* translators: %s expands to the file path that we tried to write to */
 					sprintf( __( "We're unable to create the directory %s", 'wordpress-seo-premium' ), $basedir ),
-					array( 'type' => 'error' )
+					[ 'type' => 'error' ]
 				)
 			);
 
@@ -71,7 +71,7 @@ class WPSEO_Redirect_File_Util {
 	 * @param string $file_path    The path to write the content to.
 	 * @param string $file_content The content that will be saved.
 	 *
-	 * @return int
+	 * @return bool True on successful file write.
 	 */
 	public static function write_file( $file_path, $file_content ) {
 		$has_written = false;
@@ -84,7 +84,7 @@ class WPSEO_Redirect_File_Util {
 				new Yoast_Notification(
 					/* translators: %s expands to the file path that we tried to write to */
 					sprintf( __( "We're unable to write data to the file %s", 'wordpress-seo-premium' ), $file_path ),
-					array( 'type' => 'error' )
+					[ 'type' => 'error' ]
 				)
 			);
 
@@ -99,12 +99,12 @@ class WPSEO_Redirect_File_Util {
 	 *
 	 * @param string $separate_file Saving the redirects in an separate apache file.
 	 *
-	 * @return null|WPSEO_Redirect_File_Exporter
+	 * @return WPSEO_Redirect_File_Exporter|null
 	 */
 	public static function get_file_exporter( $separate_file ) {
 		// Create the correct file object.
 		if ( WPSEO_Utils::is_apache() ) {
-			if ( 'on' === $separate_file ) {
+			if ( $separate_file === 'on' ) {
 				return new WPSEO_Redirect_Apache_Exporter();
 			}
 

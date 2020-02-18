@@ -41,7 +41,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 			return;
 		}
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'page_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'page_scripts' ] );
 
 		// Get all taxonomies.
 		$taxonomies = get_taxonomies();
@@ -50,17 +50,17 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		if ( count( $taxonomies ) > 0 ) {
 			foreach ( $taxonomies as $taxonomy ) {
 				// Add old URL field to term edit screen.
-				add_action( $taxonomy . '_edit_form_fields', array( $this, 'old_url_field' ), 10, 2 );
+				add_action( $taxonomy . '_edit_form_fields', [ $this, 'old_url_field' ], 10, 2 );
 			}
 		}
 
-		add_action( 'wp_ajax_inline-save-tax', array( $this, 'set_old_url_quick_edit' ), 1 );
+		add_action( 'wp_ajax_inline-save-tax', [ $this, 'set_old_url_quick_edit' ], 1 );
 
 		// Detect the term slug change.
-		add_action( 'edited_term', array( $this, 'detect_slug_change' ), 10, 3 );
+		add_action( 'edited_term', [ $this, 'detect_slug_change' ], 10, 3 );
 
 		// Detect a term delete.
-		add_action( 'delete_term_taxonomy', array( $this, 'detect_term_delete' ) );
+		add_action( 'delete_term_taxonomy', [ $this, 'detect_term_delete' ] );
 	}
 
 	/**
@@ -112,19 +112,39 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Detect if the slug changed, hooked into 'post_updated'.
 	 *
-	 * @param integer  $term_id  The term id.
-	 * @param integer  $tt_id    The term taxonomy id.
+	 * @param int      $term_id  The term id.
+	 * @param int      $tt_id    The term taxonomy id.
 	 * @param stdClass $taxonomy Object with the values of the taxonomy.
 	 *
 	 * @return bool
 	 */
 	public function detect_slug_change( $term_id, $tt_id, $taxonomy ) {
 		/**
-		 * Filter: 'wpseo_premium_term_redirect_slug_change' - Check if a redirect should be created on term slug change.
+		 * Filter: 'wpseo_premium_term_redirect_slug_change' - Check if a redirect should be created
+		 * on term slug change.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\term_redirect_slug_change'} filter instead.
 		 *
 		 * @api bool unsigned
 		 */
-		if ( apply_filters( 'wpseo_premium_term_redirect_slug_change', false ) === true ) {
+		$create_redirect = apply_filters_deprecated(
+			'wpseo_premium_term_redirect_slug_change',
+			[ false ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\term_redirect_slug_change'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\term_redirect_slug_change' - Check if a redirect should be created
+		 * on term slug change.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api bool unsigned
+		 */
+		if ( apply_filters( 'Yoast\WP\SEO\term_redirect_slug_change', $create_redirect ) === true ) {
 			return true;
 		}
 
@@ -154,7 +174,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Offer to create a redirect from the term that is about to get deleted.
 	 *
-	 * @param integer $term_id The term id that will be deleted.
+	 * @param int $term_id The term id that will be deleted.
 	 */
 	public function detect_term_delete( $term_id ) {
 		// When term is a menu don't show the redirect creation notice.
@@ -168,7 +188,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$term_row = $wpdb->get_row( $wpdb->prepare( 'SELECT `term_id`, `taxonomy` FROM `' . $wpdb->term_taxonomy . '` WHERE `term_taxonomy_id` = %d ', $term_id ) );
 
 		// Check result.
-		if ( null !== $term_row ) {
+		if ( $term_row !== null ) {
 
 			// Get the URL.
 			$url = $this->get_target_url( get_term( $term_row->term_id, $term_row->taxonomy ), $term_row->taxonomy );
@@ -281,7 +301,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool True when page is a term edit/overview page.
 	 */
 	protected function is_term_page( $current_page ) {
-		return ( in_array( $current_page, array( 'edit-tags.php', 'term.php' ), true ) );
+		return ( in_array( $current_page, [ 'edit-tags.php', 'term.php' ], true ) );
 	}
 
 	/**

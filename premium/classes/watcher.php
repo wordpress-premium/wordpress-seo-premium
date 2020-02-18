@@ -70,17 +70,46 @@ abstract class WPSEO_Watcher {
 	 *
 	 * This method will also apply filter for $notification_type to determine if notification has to be shown
 	 *
-	 * @param string $message           The message that will be added to the notification.
-	 * @param string $notification_type The type of the notification.
-	 * @param string $id                ID that will be given to the notice.
+	 * @param string      $message           The message that will be added to the notification.
+	 * @param string      $notification_type The type of the notification.
+	 * @param string|null $id                ID that will be given to the notice.
 	 */
 	protected function create_notification( $message, $notification_type, $id = null ) {
 		$show_notification = true;
-		$show_notification = apply_filters( 'wpseo_enable_notification_' . $this->watch_type . '_' . $notification_type, $show_notification );
+
+		/**
+		 * Filter: "wpseo_enable_notification_{$watch_type}_{$notification_type}" - Filter whether or not the
+		 * notification for a given watch type and notification type should be shown.
+		 *
+		 * @deprecated 12.9.0. Use the {@see "Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}"} filter instead.
+		 *
+		 * @api bool $show_notification Defaults to true.
+		 */
+		$show_notification = apply_filters_deprecated(
+			'wpseo_enable_notification_' . $this->watch_type . '_' . $notification_type,
+			[ $show_notification ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}'
+		);
+
+		/**
+		 * Filter: "Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}" - Filter whether or
+		 * not the notification for a given watch type and notification type should be shown.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api bool $show_notification Defaults to true.
+		 */
+		$show_notification = apply_filters(
+			"Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}",
+			$show_notification
+		);
 
 		if ( $show_notification ) {
 			// Add the message to the notifications center.
-			$arguments = array( 'type' => 'updated' );
+			$arguments = [ 'type' => 'updated' ];
 			if ( ! empty( $id ) ) {
 				$arguments['id'] = $id;
 			}
@@ -138,11 +167,10 @@ abstract class WPSEO_Watcher {
 	 */
 	protected function create_redirect( $old_url, $new_url, $header_code = 301 ) {
 		// The URL redirect manager.
-		$redirect_manager = new WPSEO_Redirect_Manager();
-		$redirect         = new WPSEO_Redirect( $old_url, $new_url, $header_code );
+		$redirect = new WPSEO_Redirect( $old_url, $new_url, $header_code );
 
 		// Create the redirect.
-		$redirect_manager->create_redirect( $redirect );
+		$this->get_redirect_manager()->create_redirect( $redirect );
 
 		return $redirect;
 	}
@@ -268,5 +296,20 @@ abstract class WPSEO_Watcher {
 		$redirect_url_format = new WPSEO_Redirect_Url_Formatter( $url );
 
 		return home_url( $redirect_url_format->format_without_subdirectory( get_home_url() ) );
+	}
+
+	/**
+	 * Retrieves an instance of the redirect manager.
+	 *
+	 * @return WPSEO_Redirect_Manager The redirect manager.
+	 */
+	protected function get_redirect_manager() {
+		static $redirect_manager;
+
+		if ( $redirect_manager === null ) {
+			$redirect_manager = new WPSEO_Redirect_Manager();
+		}
+
+		return $redirect_manager;
 	}
 }

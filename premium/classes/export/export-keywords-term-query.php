@@ -75,20 +75,20 @@ class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 	 */
 	public function get_data( $page = 1 ) {
 
-		if ( $this->columns === array() ) {
-			return array();
+		if ( $this->columns === [] ) {
+			return [];
 		}
 
 		$taxonomies = get_taxonomies(
-			array(
+			[
 				'public'  => true,
 				'show_ui' => true,
-			),
+			],
 			'names'
 		);
 
 		if ( empty( $taxonomies ) ) {
-			return array();
+			return [];
 		}
 
 		// Pages have a starting index of 1, we need to convert to a 0 based offset.
@@ -120,7 +120,7 @@ class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 	public function set_columns( array $columns ) {
 		$this->columns = $columns;
 
-		$this->selects = array( 'terms.term_id', 'taxonomies.taxonomy' );
+		$this->selects = [ 'terms.term_id', 'taxonomies.taxonomy' ];
 
 		if ( in_array( 'title', $this->columns, true ) ) {
 			$this->selects[] = 'terms.name';

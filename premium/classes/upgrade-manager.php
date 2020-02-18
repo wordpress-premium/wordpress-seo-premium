@@ -54,31 +54,39 @@ class WPSEO_Upgrade_Manager {
 		}
 
 		if ( version_compare( $version_number, '2.3', '<' ) ) {
-			add_action( 'wp', array( 'WPSEO_Redirect_Upgrade', 'import_redirects_2_3' ), 11 );
-			add_action( 'admin_head', array( 'WPSEO_Redirect_Upgrade', 'import_redirects_2_3' ), 11 );
+			add_action( 'wp', [ 'WPSEO_Redirect_Upgrade', 'import_redirects_2_3' ], 11 );
+			add_action( 'admin_head', [ 'WPSEO_Redirect_Upgrade', 'import_redirects_2_3' ], 11 );
 		}
 
 		if ( version_compare( $version_number, '3.1', '<' ) ) {
-			add_action( 'wp', array( 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ), 12 );
-			add_action( 'admin_head', array( 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ), 12 );
+			add_action( 'wp', [ 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ], 12 );
+			add_action( 'admin_head', [ 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ], 12 );
 		}
 
 		if ( version_compare( $version_number, '4.7', '<' ) ) {
-			add_action( 'wp', array( 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_7' ), 12 );
-			add_action( 'admin_head', array( 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_7' ), 12 );
+			add_action( 'wp', [ 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_7' ], 12 );
+			add_action( 'admin_head', [ 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_7' ], 12 );
 		}
 
 		if ( version_compare( $version_number, '4.8', '<' ) ) {
-			add_action( 'wp', array( 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_8' ), 12 );
-			add_action( 'admin_head', array( 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_8' ), 12 );
+			add_action( 'wp', [ 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_8' ], 12 );
+			add_action( 'admin_head', [ 'WPSEO_Premium_Prominent_Words_Versioning', 'upgrade_4_8' ], 12 );
 		}
 
 		if ( version_compare( $version_number, '9.8-RC0', '<' ) ) {
-			add_action( 'init', array( $this, 'upgrade_9_8' ), 12 );
+			add_action( 'init', [ $this, 'upgrade_9_8' ], 12 );
 		}
 
 		if ( version_compare( $version_number, '10.3', '<' ) ) {
-			add_action( 'init', array( $this, 'upgrade_11' ), 12 );
+			add_action( 'init', [ $this, 'upgrade_11' ], 12 );
+		}
+
+		if ( version_compare( $version_number, '12.8', '<' ) ) {
+			add_action( 'init', [ 'WPSEO_Premium_Prominent_Words_Recalculation_Notifier', 'upgrade_12_8' ], 12 );
+		}
+
+		if ( version_compare( $version_number, '13.0-RC0', '<' ) ) {
+			add_action( 'init', [ 'WPSEO_Redirect_Upgrade', 'upgrade_13_0' ], 12 );
 		}
 	}
 
@@ -123,9 +131,9 @@ class WPSEO_Upgrade_Manager {
 		$retry = false;
 
 		$new_redirects = get_option( WPSEO_Redirect_Option::OPTION, null );
-		if ( null === $new_redirects ) {
-			$old_plain_redirects = get_option( WPSEO_Redirect_Option::OLD_OPTION_PLAIN, array() );
-			$old_regex_redirects = get_option( WPSEO_Redirect_Option::OLD_OPTION_REGEX, array() );
+		if ( $new_redirects === null ) {
+			$old_plain_redirects = get_option( WPSEO_Redirect_Option::OLD_OPTION_PLAIN, [] );
+			$old_regex_redirects = get_option( WPSEO_Redirect_Option::OLD_OPTION_REGEX, [] );
 
 			if ( ! empty( $old_plain_redirects ) || ! empty( $old_regex_redirects ) ) {
 				$retry = true;
@@ -151,8 +159,8 @@ class WPSEO_Upgrade_Manager {
 				WPSEO_Redirect_Upgrade::upgrade_3_1();
 				return;
 			}
-			add_action( 'wp', array( 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ), 12 );
-			add_action( 'admin_head', array( 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ), 12 );
+			add_action( 'wp', [ 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ], 12 );
+			add_action( 'admin_head', [ 'WPSEO_Redirect_Upgrade', 'upgrade_3_1' ], 12 );
 		}
 	}
 
@@ -167,8 +175,8 @@ class WPSEO_Upgrade_Manager {
 			/**
 			 * Upgrade redirects
 			 */
-			add_action( 'wp', array( 'WPSEO_Redirect_Upgrade', 'upgrade_1_2_0' ), 10 );
-			add_action( 'admin_head', array( 'WPSEO_Redirect_Upgrade', 'upgrade_1_2_0' ), 10 );
+			add_action( 'wp', [ 'WPSEO_Redirect_Upgrade', 'upgrade_1_2_0' ], 10 );
+			add_action( 'admin_head', [ 'WPSEO_Redirect_Upgrade', 'upgrade_1_2_0' ], 10 );
 		}
 	}
 

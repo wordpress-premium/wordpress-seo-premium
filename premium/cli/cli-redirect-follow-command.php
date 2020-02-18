@@ -22,7 +22,7 @@ final class WPSEO_CLI_Redirect_Follow_Command extends WPSEO_CLI_Redirect_Base_Co
 	 *
 	 * @var array<string>
 	 */
-	private $stack = array();
+	private $stack = [];
 
 	/**
 	 * Follows a Yoast SEO redirect chain to get the final target it resolves to.

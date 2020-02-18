@@ -48,24 +48,24 @@ class WPSEO_Redirect_Ajax {
 
 		// The method always returns the added redirect.
 		if ( $this->redirect_manager->create_redirect( $redirect ) ) {
-			$response = array(
+			$response = [
 				'origin' => $redirect->get_origin(),
 				'target' => $redirect->get_target(),
 				'type'   => $redirect->get_type(),
-				'info'   => array(
+				'info'   => [
 					'hasTrailingSlash' => WPSEO_Redirect_Util::requires_trailing_slash( $redirect->get_target() ),
 					'isTargetRelative' => WPSEO_Redirect_Util::is_relative_url( $redirect->get_target() ),
-				),
-			);
+				],
+			];
 		}
 		else {
 			// Set the value error.
-			$error = array(
+			$error = [
 				'type'    => 'error',
 				'message' => __( 'Unknown error. Failed to create redirect.', 'wordpress-seo-premium' ),
-			);
+			];
 
-			$response = array( 'error' => $error );
+			$response = [ 'error' => $error ];
 		}
 
 		// Response.
@@ -86,20 +86,20 @@ class WPSEO_Redirect_Ajax {
 
 		// The method always returns the added redirect.
 		if ( $this->redirect_manager->update_redirect( $current_redirect, $new_redirect ) ) {
-			$response = array(
+			$response = [
 				'origin' => $new_redirect->get_origin(),
 				'target' => $new_redirect->get_target(),
 				'type'   => $new_redirect->get_type(),
-			);
+			];
 		}
 		else {
 			// Set the value error.
-			$error = array(
+			$error = [
 				'type'    => 'error',
 				'message' => __( 'Unknown error. Failed to update redirect.', 'wordpress-seo-premium' ),
-			);
+			];
 
-			$response = array( 'error' => $error );
+			$response = [ 'error' => $error ];
 		}
 
 		// Response.
@@ -127,7 +127,7 @@ class WPSEO_Redirect_Ajax {
 		if ( $error->get_type() === 'error' || ( $error->get_type() === 'warning' && $ignore_warning === 'false' ) ) {
 			wp_die(
 				// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug/methods can't be whitelisted yet.
-				WPSEO_Utils::format_json_encode( array( 'error' => $error->to_array() ) )
+				WPSEO_Utils::format_json_encode( [ 'error' => $error->to_array() ] )
 			);
 		}
 	}
@@ -139,14 +139,14 @@ class WPSEO_Redirect_Ajax {
 	 */
 	private function set_hooks( $hook_suffix ) {
 		// Add the new redirect.
-		add_action( 'wp_ajax_wpseo_add_redirect_' . $hook_suffix, array( $this, 'ajax_add_redirect' ) );
+		add_action( 'wp_ajax_wpseo_add_redirect_' . $hook_suffix, [ $this, 'ajax_add_redirect' ] );
 
 		// Update an existing redirect.
-		add_action( 'wp_ajax_wpseo_update_redirect_' . $hook_suffix, array( $this, 'ajax_update_redirect' ) );
+		add_action( 'wp_ajax_wpseo_update_redirect_' . $hook_suffix, [ $this, 'ajax_update_redirect' ] );
 
 		// Add URL response code check AJAX.
 		if ( ! has_action( 'wp_ajax_wpseo_check_url' ) ) {
-			add_action( 'wp_ajax_wpseo_check_url', array( $this, 'ajax_check_url' ) );
+			add_action( 'wp_ajax_wpseo_check_url', [ $this, 'ajax_check_url' ] );
 		}
 	}
 

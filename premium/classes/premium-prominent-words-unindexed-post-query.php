@@ -15,7 +15,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	 *
 	 * @var array
 	 */
-	protected $totals = array();
+	protected $totals = [];
 
 	/**
 	 * Returns the total amount of posts.
@@ -68,14 +68,14 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	public function get_totals( $post_types ) {
 		global $wpdb;
 
-		if ( $post_types === array() ) {
+		if ( $post_types === [] ) {
 			return $post_types;
 		}
 
-		$replacements = array(
+		$replacements = [
 			WPSEO_Premium_Prominent_Words_Versioning::POST_META_NAME,
 			WPSEO_Premium_Prominent_Words_Versioning::determine_version_number(),
-		);
+		];
 		$replacements = array_merge( $replacements, $post_types );
 
 		$results = $wpdb->get_results(
@@ -92,7 +92,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 			)
 		);
 
-		$totals = array();
+		$totals = [];
 
 		foreach ( $results as $result ) {
 			$totals[ $this->determine_rest_endpoint_for_post_type( $result->post_type ) ] = (int) $result->total;
@@ -130,7 +130,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	protected function get_post_types() {
 		$prominent_words_support = new WPSEO_Premium_Prominent_Words_Support();
 
-		return array_filter( $prominent_words_support->get_supported_post_types(), array( 'WPSEO_Post_Type', 'is_rest_enabled' ) );
+		return array_filter( $prominent_words_support->get_supported_post_types(), [ 'WPSEO_Post_Type', 'is_rest_enabled' ] );
 	}
 
 	/**
@@ -148,14 +148,14 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 			$post_types = (array) $post_types;
 		}
 
-		if ( $post_types === array() ) {
+		if ( $post_types === [] ) {
 			return $post_types;
 		}
 
-		$replacements   = array(
+		$replacements   = [
 			WPSEO_Premium_Prominent_Words_Versioning::POST_META_NAME,
 			WPSEO_Premium_Prominent_Words_Versioning::determine_version_number(),
-		);
+		];
 		$replacements   = array_merge( $replacements, $post_types );
 		$replacements[] = $limit;
 
@@ -182,9 +182,9 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	/**
 	 * Returns the array with supported post statuses.
 	 *
-	 * @return array The supported post statuses.
+	 * @return string[] The supported post statuses.
 	 */
 	public function get_supported_post_statuses() {
-		return array( 'future', 'draft', 'pending', 'private', 'publish' );
+		return [ 'future', 'draft', 'pending', 'private', 'publish' ];
 	}
 }

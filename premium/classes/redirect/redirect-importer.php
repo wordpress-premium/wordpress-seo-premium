@@ -46,19 +46,19 @@ class WPSEO_Redirect_Importer {
 	 *
 	 * @param WPSEO_Redirect[] $redirects The redirects to import.
 	 *
-	 * @return array The import statistics.
+	 * @return int[] The import statistics.
 	 */
 	public function import( array $redirects ) {
-		array_walk( $redirects, array( $this, 'add_redirect' ) );
+		array_walk( $redirects, [ $this, 'add_redirect' ] );
 
 		if ( $this->total_imported > 0 ) {
 			$this->save_import();
 		}
 
-		return array(
+		return [
 			'total_redirects' => count( $redirects ),
 			'total_imported'  => $this->total_imported,
-		);
+		];
 	}
 
 	/**
@@ -81,7 +81,7 @@ class WPSEO_Redirect_Importer {
 	 *
 	 * @param WPSEO_Redirect $redirect The redirect to add.
 	 *
-	 * @retun void
+	 * @return void
 	 */
 	protected function add_redirect( $redirect ) {
 		if ( ! $this->redirect_option->add( $redirect ) ) {

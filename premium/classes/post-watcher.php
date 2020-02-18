@@ -18,26 +18,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	protected $watch_type = 'post';
 
 	/**
-	 * Instance of the WPSEO_Redirect_Manager class.
-	 *
-	 * @var WPSEO_Redirect_Manager
-	 */
-	private $redirect_manager;
-
-	/**
-	 * Constructor of class.
-	 *
-	 * @param WPSEO_Redirect_Manager|null $redirect_manager Redirect Manager to use.
-	 */
-	public function __construct( WPSEO_Redirect_Manager $redirect_manager = null ) {
-		if ( $redirect_manager === null ) {
-			$redirect_manager = new WPSEO_Redirect_Manager();
-		}
-
-		$this->redirect_manager = $redirect_manager;
-	}
-
-	/**
 	 * Registers the hooks.
 	 *
 	 * @codeCoverageIgnore Method used WordPress functions.
@@ -47,7 +27,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	public function register_hooks() {
 		global $pagenow;
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'page_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'page_scripts' ] );
 
 		// Only set the hooks for the page where they are needed.
 		if ( ! $this->is_rest_request() && ! $this->post_redirect_can_be_made( $pagenow ) ) {
@@ -55,16 +35,16 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		}
 
 		// Detect a post slug change.
-		add_action( 'post_updated', array( $this, 'detect_slug_change' ), 12, 3 );
+		add_action( 'post_updated', [ $this, 'detect_slug_change' ], 12, 3 );
 
 		// Detect a post trash.
-		add_action( 'wp_trash_post', array( $this, 'detect_post_trash' ) );
+		add_action( 'wp_trash_post', [ $this, 'detect_post_trash' ] );
 
 		// Detect a post untrash.
-		add_action( 'untrashed_post', array( $this, 'detect_post_untrash' ) );
+		add_action( 'untrashed_post', [ $this, 'detect_post_untrash' ] );
 
 		// Detect a post delete.
-		add_action( 'before_delete_post', array( $this, 'detect_post_delete' ) );
+		add_action( 'before_delete_post', [ $this, 'detect_post_delete' ] );
 	}
 
 	/**
@@ -105,13 +85,17 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Detect if the slug changed, hooked into 'post_updated'.
 	 *
-	 * @param integer $post_id     The ID of the post.
+	 * @param int     $post_id     The ID of the post.
 	 * @param WP_Post $post        The post with the new values.
 	 * @param WP_Post $post_before The post with the previous values.
 	 *
 	 * @return bool
 	 */
 	public function detect_slug_change( $post_id, $post, $post_before ) {
+		// Bail if this is a multisite installation and the site has been switched.
+		if ( is_multisite() && ms_is_switched() ) {
+			return false;
+		}
 
 		if ( ! $this->is_redirect_relevant( $post, $post_before ) ) {
 			return false;
@@ -120,14 +104,39 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$this->remove_colliding_redirect( $post, $post_before );
 
 		/**
-		 * Filter: 'wpseo_premium_post_redirect_slug_change' - Check if a redirect should be created on post slug change.
+		 * Filter: 'wpseo_premium_post_redirect_slug_change' - Check if a redirect should be created
+		 * on post slug change.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\post_redirect_slug_change'} filter instead.
 		 *
 		 * @api bool    Determines if a redirect should be created for this post slug change.
-		 * @api integer The ID of the post.
+		 * @api int     The ID of the post.
 		 * @api WP_Post The current post object.
 		 * @api WP_Post The previous post object.
 		 */
-		if ( apply_filters( 'wpseo_premium_post_redirect_slug_change', false, $post_id, $post, $post_before ) === true ) {
+		$create_redirect = apply_filters_deprecated(
+			'wpseo_premium_post_redirect_slug_change',
+			[ false, $post_id, $post, $post_before ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\post_redirect_slug_change'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\post_redirect_slug_change' - Check if a redirect should be created
+		 * on post slug change.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api bool    Determines if a redirect should be created for this post slug change.
+		 * @api int     The ID of the post.
+		 * @api WP_Post The current post object.
+		 * @api WP_Post The previous post object.
+		 */
+		$create_redirect = apply_filters( 'Yoast\WP\SEO\post_redirect_slug_change', $create_redirect, $post_id, $post, $post_before );
+
+		if ( $create_redirect === true ) {
 			return true;
 		}
 
@@ -157,7 +166,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return void
 	 */
 	protected function remove_colliding_redirect( $post, $post_before ) {
-		$redirect = $this->redirect_manager->get_redirect( $this->get_target_url( $post ) );
+		$redirect = $this->get_redirect_manager()->get_redirect( $this->get_target_url( $post ) );
 		if ( $redirect === false ) {
 			return;
 		}
@@ -166,7 +175,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 			return;
 		}
 
-		$this->redirect_manager->delete_redirects( array( $redirect ) );
+		$this->get_redirect_manager()->delete_redirects( [ $redirect ] );
 	}
 
 	/**
@@ -180,13 +189,36 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	protected function is_redirect_relevant( $post, $post_before ) {
 		// Check if the post type is enabled for redirects.
 		$post_type = get_post_type( $post );
+
 		/**
-		 * Filter: 'wpseo_premium_redirect_post_type' - Check if a redirect should be created on post slug change for specified post type.
+		 * Filter: 'wpseo_premium_redirect_post_type' - Check if a redirect should be created
+		 * on post slug change for specified post type.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\redirect_post_type'} filter instead.
 		 *
 		 * @api bool   Determines if a redirect should be created for this post type.
 		 * @api string The post type that is being checked for.
 		 */
-		$post_type_accessible = apply_filters( 'wpseo_premium_redirect_post_type', WPSEO_Post_Type::is_post_type_accessible( $post_type ), $post_type );
+		$post_type_accessible = apply_filters_deprecated(
+			'wpseo_premium_redirect_post_type',
+			[ WPSEO_Post_Type::is_post_type_accessible( $post_type ), $post_type ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\redirect_post_type'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\redirect_post_type' - Check if a redirect should be created
+		 * on post slug change for specified post type.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api bool   Determines if a redirect should be created for this post type.
+		 * @api string The post type that is being checked for.
+		 */
+		$post_type_accessible = apply_filters( 'Yoast\WP\SEO\redirect_post_type', $post_type_accessible, $post_type );
+
 		if ( ! $post_type_accessible ) {
 			return false;
 		}
@@ -207,24 +239,45 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Checks whether the given post is public or not.
 	 *
-	 * @param integer $post_id The current post ID.
+	 * @param int $post_id The current post ID.
 	 *
 	 * @return bool
 	 */
 	private function check_public_post_status( $post_id ) {
-		$public_post_statuses = array(
+		$public_post_statuses = [
 			'publish',
 			'static',
 			'private',
-		);
+		];
 
 		/**
-		 * Filter: 'wpseo_public_post_statuses' - Allow changing the statuses that are expected to have caused a URL to be public.
+		 * Filter: 'wpseo_public_post_statuses' - Allow changing the statuses that are expected
+		 * to have caused a URL to be public.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\public_post_statuses'} filter instead.
 		 *
 		 * @api array $published_post_statuses The statuses that'll be treated as published.
 		 * @param object $post The post object we're doing the published check for.
 		 */
-		$public_post_statuses = apply_filters( 'wpseo_public_post_statuses', $public_post_statuses, $post_id );
+		$public_post_statuses = apply_filters_deprecated(
+			'wpseo_public_post_statuses',
+			[ $public_post_statuses, $post_id ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\public_post_statuses'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\public_post_statuses' - Allow changing the statuses that are expected
+		 * to have caused a URL to be public.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array $published_post_statuses The statuses that'll be treated as published.
+		 * @param object $post The post object we're doing the published check for.
+		 */
+		$public_post_statuses = apply_filters( 'Yoast\WP\SEO\public_post_statuses', $public_post_statuses, $post_id );
 
 		return ( in_array( get_post_status( $post_id ), $public_post_statuses, true ) );
 	}
@@ -232,7 +285,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Offer to create a redirect from the post that is about to get trashed.
 	 *
-	 * @param integer $post_id The current post ID.
+	 * @param int $post_id The current post ID.
 	 */
 	public function detect_post_trash( $post_id ) {
 
@@ -259,7 +312,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Offer to create a redirect from the post that is about to get  restored from the trash.
 	 *
-	 * @param integer $post_id The current post ID.
+	 * @param int $post_id The current post ID.
 	 */
 	public function detect_post_untrash( $post_id ) {
 		$redirect = $this->check_if_redirect_needed( $post_id, true );
@@ -285,7 +338,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Offer to create a redirect from the post that is about to get deleted.
 	 *
-	 * @param integer $post_id The current post ID.
+	 * @param int $post_id The current post ID.
 	 */
 	public function detect_post_delete( $post_id ) {
 
@@ -315,9 +368,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool
 	 */
 	protected function get_redirect( $url ) {
-		$redirect_manager = new WPSEO_Redirect_Manager();
-
-		return $redirect_manager->get_redirect( $url );
+		return $this->get_redirect_manager()->get_redirect( $url );
 	}
 
 	/**
@@ -325,8 +376,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 *
 	 * This method will check if URL as redirect already exists.
 	 *
-	 * @param integer $post_id      The current post ID.
-	 * @param bool    $should_exist Boolean to determine if the URL should be exist as a redirect.
+	 * @param int  $post_id      The current post ID.
+	 * @param bool $should_exist Boolean to determine if the URL should be exist as a redirect.
 	 *
 	 * @return WPSEO_Redirect|string|bool
 	 */
@@ -373,14 +424,34 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$post_types = WPSEO_Post_Type::get_accessible_post_types();
 
 		/**
-		 * Filter: 'wpseo_premium_include_automatic_redirection_post_types' - Post types to create automatic redirects for.
+		 * Filter: 'wpseo_premium_include_automatic_redirection_post_types' - Post types to create
+		 * automatic redirects for.
+		 *
+		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\automatic_redirection_post_types'} filter instead.
 		 *
 		 * @api array $included_post_types Array with the post type names to include to automatic redirection.
 		 */
-		$included_post_types = apply_filters( 'wpseo_premium_include_automatic_redirection_post_types', $post_types );
+		$included_post_types = apply_filters_deprecated(
+			'wpseo_premium_include_automatic_redirection_post_types',
+			[ $post_types ],
+			'YoastSEO Premium 12.9.0',
+			'Yoast\WP\SEO\automatic_redirection_post_types'
+		);
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\automatic_redirection_post_types' - Post types to create
+		 * automatic redirects for.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 12.9.0
+		 *
+		 * @api array $included_post_types Array with the post type names to include to automatic redirection.
+		 */
+		$included_post_types = apply_filters( 'Yoast\WP\SEO\automatic_redirection_post_types', $included_post_types );
 
 		if ( ! is_array( $included_post_types ) ) {
-			$included_post_types = array();
+			$included_post_types = [];
 		}
 
 		return $included_post_types;
@@ -483,7 +554,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool True when page is a post edit/overview page.
 	 */
 	protected function is_post_page( $current_page ) {
-		return ( in_array( $current_page, array( 'edit.php', 'post.php' ), true ) );
+		return ( in_array( $current_page, [ 'edit.php', 'post.php' ], true ) );
 	}
 
 	/**

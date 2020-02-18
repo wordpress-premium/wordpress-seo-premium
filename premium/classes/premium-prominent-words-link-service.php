@@ -27,7 +27,7 @@ class WPSEO_Premium_Prominent_Words_Link_Service {
 
 		$terms_to_save = $request->get_param( WPSEO_Premium_Prominent_Words_Registration::TERM_NAME );
 		if ( ! $terms_to_save ) {
-			$terms_to_save = array();
+			$terms_to_save = [];
 		}
 
 		wp_set_object_terms( $post_id, $terms_to_save, WPSEO_Premium_Prominent_Words_Registration::TERM_NAME );

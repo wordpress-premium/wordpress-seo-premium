@@ -22,7 +22,7 @@ class WPSEO_Redirect_Handler {
 	 *
 	 * @var array
 	 */
-	protected $url_matches = array();
+	protected $url_matches = [];
 
 	/**
 	 * Is the current page being redirected.
@@ -130,7 +130,7 @@ class WPSEO_Redirect_Handler {
 	/**
 	 * Replaces the $regex vars with URL matches.
 	 *
-	 * @param array $matches Array with the matches from the matching redirect.
+	 * @param string[] $matches Array with the matches from the matching redirect.
 	 *
 	 * @return string The replaced URL.
 	 */
@@ -235,12 +235,12 @@ class WPSEO_Redirect_Handler {
 		// Suppress warning: a faulty redirect will give a warning and not an exception. So we can't catch it.
 		// See issue: https://github.com/Yoast/wordpress-seo-premium/issues/662.
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		if ( 1 === @preg_match( "`{$regex}`", $this->request_url, $this->url_matches ) ) {
+		if ( @preg_match( "`{$regex}`", $this->request_url, $this->url_matches ) === 1 ) {
 
 			// Replace the $regex vars with URL matches.
 			$redirect_url = preg_replace_callback(
 				'/\$[0-9]+/',
-				array( $this, 'format_regex_redirect_url' ),
+				[ $this, 'format_regex_redirect_url' ],
 				$redirect['url']
 			);
 
@@ -248,7 +248,7 @@ class WPSEO_Redirect_Handler {
 		}
 
 		// Reset url_matches.
-		$this->url_matches = array();
+		$this->url_matches = [];
 	}
 
 	/**
@@ -265,7 +265,7 @@ class WPSEO_Redirect_Handler {
 			return $redirects[ $option ];
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -284,14 +284,12 @@ class WPSEO_Redirect_Handler {
 			return;
 		}
 
-		$redirect_types_without_target = array( 410, 451 );
+		$redirect_types_without_target = [ 410, 451 ];
 		if ( in_array( $redirect_type, $redirect_types_without_target, true ) ) {
 			$this->handle_redirect_without_target( $redirect_type );
 
 			return;
 		}
-
-		$this->add_redirect_by_header();
 
 		$this->redirect( $redirect_url, $redirect_type );
 	}
@@ -314,7 +312,7 @@ class WPSEO_Redirect_Handler {
 	 */
 	protected function load_php_redirects() {
 
-		if ( defined( 'WPSEO_DISABLE_PHP_REDIRECTS' ) && true === WPSEO_DISABLE_PHP_REDIRECTS ) {
+		if ( defined( 'WPSEO_DISABLE_PHP_REDIRECTS' ) && WPSEO_DISABLE_PHP_REDIRECTS === true ) {
 			return false;
 		}
 
@@ -343,7 +341,7 @@ class WPSEO_Redirect_Handler {
 	 * @return string
 	 */
 	protected function get_request_uri() {
-		$options     = array( 'options' => array( 'default' => '' ) );
+		$options     = [ 'options' => [ 'default' => '' ] ];
 		$request_uri = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL, $options );
 
 		// Because there isn't an usable value, try the fallback.
@@ -364,7 +362,7 @@ class WPSEO_Redirect_Handler {
 	 * @return array The normalized redirects.
 	 */
 	protected function normalize_redirects( $redirects ) {
-		$normalized_redirects = array();
+		$normalized_redirects = [];
 
 		foreach ( $redirects as $origin => $redirect ) {
 			$normalized_redirects[ rawurldecode( $origin ) ] = $redirect;
@@ -418,7 +416,7 @@ class WPSEO_Redirect_Handler {
 	 *
 	 * This will add a slash if there isn't a slash or it will remove a trailing slash when there isn't one.
 	 *
-	 * @discuss: Maybe we should add slashes to all the values we handle instead of using a fallback.
+	 * @todo Discuss: Maybe we should add slashes to all the values we handle instead of using a fallback.
 	 *
 	 * @param string $url The URL that have to be matched.
 	 *
@@ -427,10 +425,10 @@ class WPSEO_Redirect_Handler {
 	protected function find_url_fallback( $url ) {
 		$no_trailing_slash = rtrim( $url, '/' );
 
-		$checks = array(
+		$checks = [
 			'no_trailing_slash' => $no_trailing_slash,
 			'trailing_slash'    => $no_trailing_slash . '/',
-		);
+		];
 
 		foreach ( $checks as $check ) {
 			$redirect_url = $this->search( $check );
@@ -504,7 +502,7 @@ class WPSEO_Redirect_Handler {
 		$blog_details = get_blog_details();
 		if ( $blog_details && ! empty( $blog_details->path ) ) {
 			$blog_path = ltrim( $blog_details->path, '/' );
-			if ( ! empty( $blog_path ) && 0 === strpos( $target_url, $blog_path ) ) {
+			if ( ! empty( $blog_path ) && strpos( $target_url, $blog_path ) === 0 ) {
 				$target_url = substr( $target_url, strlen( $blog_path ) );
 			}
 		}
@@ -559,7 +557,7 @@ class WPSEO_Redirect_Handler {
 
 		global $wpdb;
 
-		$redirects = array();
+		$redirects = [];
 		$results   = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT option_name, option_value
@@ -586,7 +584,7 @@ class WPSEO_Redirect_Handler {
 	protected function set_template_include_hook( $template_to_set ) {
 		$this->template_file_path = $this->get_query_template( $template_to_set );
 		if ( ! empty( $this->template_file_path ) ) {
-			add_filter( 'template_include', array( $this, 'set_template_include' ) );
+			add_filter( 'template_include', [ $this, 'set_template_include' ] );
 
 			return true;
 		}
@@ -629,29 +627,12 @@ class WPSEO_Redirect_Handler {
 	 * @return void
 	 */
 	protected function handle_redirect_without_target( $redirect_type ) {
-		if ( 410 === $redirect_type ) {
-			add_action( 'wp', array( $this, 'do_410' ) );
+		if ( $redirect_type === 410 ) {
+			add_action( 'wp', [ $this, 'do_410' ] );
 		}
 
-		if ( 451 === $redirect_type ) {
-			add_action( 'wp', array( $this, 'do_451' ) );
-		}
-	}
-
-	/**
-	 * Adds a X-Redirect-By hook if needed.
-	 *
-	 * @return void
-	 */
-	protected function add_redirect_by_header() {
-		/**
-		 * Filter: 'wpseo_add_x_redirect' - can be used to remove the X-Redirect-By header Yoast SEO creates
-		 * (only available in Yoast SEO Premium, defaults to true, which is adding it)
-		 *
-		 * @api bool
-		 */
-		if ( apply_filters( 'wpseo_add_x_redirect', true ) === true ) {
-			header( 'X-Redirect-By: Yoast SEO Premium' );
+		if ( $redirect_type === 451 ) {
+			add_action( 'wp', [ $this, 'do_451' ] );
 		}
 	}
 

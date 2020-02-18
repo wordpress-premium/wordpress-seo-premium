@@ -40,7 +40,7 @@ class WPSEO_Export_Keywords_Post_Presenter implements WPSEO_Export_Keywords_Pres
 	 */
 	public function present( array $result ) {
 		if ( ! $this->validate_result( $result ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $this->columns as $column ) {
@@ -141,10 +141,10 @@ class WPSEO_Export_Keywords_Post_Presenter implements WPSEO_Export_Keywords_Pres
 	 * @return array The converted result.
 	 */
 	protected function convert_result_keywords( array $result ) {
-		$result['keywords'] = array();
+		$result['keywords'] = [];
 
 		if ( $this->column_is_present( 'keywords_score' ) ) {
-			$result['keywords_score'] = array();
+			$result['keywords_score'] = [];
 		}
 
 		if ( $this->has_primary_keyword( $result ) ) {
@@ -192,13 +192,13 @@ class WPSEO_Export_Keywords_Post_Presenter implements WPSEO_Export_Keywords_Pres
 	 */
 	protected function parse_result_keywords_json( array $result, $key ) {
 		if ( empty( $result[ $key ] ) ) {
-			return array();
+			return [];
 		}
 
 		$parsed = json_decode( $result[ $key ], true );
 
 		if ( ! $parsed ) {
-			return array();
+			return [];
 		}
 
 		return $parsed;
@@ -213,7 +213,7 @@ class WPSEO_Export_Keywords_Post_Presenter implements WPSEO_Export_Keywords_Pres
 	 * @return array  The keyword scores.
 	 */
 	protected function get_result_keywords_scores( array $result, $keywords ) {
-		$scores = array();
+		$scores = [];
 
 		$rank     = WPSEO_Rank::from_numeric_score( (int) $result['primary_keyword_score'] );
 		$scores[] = $rank->get_label();

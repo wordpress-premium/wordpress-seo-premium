@@ -9,6 +9,7 @@
  * Handles the actual requests to the prominent words endpoints.
  */
 class WPSEO_Premium_Link_Suggestions_Service {
+
 	const CACHE_PREFIX = 'wpseo_link_suggestions_';
 
 	/**
@@ -32,7 +33,7 @@ class WPSEO_Premium_Link_Suggestions_Service {
 	 * @return string[] Links for the post that are suggested.
 	 */
 	public function get_suggestions( $prominent_words ) {
-		$posts = array();
+		$posts = [];
 
 		foreach ( $prominent_words as $prominent_word ) {
 			$posts_query = $this->retrieve_posts( $prominent_word );
@@ -40,9 +41,9 @@ class WPSEO_Premium_Link_Suggestions_Service {
 			$posts = $this->count( $posts_query, $posts );
 		}
 
-		usort( $posts, array( $this, 'compare_post_count' ) );
+		usort( $posts, [ $this, 'compare_post_count' ] );
 
-		$suggestions = array_map( array( $this, 'get_post_object' ), $posts );
+		$suggestions = array_map( [ $this, 'get_post_object' ], $posts );
 
 		set_transient( $this->get_cache_key( $prominent_words ), $suggestions, WEEK_IN_SECONDS );
 
@@ -82,21 +83,21 @@ class WPSEO_Premium_Link_Suggestions_Service {
 		);
 
 		if ( ! is_array( $results ) ) {
-			$results = array();
+			$results = [];
 		}
 
 		// Fetch all the  post_ids from the results.
 		$results = wp_list_pluck( $results, 'post_id' );
 
 		// Loop through all suggestions and add the isCornerstone flag.
-		foreach ( $suggestions as & $suggestion ) {
+		foreach ( $suggestions as &$suggestion ) {
 			$suggestion['isCornerstone'] = in_array( $suggestion['id'], $results, false );
 		}
 		// Cleanup referenced value.
 		unset( $suggestion );
 
 		// Sort list to have cornerstone articles appear first.
-		usort( $suggestions, array( $this, 'sort_by_cornerstone' ) );
+		usort( $suggestions, [ $this, 'sort_by_cornerstone' ] );
 
 		return $suggestions;
 	}
@@ -109,13 +110,13 @@ class WPSEO_Premium_Link_Suggestions_Service {
 	 * @return array The tax query for the prominent word.
 	 */
 	public function get_tax_query( $term_id ) {
-		return array(
-			array(
+		return [
+			[
 				'taxonomy' => WPSEO_Premium_Prominent_Words_Registration::TERM_NAME,
 				'field'    => 'term_id',
 				'terms'    => $term_id,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -159,14 +160,13 @@ class WPSEO_Premium_Link_Suggestions_Service {
 	 * @return WP_Query The query to retrieve the posts for the prominent word.
 	 */
 	private function retrieve_posts( $prominent_word_id ) {
-		$query_args  = array(
+		$query_args = [
 			// phpcs:ignore WordPress.DB.SlowDBQuery -- Unavoidable.
 			'tax_query'    => $this->get_tax_query( $prominent_word_id ),
 			'post_status'  => 'publish',
-		);
-		$posts_query = new WP_Query( $query_args );
+		];
 
-		return $posts_query;
+		return new WP_Query( $query_args );
 	}
 
 	/**
@@ -183,10 +183,10 @@ class WPSEO_Premium_Link_Suggestions_Service {
 				$posts[ $post->ID ]['count'] += 1;
 			}
 			else {
-				$posts[ $post->ID ] = array(
+				$posts[ $post->ID ] = [
 					'count' => 1,
 					'post'  => $post,
-				);
+				];
 			}
 		}
 
@@ -220,10 +220,10 @@ class WPSEO_Premium_Link_Suggestions_Service {
 			$title = __( '(no title)', 'wordpress-seo-premium' );
 		}
 
-		return array(
+		return [
 			'id'            => $post->ID,
 			'title'         => $title,
 			'link'          => get_permalink( $post ),
-		);
+		];
 	}
 }

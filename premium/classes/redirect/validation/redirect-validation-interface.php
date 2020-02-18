@@ -13,9 +13,9 @@ interface WPSEO_Redirect_Validation {
 	/**
 	 * Validates the redirect.
 	 *
-	 * @param WPSEO_Redirect $redirect     The redirect to validate.
-	 * @param WPSEO_Redirect $old_redirect The old redirect to compare.
-	 * @param array          $redirects    Array with redirect to validate against.
+	 * @param WPSEO_Redirect      $redirect     The redirect to validate.
+	 * @param WPSEO_Redirect|null $old_redirect The old redirect to compare.
+	 * @param array|null          $redirects    Array with redirect to validate against.
 	 *
 	 * @return bool
 	 */

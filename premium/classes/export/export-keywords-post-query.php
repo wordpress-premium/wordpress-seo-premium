@@ -38,7 +38,7 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 	 *
 	 * @var array
 	 */
-	protected $joins = array();
+	protected $joins = [];
 
 	/**
 	 * Number of items to fetch per page.
@@ -80,13 +80,13 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 	 * @return array An array of associative arrays containing the keys as requested in the constructor.
 	 */
 	public function get_data( $page = 1 ) {
-		if ( $this->columns === array() ) {
-			return array();
+		if ( $this->columns === [] ) {
+			return [];
 		}
 
 		$post_types = WPSEO_Post_Type::get_accessible_post_types();
 		if ( empty( $post_types ) ) {
-			return array();
+			return [];
 		}
 
 		// Pages have a starting index of 1, we need to convert to a 0 based offset.
@@ -118,8 +118,8 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 	public function set_columns( array $columns ) {
 		$this->columns = $columns;
 
-		$this->joins   = array();
-		$this->selects = array( 'posts.ID', 'posts.post_type' );
+		$this->joins   = [];
+		$this->selects = [ 'posts.ID', 'posts.post_type' ];
 
 		if ( in_array( 'title', $this->columns, true ) ) {
 			$this->selects[] = 'posts.post_title';

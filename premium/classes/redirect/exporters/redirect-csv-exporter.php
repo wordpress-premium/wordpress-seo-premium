@@ -54,12 +54,12 @@ class WPSEO_Redirect_CSV_Exporter implements WPSEO_Redirect_Exporter {
 			$origin = '/' . $origin;
 		}
 
-		$redirect_details = array(
+		$redirect_details = [
 			$this->format_csv_column( $origin ),
 			$this->format_csv_column( $target ),
 			$this->format_csv_column( $redirect->get_type() ),
 			$this->format_csv_column( $redirect->get_format() ),
-		);
+		];
 
 		return implode( ',', $redirect_details );
 	}
@@ -70,12 +70,12 @@ class WPSEO_Redirect_CSV_Exporter implements WPSEO_Redirect_Exporter {
 	 * @return string CSV line of the headers.
 	 */
 	protected function get_headers() {
-		$headers = array(
+		$headers = [
 			__( 'Origin', 'wordpress-seo-premium' ),
 			__( 'Target', 'wordpress-seo-premium' ),
 			__( 'Type', 'wordpress-seo-premium' ),
 			__( 'Format', 'wordpress-seo-premium' ),
-		);
+		];
 
 		return implode( ',', $headers );
 	}

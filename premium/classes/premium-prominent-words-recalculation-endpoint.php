@@ -51,24 +51,24 @@ class WPSEO_Premium_Prominent_Words_Recalculation_Endpoint implements WPSEO_Word
 	 * Registers all hooks to WordPress.
 	 */
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register' ) );
+		add_action( 'rest_api_init', [ $this, 'register' ] );
 	}
 
 	/**
 	 * Register the REST endpoint to WordPress.
 	 */
 	public function register() {
-		$route_args = array(
+		$route_args = [
 			'methods'             => 'GET',
-			'callback'            => array(
+			'callback'            => [
 				$this->service,
 				'remove_notification',
-			),
-			'permission_callback' => array(
+			],
+			'permission_callback' => [
 				$this,
 				'can_retrieve_data',
-			),
-		);
+			],
+		];
 		register_rest_route( self::REST_NAMESPACE, self::ENDPOINT_QUERY, $route_args );
 	}
 

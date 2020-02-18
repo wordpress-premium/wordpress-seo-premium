@@ -82,7 +82,7 @@ final class WPSEO_CLI_Redirect_List_Command extends WPSEO_CLI_Redirect_Base_Comm
 
 		$redirects = array_filter(
 			$this->get_redirects(),
-			array( $this, 'filter_redirect' )
+			[ $this, 'filter_redirect' ]
 		);
 
 		$formatter->display_items( $redirects );
@@ -97,7 +97,7 @@ final class WPSEO_CLI_Redirect_List_Command extends WPSEO_CLI_Redirect_Base_Comm
 		$redirect_objects = $this->redirect_manager->get_all_redirects();
 
 		return array_map(
-			array( $this, 'adapt_redirect_data' ),
+			[ $this, 'adapt_redirect_data' ],
 			$redirect_objects
 		);
 	}
@@ -133,12 +133,12 @@ final class WPSEO_CLI_Redirect_List_Command extends WPSEO_CLI_Redirect_Base_Comm
 	 * @return array Associative array of redirects.
 	 */
 	private function adapt_redirect_data( $redirect ) {
-		return array(
+		return [
 			'origin' => $redirect->get_origin(),
 			'target' => $redirect->get_target(),
 			'type'   => $redirect->get_type(),
 			'format' => $redirect->get_format(),
-		);
+		];
 	}
 
 	/**
@@ -170,9 +170,9 @@ final class WPSEO_CLI_Redirect_List_Command extends WPSEO_CLI_Redirect_Base_Comm
 	 * @return array Associative array of filter values.
 	 */
 	private function get_filter( $assoc_args ) {
-		$filter = array();
+		$filter = [];
 
-		foreach ( array( 'origin', 'target', 'type', 'format' ) as $type ) {
+		foreach ( [ 'origin', 'target', 'type', 'format' ] as $type ) {
 			if ( isset( $assoc_args[ $type ] ) ) {
 				$filter[ $type ] = $assoc_args[ $type ];
 			}

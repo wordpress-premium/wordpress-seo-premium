@@ -17,7 +17,7 @@ class WPSEO_Redirect_Page_Presenter implements WPSEO_Redirect_Presenter {
 	 *
 	 * @return void
 	 */
-	public function display( array $display = array() ) {
+	public function display( array $display = [] ) {
 		$current_tab   = ! empty( $display['current_tab'] ) ? $display['current_tab'] : '';
 		$tab_presenter = $this->get_tab_presenter( $current_tab );
 		$redirect_tabs = $this->navigation_tabs( $current_tab );
@@ -69,11 +69,11 @@ class WPSEO_Redirect_Page_Presenter implements WPSEO_Redirect_Presenter {
 			$tabs['settings'] = __( 'Settings', 'wordpress-seo-premium' );
 		}
 
-		return array(
+		return [
 			'tabs'        => $tabs,
 			'current_tab' => $current_tab,
 			'page_url'    => admin_url( 'admin.php?page=wpseo_redirects&tab=' ),
-		);
+		];
 	}
 
 	/**

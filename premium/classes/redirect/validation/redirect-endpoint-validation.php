@@ -22,9 +22,9 @@ class WPSEO_Redirect_Endpoint_Validation extends WPSEO_Redirect_Abstract_Validat
 	 * - a path that results in a redirection to it's own origin due to other redirects pointing to the current origin.
 	 * - a path that can be shorten by creating a direct redirect.
 	 *
-	 * @param WPSEO_Redirect $redirect     The redirect to validate.
-	 * @param WPSEO_Redirect $old_redirect The old redirect to compare.
-	 * @param array          $redirects    Array with redirect to validate against.
+	 * @param WPSEO_Redirect      $redirect     The redirect to validate.
+	 * @param WPSEO_Redirect|null $old_redirect The old redirect to compare.
+	 * @param array|null          $redirects    Array with redirect to validate against.
 	 *
 	 * @return bool
 	 */
@@ -36,9 +36,9 @@ class WPSEO_Redirect_Endpoint_Validation extends WPSEO_Redirect_Abstract_Validat
 		$endpoint = $this->search_end_point( $target, $origin );
 
 		// Check for a redirect loop.
-		if ( is_string( $endpoint ) && in_array( $endpoint, array( $origin, $target ), true ) ) {
+		if ( is_string( $endpoint ) && in_array( $endpoint, [ $origin, $target ], true ) ) {
 			$error = __( 'The redirect you are trying to save will create a redirect loop. This means there probably already exists a redirect that points to the origin of the redirect you are trying to save', 'wordpress-seo-premium' );
-			$this->set_error( new WPSEO_Validation_Error( $error, array( 'origin', 'target' ) ) );
+			$this->set_error( new WPSEO_Validation_Error( $error, [ 'origin', 'target' ] ) );
 
 			return false;
 		}

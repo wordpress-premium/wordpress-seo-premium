@@ -10,17 +10,17 @@
  * }
  */
 
-$yoast_premium_file_path     = $view_vars['file_path'];
-$yoast_premium_redirect_file = $view_vars['redirect_file'];
+$yoast_seo_file_path     = $view_vars['file_path'];
+$yoast_seo_redirect_file = $view_vars['redirect_file'];
 
-if ( ! empty( $yoast_premium_redirect_file ) ) {
-	switch ( $yoast_premium_redirect_file ) {
+if ( ! empty( $yoast_seo_redirect_file ) ) {
+	switch ( $yoast_seo_redirect_file ) {
 		case 'apache_include_file':
 			?>
 			<div class="notice notice-warning inline">
 				<p>
 					<?php esc_html_e( "As you're on Apache, you should add the following include to the website httpd config file:", 'wordpress-seo-premium' ); ?>
-					<br><code>Include <?php echo esc_html( $yoast_premium_file_path ); ?></code>
+					<br><code>Include <?php echo esc_html( $yoast_seo_file_path ); ?></code>
 				</p>
 			</div>
 			<?php
@@ -46,7 +46,7 @@ if ( ! empty( $yoast_premium_redirect_file ) ) {
 			<div class="notice notice-warning inline">
 				<p>
 					<?php esc_html_e( "As you're on Nginx, you should add the following include to the Nginx config file:", 'wordpress-seo-premium' ); ?>
-					<br><code>include <?php echo esc_html( $yoast_premium_file_path ); ?></code>
+					<br><code>include <?php echo esc_html( $yoast_seo_file_path ); ?></code>
 				</p>
 			</div>
 			<?php
@@ -59,7 +59,7 @@ if ( ! empty( $yoast_premium_redirect_file ) ) {
 					printf(
 						/* translators: %s expands to the folder location where the redirects fill will be saved. */
 						esc_html__( "We're unable to save the redirect file to %s", 'wordpress-seo-premium' ),
-						esc_html( $yoast_premium_file_path )
+						esc_html( $yoast_seo_file_path )
 					);
 					?>
 				</p>
@@ -76,21 +76,21 @@ if ( ! empty( $yoast_premium_redirect_file ) ) {
 		<?php
 		settings_fields( 'yoast_wpseo_redirect_options' );
 
-		$yform = Yoast_Form::get_instance();
+		$yoast_seo_form = Yoast_Form::get_instance();
 
-		$yform->set_option( 'wpseo_redirect' );
+		$yoast_seo_form->set_option( 'wpseo_redirect' );
 
-		$yoast_premium_toggle_values = array(
+		$yoast_seo_toggle_values = [
 			'off' => 'PHP',
 			'on'  => ( WPSEO_Utils::is_apache() ) ? '.htaccess' : __( 'Web server', 'wordpress-seo-premium' ),
-		);
-		$yform->toggle_switch( 'disable_php_redirect', $yoast_premium_toggle_values, __( 'Redirect method', 'wordpress-seo-premium' ) );
+		];
+		$yoast_seo_form->toggle_switch( 'disable_php_redirect', $yoast_seo_toggle_values, __( 'Redirect method', 'wordpress-seo-premium' ) );
 
 		if ( WPSEO_Utils::is_apache() ) {
 			/* translators: 1: '.htaccess' file name */
 			echo '<p>' . sprintf( esc_html__( 'Write redirects to the %1$s file. Make sure the %1$s file is writable.', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';
 
-			$yform->light_switch( 'separate_file', __( 'Generate a separate redirect file', 'wordpress-seo-premium' ) );
+			$yoast_seo_form->light_switch( 'separate_file', __( 'Generate a separate redirect file', 'wordpress-seo-premium' ) );
 
 			/* translators: %s: '.htaccess' file name */
 			echo '<p>' . sprintf( esc_html__( 'By default we write the redirects to your %s file, check this if you want the redirects written to a separate file. Only check this option if you know what you are doing!', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';

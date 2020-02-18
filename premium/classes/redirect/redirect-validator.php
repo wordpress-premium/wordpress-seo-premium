@@ -15,43 +15,43 @@ class WPSEO_Redirect_Validator {
 	 *
 	 * @var array
 	 */
-	protected $validation_rules = array(
-		'relative-origin' => array(
+	protected $validation_rules = [
+		'relative-origin' => [
 			'validation_class' => 'WPSEO_Redirect_Relative_Origin_Validation',
-			'exclude_types'    => array(),
-			'exclude_format'   => array( WPSEO_Redirect_Formats::REGEX ),
-		),
-		'self-redirect' => array(
+			'exclude_types'    => [],
+			'exclude_format'   => [ WPSEO_Redirect_Formats::REGEX ],
+		],
+		'self-redirect' => [
 			'validation_class' => 'WPSEO_Redirect_Self_Redirect_Validation',
-			'exclude_types'    => array(),
-			'exclude_format'   => array( WPSEO_Redirect_Formats::REGEX ),
-		),
-		'uniqueness' => array(
+			'exclude_types'    => [],
+			'exclude_format'   => [ WPSEO_Redirect_Formats::REGEX ],
+		],
+		'uniqueness' => [
 			'validation_class' => 'WPSEO_Redirect_Uniqueness_Validation',
-			'exclude_types'    => array(),
-			'exclude_format'   => array(),
-		),
-		'presence' => array(
+			'exclude_types'    => [],
+			'exclude_format'   => [],
+		],
+		'presence' => [
 			'validation_class' => 'WPSEO_Redirect_Presence_Validation',
-			'exclude_types'    => array(),
-			'exclude_format'   => array(),
-		),
-		'subdirectory-presence' => array(
+			'exclude_types'    => [],
+			'exclude_format'   => [],
+		],
+		'subdirectory-presence' => [
 			'validation_class' => 'WPSEO_Redirect_Subdirectory_Validation',
-			'exclude_types'    => array(),
-			'exclude_format'   => array(),
-		),
-		'accessible' => array(
+			'exclude_types'    => [],
+			'exclude_format'   => [],
+		],
+		'accessible' => [
 			'validation_class' => 'WPSEO_Redirect_Accessible_Validation',
-			'exclude_types'    => array( WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ),
-			'exclude_format'   => array( WPSEO_Redirect_Formats::REGEX ),
-		),
-		'endpoint' => array(
+			'exclude_types'    => [ WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ],
+			'exclude_format'   => [ WPSEO_Redirect_Formats::REGEX ],
+		],
+		'endpoint' => [
 			'validation_class' => 'WPSEO_Redirect_Endpoint_Validation',
-			'exclude_types'    => array( WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ),
-			'exclude_format'   => array( WPSEO_Redirect_Formats::REGEX ),
-		),
-	);
+			'exclude_types'    => [ WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ],
+			'exclude_format'   => [ WPSEO_Redirect_Formats::REGEX ],
+		],
+	];
 
 	/**
 	 * A string holding a possible redirect validation error.
@@ -63,8 +63,8 @@ class WPSEO_Redirect_Validator {
 	/**
 	 * Validates the old and the new URL.
 	 *
-	 * @param WPSEO_Redirect $redirect         The redirect that will be saved.
-	 * @param WPSEO_Redirect $current_redirect Redirect that will be used for comparison.
+	 * @param WPSEO_Redirect      $redirect         The redirect that will be saved.
+	 * @param WPSEO_Redirect|null $current_redirect Redirect that will be used for comparison.
 	 *
 	 * @return bool|string
 	 */
@@ -135,7 +135,7 @@ class WPSEO_Redirect_Validator {
 	 * @return WPSEO_Redirect_Validation[]
 	 */
 	protected function get_validations( $validation_rules ) {
-		$validations = array();
+		$validations = [];
 		foreach ( $validation_rules as $validation_rule ) {
 			$validations[] = new $validation_rule['validation_class']();
 		}
@@ -154,7 +154,7 @@ class WPSEO_Redirect_Validator {
 		$redirect_manager = new WPSEO_Redirect_Manager( $format );
 
 		// Format the redirects.
-		$redirects = array();
+		$redirects = [];
 		foreach ( $redirect_manager->get_all_redirects() as $redirect ) {
 			$redirects[ $redirect->get_origin() ] = $redirect->get_target();
 		}

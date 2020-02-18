@@ -26,11 +26,11 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 */
 	public function register_hooks() {
 		// Handle premium imports.
-		add_filter( 'wpseo_handle_import', array( $this, 'do_premium_imports' ) );
+		add_filter( 'wpseo_handle_import', [ $this, 'do_premium_imports' ] );
 
 		// Add htaccess import block.
-		add_action( 'wpseo_import_tab_content', array( $this, 'add_redirect_import_block' ) );
-		add_action( 'wpseo_import_tab_header', array( $this, 'redirects_import_header' ) );
+		add_action( 'wpseo_import_tab_content', [ $this, 'add_redirect_import_block' ] );
+		add_action( 'wpseo_import_tab_header', [ $this, 'redirects_import_header' ] );
 	}
 
 	/**
@@ -42,11 +42,11 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 */
 	public function do_premium_imports( $import ) {
 		if ( ! $import ) {
-			$import = (object) array(
+			$import = (object) [
 				'msg'     => '',
 				'success' => false,
 				'status'  => null,
-			);
+			];
 		}
 
 		$this->import = $import;
@@ -258,9 +258,9 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 *
 	 * @param array $csv_file The file to upload, from the $_FILES object.
 	 *
-	 * @throws WPSEO_Redirect_Import_Exception When the given file is invalid.
-	 *
 	 * @return void
+	 *
+	 * @throws WPSEO_Redirect_Import_Exception When the given file is invalid.
 	 */
 	protected function validate_uploaded_csv_file( $csv_file ) {
 
@@ -285,7 +285,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 		}
 
 		// If it's not a CSV file (send the csv mimetype along for multisite installations).
-		$filetype = wp_check_filetype( $csv_file['name'], array( 'csv' => 'text/csv' ) );
+		$filetype = wp_check_filetype( $csv_file['name'], [ 'csv' => 'text/csv' ] );
 		if ( strtolower( $filetype['ext'] ) !== 'csv' ) {
 			$error_message = __( 'CSV import failed: the provided file is not a CSV file.', 'wordpress-seo-premium' );
 			throw new WPSEO_Redirect_Import_Exception( $error_message );
@@ -338,7 +338,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 *
 	 * @codeCoverageIgnore
 	 *
-	 * @return null|string The posted import plugin.
+	 * @return string|null The posted import plugin.
 	 */
 	protected function get_posted_import_plugin() {
 		$wpseo_post = filter_input( INPUT_POST, 'wpseo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
@@ -355,7 +355,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 *
 	 * @codeCoverageIgnore
 	 *
-	 * @return null|array The posted CSV file.
+	 * @return array|null The posted CSV file.
 	 */
 	protected function get_posted_csv_file() {
 		if ( ! isset( $_FILES['redirects_csv_file'] ) ) {

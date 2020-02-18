@@ -25,7 +25,7 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 			return;
 		}
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
 	}
 
 	/**
@@ -46,9 +46,9 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 	 * @return array The fields to localize.
 	 */
 	public function localize_script() {
-		return array(
+		return [
 			'custom_field_names' => $this->get_custom_field_names(),
-		);
+		];
 	}
 
 	/**
@@ -57,7 +57,7 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 	 * @return array The custom field names.
 	 */
 	protected function get_custom_field_names() {
-		$custom_field_names = array();
+		$custom_field_names = [];
 
 		$post = $this->get_post();
 
@@ -80,7 +80,7 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 	 *
 	 * @codeCoverageIgnore Method relies on dependencies.
 	 *
-	 * @return array|null|WP_Post Returns a post if found, otherwise returns an empty array.
+	 * @return WP_Post|array|null Returns a post if found, otherwise returns an empty array.
 	 */
 	protected function get_post() {
 		$post = filter_input( INPUT_GET, 'post' );
@@ -94,7 +94,7 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 			return $GLOBALS['post'];
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -106,8 +106,7 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 	 */
 	protected function get_titles_from_options() {
 		$option_name = WPSEO_Options::get_option_instance( 'wpseo_titles' )->option_name;
-		$titles      = get_option( $option_name, array() );
 
-		return $titles;
+		return get_option( $option_name, [] );
 	}
 }

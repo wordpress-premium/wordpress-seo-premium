@@ -17,7 +17,7 @@ class WPSEO_Redirect_Quick_Edit_Presenter implements WPSEO_Redirect_Presenter {
 	 *
 	 * @return void
 	 */
-	public function display( array $display_data = array() ) {
+	public function display( array $display_data = [] ) {
 		require WPSEO_PREMIUM_PATH . 'classes/redirect/views/redirects-quick-edit.php';
 	}
 }

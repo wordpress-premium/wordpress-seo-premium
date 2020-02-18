@@ -57,5 +57,4 @@ if ( class_exists( 'Yoast_Product' ) && ! class_exists( 'WPSEO_Product_Premium',
 			}
 		}
 	}
-
 }

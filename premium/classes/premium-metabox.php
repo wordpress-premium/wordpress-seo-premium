@@ -38,8 +38,8 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'admin_init', array( $this, 'initialize' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'admin_init', [ $this, 'initialize' ] );
 
 		$this->link_suggestions->register_hooks();
 	}
@@ -91,11 +91,11 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	public function send_data_to_assets() {
 		$analysis_seo = new WPSEO_Metabox_Analysis_SEO();
 
-		$data = array(
+		$data = [
 			'restApi'            => $this->get_rest_api_config(),
 			'seoAnalysisEnabled' => $analysis_seo->is_enabled(),
 			'licensedURL'        => WPSEO_Utils::get_home_url(),
-		);
+		];
 
 		if ( WPSEO_Metabox::is_post_edit( $this->get_current_page() ) ) {
 			$data = array_merge( $data, $this->get_post_metabox_config() );
@@ -105,7 +105,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		}
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.
-		wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'premium-metabox', 'wpseoPremiumMetaboxData', array( 'data' => $data ) );
+		wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'premium-metabox', 'wpseoPremiumMetaboxData', [ 'data' => $data ] );
 	}
 
 	/**
@@ -131,14 +131,14 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 			$insights_enabled = false;
 		}
 
-		return array(
+		return [
 			'insightsEnabled'          => ( $insights_enabled ) ? 'enabled' : 'disabled',
 			'postID'                   => $this->get_post_ID(),
 			'linkSuggestionsEnabled'   => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
 			'linkSuggestionsAvailable' => $this->link_suggestions->is_available( $post->post_type ),
 			'linkSuggestionsUnindexed' => $this->link_suggestions->is_site_unindexed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
 			'linkSuggestions'          => $this->link_suggestions->get_js_data(),
-		);
+		];
 	}
 
 	/**
@@ -147,13 +147,13 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return array The config.
 	 */
 	protected function get_term_metabox_config() {
-		return array(
+		return [
 			'insightsEnabled'          => 'disabled',
 			'linkSuggestionsEnabled'   => 'disabled',
 			'linkSuggestionsAvailable' => false,
 			'linkSuggestionsUnindexed' => false,
 			'linkSuggestions'          => false,
-		);
+		];
 	}
 
 	/**
@@ -162,12 +162,12 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return array The configuration.
 	 */
 	protected function get_rest_api_config() {
-		return array(
+		return [
 			'available'                 => WPSEO_Utils::is_api_available(),
 			'contentEndpointsAvailable' => WPSEO_Utils::are_content_endpoints_available(),
 			'root'                      => esc_url_raw( rest_url() ),
 			'nonce'                     => wp_create_nonce( 'wp_rest' ),
-		);
+		];
 	}
 
 	/**
@@ -200,12 +200,12 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return WPSEO_WordPress_Integration[] The metabox integrations.
 	 */
 	protected function get_metabox_integrations() {
-		return array(
+		return [
 			'social-previews'       => new WPSEO_Social_Previews(),
 
 			// Add custom fields plugin to post and page edit pages.
 			'premium-custom-fields' => new WPSEO_Custom_Fields_Plugin(),
-		);
+		];
 	}
 
 	/**
@@ -250,11 +250,11 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 			INPUT_GET,
 			'post_type',
 			FILTER_SANITIZE_STRING,
-			array(
-				'options' => array(
+			[
+				'options' => [
 					'default' => 'post',
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -267,7 +267,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 */
 	protected function get_current_taxonomy() {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- doing a strict in_array check should be sufficient.
-		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || ! in_array( $_SERVER['REQUEST_METHOD'], array( 'GET', 'POST' ), true ) ) {
+		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || ! in_array( $_SERVER['REQUEST_METHOD'], [ 'GET', 'POST' ], true ) ) {
 			return '';
 		}
 

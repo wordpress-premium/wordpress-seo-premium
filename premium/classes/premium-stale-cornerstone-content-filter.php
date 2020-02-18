@@ -54,7 +54,7 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Filter extends WPSEO_Abstract_Post
 	/**
 	 * Returns a text explaining this filter.
 	 *
-	 * @return string The explanation for this filter.
+	 * @return string|null The explanation for this filter.
 	 */
 	protected function get_explanation() {
 		$post_type_object = get_post_type_object( $this->get_current_post_type() );
@@ -75,7 +75,7 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Filter extends WPSEO_Abstract_Post
 	/**
 	 * Returns the total amount of stale cornerstone content.
 	 *
-	 * @return integer The total amount of stale cornerstone content.
+	 * @return int The total amount of stale cornerstone content.
 	 */
 	protected function get_post_total() {
 		global $wpdb;
@@ -101,9 +101,10 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Filter extends WPSEO_Abstract_Post
 	 * @return array The post types to which this filter should be added.
 	 */
 	protected function get_post_types() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Using YoastSEO hook.
 		$post_types = apply_filters( 'wpseo_cornerstone_post_types', parent::get_post_types() );
 		if ( ! is_array( $post_types ) ) {
-			return array();
+			return [];
 		}
 
 		return $post_types;

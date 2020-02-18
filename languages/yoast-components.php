@@ -137,11 +137,14 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/@yoast/helpers/makeOutboundLink.js:75
 	__( '(Opens in a new browser tab)', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:80
-	__( 'Mobile preview', 'wordpress-seo' ),
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:107
+	__( 'Desktop result', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:91
-	__( 'Desktop preview', 'wordpress-seo' ),
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:78
+	__( 'Preview as:', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:92
+	__( 'Mobile result', 'wordpress-seo' ),
 
 	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ReplacementVariableEditor.js:92
 	__( 'Insert snippet variable', 'wordpress-seo' ),

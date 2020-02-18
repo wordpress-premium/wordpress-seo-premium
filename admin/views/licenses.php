@@ -157,28 +157,14 @@ $new_tab_message         = sprintf(
 
 				<?php if ( $has_valid_premium_subscription ) : ?>
 					<div class="yoast-button yoast-button--noarrow yoast-button--extension yoast-button--extension-activated"><?php esc_html_e( 'Activated', 'wordpress-seo' ); ?></div>
-	
 				<?php else : ?>
 					<div class="yoast-button yoast-button--noarrow yoast-button--extension yoast-button--extension-not-activated"><?php esc_html_e( 'Not activated', 'wordpress-seo' ); ?></div>
-					<a target="_blank" href="<?php WPSEO_Shortlinker::show( 'https://yoa.st/13i' ); ?>"
-					   class="yoast-link--license">
-						<?php
-						printf(
-							/* translators: %s expands to the extension title */
-							esc_html__( 'Activate %s for your site on MyYoast', 'wordpress-seo' ),
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: The `get_title` value is hardcoded; only passed through the WPSEO_Extensions class.
-							$premium_extension->get_title()
-						);
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: $new_tab_message is properly escaped.
-						echo $new_tab_message;
-						?>
-					</a>
 				<?php endif; ?>
 
 			<?php else : ?>
 
 				<a target="_blank" href="<?php echo esc_url( $premium_extension->get_buy_url() ); ?>"
-				   class="yoast-button-upsell">
+					class="yoast-button-upsell">
 					<?php
 					printf(
 						/* translators: $s expands to Yoast SEO Premium */
@@ -193,7 +179,7 @@ $new_tab_message         = sprintf(
 				</a>
 
 				<a target="_blank" href="<?php echo esc_url( $premium_extension->get_info_url() ); ?>"
-				   class="yoast-link--more-info">
+					class="yoast-link--more-info">
 					<?php
 					printf(
 						/* translators: Text between 1: and 2: will only be shown to screen readers. 3: expands to the product name. */
@@ -251,14 +237,13 @@ $new_tab_message         = sprintf(
 
 							<?php if ( $addon_manager->has_valid_subscription( $slug ) ) : ?>
 								<div class="yoast-button yoast-button--noarrow yoast-button--extension yoast-button--extension-activated"><?php esc_html_e( 'Activated', 'wordpress-seo' ); ?></div>
-
 							<?php else : ?>
 								<div class="yoast-button yoast-button--noarrow yoast-button--extension yoast-button--extension-activated"><?php esc_html_e( 'Activated', 'wordpress-seo' ); ?></div>
 							<?php endif; ?>
 						<?php else : ?>
 
 							<a target="_blank" class="yoast-link--more-info"
-							   href="<?php echo esc_url( $extension->get_info_url() ); ?>">
+								href="<?php echo esc_url( $extension->get_info_url() ); ?>">
 								<?php
 								printf(
 									/* translators: Text between 1: and 2: will only be shown to screen readers. 3: expands to the product name. */

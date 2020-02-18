@@ -35,10 +35,10 @@ class WPSEO_Redirect_CSV_Loader extends WPSEO_Redirect_Abstract_Loader {
 		$handle = fopen( $this->csv_file, 'r' );
 
 		if ( ! $handle ) {
-			return array();
+			return [];
 		}
 
-		$redirects = array();
+		$redirects = [];
 		while ( $item = fgetcsv( $handle, 10000 ) ) {
 			if ( ! $this->validate_item( $item ) ) {
 				continue;

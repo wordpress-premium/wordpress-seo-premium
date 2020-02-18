@@ -17,13 +17,13 @@ class WPSEO_Redirect_Settings_Presenter extends WPSEO_Redirect_Tab_Presenter {
 	 *
 	 * @return array Contextual variables to pass to the view.
 	 */
-	protected function get_view_vars( array $passed_vars = array() ) {
+	protected function get_view_vars( array $passed_vars = [] ) {
 		return array_merge(
 			$passed_vars,
-			array(
+			[
 				'file_path'     => WPSEO_Redirect_File_Util::get_file_path(),
 				'redirect_file' => $this->writable_redirect_file(),
-			)
+			]
 		);
 	}
 
@@ -33,10 +33,7 @@ class WPSEO_Redirect_Settings_Presenter extends WPSEO_Redirect_Tab_Presenter {
 	 * @return false|string
 	 */
 	private function writable_redirect_file() {
-		// Get redirect options.
-		$redirect_options = WPSEO_Redirect_Page::get_options();
-
-		if ( 'on' !== $redirect_options['disable_php_redirect'] ) {
+		if ( WPSEO_Options::get( 'disable_php_redirect' ) !== 'on' ) {
 			return false;
 		}
 
@@ -44,7 +41,7 @@ class WPSEO_Redirect_Settings_Presenter extends WPSEO_Redirect_Tab_Presenter {
 		$file_exists = file_exists( WPSEO_Redirect_File_Util::get_file_path() );
 
 		if ( WPSEO_Utils::is_apache() ) {
-			$separate_file = ( 'on' === $redirect_options['separate_file'] );
+			$separate_file = ( WPSEO_Options::get( 'separate_file' ) === 'on' );
 
 			if ( $separate_file && $file_exists ) {
 				return 'apache_include_file';

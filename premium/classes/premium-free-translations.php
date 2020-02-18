@@ -15,7 +15,7 @@ class WPSEO_Premium_Free_Translations implements WPSEO_WordPress_Integration {
 	 * Registers all hooks to WordPress.
 	 */
 	public function register_hooks() {
-		add_filter( 'http_request_args', array( $this, 'request_wordpress_seo_translations' ), 10, 2 );
+		add_filter( 'http_request_args', [ $this, 'request_wordpress_seo_translations' ], 10, 2 );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class WPSEO_Premium_Free_Translations implements WPSEO_WordPress_Integration {
 		 * The capitalized json data defines the array keys, therefore we need to check and define these as such.
 		 */
 		$plugins = json_decode( $args['body']['plugins'], true );
-		foreach ( $plugins['plugins'] as $slug => $data ) {
+		foreach ( $plugins['plugins'] as $data ) {
 			if ( isset( $data['Name'] ) && $data['Name'] === 'Yoast SEO' ) {
 				return $args;
 			}

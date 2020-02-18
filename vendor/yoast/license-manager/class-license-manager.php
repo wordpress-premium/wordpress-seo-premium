@@ -127,7 +127,6 @@ if ( ! class_exists( 'Yoast_License_Manager', false ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-
 			// show notice if external requests are blocked through the WP_HTTP_BLOCK_EXTERNAL constant
 			if ( defined( "WP_HTTP_BLOCK_EXTERNAL" ) && WP_HTTP_BLOCK_EXTERNAL === true ) {
 

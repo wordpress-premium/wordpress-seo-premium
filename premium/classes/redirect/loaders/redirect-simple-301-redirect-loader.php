@@ -20,7 +20,7 @@ class WPSEO_Redirect_Simple_301_Redirect_Loader extends WPSEO_Redirect_Abstract_
 	public function load() {
 		$items          = get_option( '301_redirects' );
 		$uses_wildcards = get_option( '301_redirects_wildcard' );
-		$redirects      = array();
+		$redirects      = [];
 
 		if ( ! is_array( $items ) ) {
 			return $redirects;

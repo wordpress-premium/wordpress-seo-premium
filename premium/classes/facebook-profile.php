@@ -27,7 +27,7 @@ class WPSEO_Facebook_Profile {
 	 * Sets the AJAX action hook, to catch the AJAX request for getting the name on Facebook.
 	 */
 	public function set_hooks() {
-		add_action( 'wp_ajax_wpseo_get_facebook_name', array( $this, 'ajax_get_facebook_name' ) );
+		add_action( 'wp_ajax_wpseo_get_facebook_name', [ $this, 'ajax_get_facebook_name' ] );
 	}
 
 	/**
@@ -92,7 +92,7 @@ class WPSEO_Facebook_Profile {
 	 *
 	 * @param string $facebook_profile The Facebook profile to look for.
 	 *
-	 * @return string|boolean
+	 * @return string|bool
 	 */
 	private function get_cached_name( $facebook_profile ) {
 		$facebook_profiles = get_transient( self::TRANSIENT_NAME );
@@ -127,17 +127,15 @@ class WPSEO_Facebook_Profile {
 	private function get_name_from_facebook( $facebook_profile ) {
 		$response = wp_remote_get(
 			$this->facebook_endpoint . $facebook_profile,
-			array(
-				'headers' => array( 'Accept-Language' => 'en_US' ),
-			)
+			[
+				'headers' => [ 'Accept-Language' => 'en_US' ],
+			]
 		);
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			$full_name = $this->extract_name_from_response(
+			return $this->extract_name_from_response(
 				wp_remote_retrieve_body( $response )
 			);
-
-			return $full_name;
 		}
 
 		return '';

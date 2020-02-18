@@ -24,11 +24,11 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	 */
 	public function register_hooks() {
 		// Hook into the request in case of CSV download and return our generated CSV instead.
-		add_action( 'admin_init', array( $this, 'keywords_csv_export' ) );
+		add_action( 'admin_init', [ $this, 'keywords_csv_export' ] );
 
 		// Add htaccess import block.
-		add_action( 'wpseo_import_tab_content', array( $this, 'add_keyword_export_tab_block' ) );
-		add_action( 'wpseo_import_tab_header', array( $this, 'keywords_export_tab_header' ) );
+		add_action( 'wpseo_import_tab_content', [ $this, 'add_keyword_export_tab_block' ] );
+		add_action( 'wpseo_import_tab_header', [ $this, 'keywords_export_tab_header' ] );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	 * @return void
 	 */
 	protected function get_csv_contents() {
-		$columns = array( 'keywords' );
+		$columns = [ 'keywords' ];
 
 		$post_wpseo = filter_input( INPUT_POST, 'wpseo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
@@ -133,14 +133,14 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	 * @return array List of export columns.
 	 */
 	protected function get_export_columns( array $post_object ) {
-		$exportable_columns = array(
+		$exportable_columns = [
 			'export-keywords-score'    => 'keywords_score',
 			'export-url'               => 'url',
 			'export-title'             => 'title',
 			'export-seo-title'         => 'seo_title',
 			'export-meta-description'  => 'meta_description',
 			'export-readability-score' => 'readability_score',
-		);
+		];
 
 		// Need to call array_values to ensure that we get a numerical key back.
 		return array_values( array_intersect_key( $exportable_columns, $post_object ) );
@@ -191,10 +191,10 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 			$result_count = count( $results );
 
 			// Present the result.
-			$presented = array_map( array( $presenter, 'present' ), $results );
+			$presented = array_map( [ $presenter, 'present' ], $results );
 
 			// Feed presented item to the builder.
-			array_walk( $presented, array( $builder, 'print_row' ) );
+			array_walk( $presented, [ $builder, 'print_row' ] );
 
 			++$page;
 

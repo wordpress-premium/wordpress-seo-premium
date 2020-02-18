@@ -62,12 +62,12 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 			return;
 		}
 
-		add_action( 'wpseo_tools_overview_list_items', array( $this, 'show_tools_overview_item' ), 11 );
+		add_action( 'wpseo_tools_overview_list_items', [ $this, 'show_tools_overview_item' ], 11 );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
 
 		if ( $this->is_modal_page() ) {
-			add_action( 'admin_footer', array( $this, 'modal_box' ), 20 );
+			add_action( 'admin_footer', [ $this, 'modal_box' ], 20 );
 		}
 	}
 
@@ -129,10 +129,10 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 	 */
 	protected function get_indexable_post_type_labels( $post_types ) {
 		if ( ! is_array( $post_types ) ) {
-			return array();
+			return [];
 		}
 
-		return array_map( array( $this, 'retrieve_post_type_label' ), $post_types );
+		return array_map( [ $this, 'retrieve_post_type_label' ], $post_types );
 	}
 
 	/**
@@ -232,10 +232,10 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 		wp_register_script(
 			WPSEO_Admin_Asset_Manager::PREFIX . 'premium-site-wide-analysis',
 			plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/js/dist/yoast-premium-site-wide-analysis-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
-			array(
+			[
 				WPSEO_Admin_Asset_Manager::PREFIX . 'analysis',
 				'yoast-seo-premium-commons',
-			),
+			],
 			WPSEO_VERSION,
 			true
 		);
@@ -253,27 +253,27 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 	protected function enqueue_dashboard_assets() {
 		$all_items = $this->post_query->get_totals( $this->get_post_types() );
 
-		$data = array(
-			'allWords'             => get_terms( WPSEO_Premium_Prominent_Words_Registration::TERM_NAME, array( 'fields' => 'ids' ) ),
+		$data = [
+			'allWords'             => get_terms( WPSEO_Premium_Prominent_Words_Registration::TERM_NAME, [ 'fields' => 'ids' ] ),
 			'nrOfItemsPerPostType' => $all_items,
 			'totalItems'           => array_sum( $all_items ),
-			'message'              => array( 'analysisCompleted' => $this->message_already_indexed() ),
-			'restApi'              => array(
+			'message'              => [ 'analysisCompleted' => $this->message_already_indexed() ],
+			'restApi'              => [
 				'root'  => esc_url_raw( rest_url() ),
 				'nonce' => wp_create_nonce( 'wp_rest' ),
-			),
-			'l10n'                 => array(
+			],
+			'l10n'                 => [
 				'calculationInProgress' => __( 'Calculation in progress...', 'wordpress-seo-premium' ),
 				'calculationCompleted'  => __( 'Calculation completed.', 'wordpress-seo-premium' ),
 				'contentLocale'         => get_locale(),
-			),
-		);
+			],
+		];
 
 		// Add feature flags to localization data.
-		$localization_data = array(
+		$localization_data = [
 			'data'            => $data,
 			'enabledFeatures' => WPSEO_Utils::retrieve_enabled_features(),
-		);
+		];
 
 		wp_enqueue_script( WPSEO_Admin_Asset_Manager::PREFIX . 'premium-site-wide-analysis' );
 		wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'premium-site-wide-analysis', 'yoastSiteWideAnalysisData', $localization_data );
@@ -285,7 +285,7 @@ class WPSEO_Premium_Prominent_Words_Recalculation implements WPSEO_WordPress_Int
 	 * @return array Array with rest enabled post types.
 	 */
 	protected function get_post_types() {
-		return array_filter( $this->prominent_words_support->get_supported_post_types(), array( 'WPSEO_Post_Type', 'is_rest_enabled' ) );
+		return array_filter( $this->prominent_words_support->get_supported_post_types(), [ 'WPSEO_Post_Type', 'is_rest_enabled' ] );
 	}
 
 	/**

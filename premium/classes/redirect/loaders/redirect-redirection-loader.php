@@ -41,11 +41,11 @@ class WPSEO_Redirect_Redirection_Loader extends WPSEO_Redirect_Abstract_Loader {
 		);
 		// phpcs:enable
 
-		$redirects = array();
+		$redirects = [];
 
 		foreach ( $items as $item ) {
 			$format = WPSEO_Redirect_Formats::PLAIN;
-			if ( 1 === (int) $item->regex ) {
+			if ( (int) $item->regex === 1 ) {
 				$format = WPSEO_Redirect_Formats::REGEX;
 			}
 

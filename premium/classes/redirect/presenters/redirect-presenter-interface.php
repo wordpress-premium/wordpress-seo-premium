@@ -17,5 +17,5 @@ interface WPSEO_Redirect_Presenter {
 	 *
 	 * @return void
 	 */
-	public function display( array $display = array() );
+	public function display( array $display = [] );
 }

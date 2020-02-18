@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\Free\Generated;
+namespace Yoast\WP\SEO\Generated;
 
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,54 +25,54 @@ class Cached_Container extends Container
     {
         $this->services = [];
         $this->normalizedIds = [
-            'yoast\\wp\\free\\builders\\indexable_author_builder' => 'Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder',
-            'yoast\\wp\\free\\builders\\indexable_post_builder' => 'Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder',
-            'yoast\\wp\\free\\builders\\indexable_term_builder' => 'Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder',
-            'yoast\\wp\\free\\conditionals\\admin_conditional' => 'Yoast\\WP\\Free\\Conditionals\\Admin_Conditional',
-            'yoast\\wp\\free\\conditionals\\indexables_feature_flag_conditional' => 'Yoast\\WP\\Free\\Conditionals\\Indexables_Feature_Flag_Conditional',
-            'yoast\\wp\\free\\database\\database_setup' => 'Yoast\\WP\\Free\\Database\\Database_Setup',
-            'yoast\\wp\\free\\database\\migration_runner' => 'Yoast\\WP\\Free\\Database\\Migration_Runner',
-            'yoast\\wp\\free\\loader' => 'Yoast\\WP\\Free\\Loader',
-            'yoast\\wp\\free\\loggers\\logger' => 'Yoast\\WP\\Free\\Loggers\\Logger',
-            'yoast\\wp\\free\\repositories\\indexable_repository' => 'Yoast\\WP\\Free\\Repositories\\Indexable_Repository',
-            'yoast\\wp\\free\\repositories\\primary_term_repository' => 'Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository',
-            'yoast\\wp\\free\\repositories\\seo_links_repository' => 'Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository',
-            'yoast\\wp\\free\\repositories\\seo_meta_repository' => 'Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository',
-            'yoast\\wp\\free\\watchers\\indexable_author_watcher' => 'Yoast\\WP\\Free\\Watchers\\Indexable_Author_Watcher',
-            'yoast\\wp\\free\\watchers\\indexable_post_watcher' => 'Yoast\\WP\\Free\\Watchers\\Indexable_Post_Watcher',
-            'yoast\\wp\\free\\watchers\\indexable_term_watcher' => 'Yoast\\WP\\Free\\Watchers\\Indexable_Term_Watcher',
-            'yoast\\wp\\free\\watchers\\primary_term_watcher' => 'Yoast\\WP\\Free\\Watchers\\Primary_Term_Watcher',
+            'yoast\\wp\\seo\\builders\\indexable_author_builder' => 'Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder',
+            'yoast\\wp\\seo\\builders\\indexable_post_builder' => 'Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder',
+            'yoast\\wp\\seo\\builders\\indexable_term_builder' => 'Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder',
+            'yoast\\wp\\seo\\conditionals\\admin_conditional' => 'Yoast\\WP\\SEO\\Conditionals\\Admin_Conditional',
+            'yoast\\wp\\seo\\conditionals\\indexables_feature_flag_conditional' => 'Yoast\\WP\\SEO\\Conditionals\\Indexables_Feature_Flag_Conditional',
+            'yoast\\wp\\seo\\database\\database_setup' => 'Yoast\\WP\\SEO\\Database\\Database_Setup',
+            'yoast\\wp\\seo\\database\\migration_runner' => 'Yoast\\WP\\SEO\\Database\\Migration_Runner',
+            'yoast\\wp\\seo\\loader' => 'Yoast\\WP\\SEO\\Loader',
+            'yoast\\wp\\seo\\loggers\\logger' => 'Yoast\\WP\\SEO\\Loggers\\Logger',
+            'yoast\\wp\\seo\\repositories\\indexable_repository' => 'Yoast\\WP\\SEO\\Repositories\\Indexable_Repository',
+            'yoast\\wp\\seo\\repositories\\primary_term_repository' => 'Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository',
+            'yoast\\wp\\seo\\repositories\\seo_links_repository' => 'Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository',
+            'yoast\\wp\\seo\\repositories\\seo_meta_repository' => 'Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository',
+            'yoast\\wp\\seo\\watchers\\indexable_author_watcher' => 'Yoast\\WP\\SEO\\Watchers\\Indexable_Author_Watcher',
+            'yoast\\wp\\seo\\watchers\\indexable_post_watcher' => 'Yoast\\WP\\SEO\\Watchers\\Indexable_Post_Watcher',
+            'yoast\\wp\\seo\\watchers\\indexable_term_watcher' => 'Yoast\\WP\\SEO\\Watchers\\Indexable_Term_Watcher',
+            'yoast\\wp\\seo\\watchers\\primary_term_watcher' => 'Yoast\\WP\\SEO\\Watchers\\Primary_Term_Watcher',
         ];
         $this->methodMap = [
-            'Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder' => 'getIndexableAuthorBuilderService',
-            'Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder' => 'getIndexablePostBuilderService',
-            'Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder' => 'getIndexableTermBuilderService',
-            'Yoast\\WP\\Free\\Conditionals\\Admin_Conditional' => 'getAdminConditionalService',
-            'Yoast\\WP\\Free\\Conditionals\\Indexables_Feature_Flag_Conditional' => 'getIndexablesFeatureFlagConditionalService',
-            'Yoast\\WP\\Free\\Database\\Database_Setup' => 'getDatabaseSetupService',
-            'Yoast\\WP\\Free\\Database\\Migration_Runner' => 'getMigrationRunnerService',
-            'Yoast\\WP\\Free\\Loader' => 'getLoaderService',
-            'Yoast\\WP\\Free\\Loggers\\Logger' => 'getLoggerService',
-            'Yoast\\WP\\Free\\Repositories\\Indexable_Repository' => 'getIndexableRepositoryService',
-            'Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository' => 'getPrimaryTermRepositoryService',
-            'Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository' => 'getSEOLinksRepositoryService',
-            'Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository' => 'getSEOMetaRepositoryService',
-            'Yoast\\WP\\Free\\Watchers\\Indexable_Author_Watcher' => 'getIndexableAuthorWatcherService',
-            'Yoast\\WP\\Free\\Watchers\\Indexable_Post_Watcher' => 'getIndexablePostWatcherService',
-            'Yoast\\WP\\Free\\Watchers\\Indexable_Term_Watcher' => 'getIndexableTermWatcherService',
-            'Yoast\\WP\\Free\\Watchers\\Primary_Term_Watcher' => 'getPrimaryTermWatcherService',
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder' => 'getIndexableAuthorBuilderService',
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder' => 'getIndexablePostBuilderService',
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder' => 'getIndexableTermBuilderService',
+            'Yoast\\WP\\SEO\\Conditionals\\Admin_Conditional' => 'getAdminConditionalService',
+            'Yoast\\WP\\SEO\\Conditionals\\Indexables_Feature_Flag_Conditional' => 'getIndexablesFeatureFlagConditionalService',
+            'Yoast\\WP\\SEO\\Database\\Database_Setup' => 'getDatabaseSetupService',
+            'Yoast\\WP\\SEO\\Database\\Migration_Runner' => 'getMigrationRunnerService',
+            'Yoast\\WP\\SEO\\Loader' => 'getLoaderService',
+            'Yoast\\WP\\SEO\\Loggers\\Logger' => 'getLoggerService',
+            'Yoast\\WP\\SEO\\Repositories\\Indexable_Repository' => 'getIndexableRepositoryService',
+            'Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository' => 'getPrimaryTermRepositoryService',
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository' => 'getSEOLinksRepositoryService',
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository' => 'getSEOMetaRepositoryService',
+            'Yoast\\WP\\SEO\\Watchers\\Indexable_Author_Watcher' => 'getIndexableAuthorWatcherService',
+            'Yoast\\WP\\SEO\\Watchers\\Indexable_Post_Watcher' => 'getIndexablePostWatcherService',
+            'Yoast\\WP\\SEO\\Watchers\\Indexable_Term_Watcher' => 'getIndexableTermWatcherService',
+            'Yoast\\WP\\SEO\\Watchers\\Primary_Term_Watcher' => 'getPrimaryTermWatcherService',
             'wp_query' => 'getWpQueryService',
             'wpdb' => 'getWpdbService',
         ];
         $this->privates = [
-            'Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder' => true,
-            'Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder' => true,
-            'Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder' => true,
-            'Yoast\\WP\\Free\\Loggers\\Logger' => true,
-            'Yoast\\WP\\Free\\Repositories\\Indexable_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder' => true,
+            'Yoast\\WP\\SEO\\Loggers\\Logger' => true,
+            'Yoast\\WP\\SEO\\Repositories\\Indexable_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository' => true,
             'wp_query' => true,
             'wpdb' => true,
         ];
@@ -85,19 +85,21 @@ class Cached_Container extends Container
         return [
             'Psr\\Container\\ContainerInterface' => true,
             'YoastSEO_Vendor\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
-            'Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder' => true,
-            'Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder' => true,
-            'Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder' => true,
-            'Yoast\\WP\\Free\\Config\\Dependency_Management' => true,
-            'Yoast\\WP\\Free\\Database\\Ruckusing_Framework' => true,
-            'Yoast\\WP\\Free\\Exceptions\\Missing_Method' => true,
-            'Yoast\\WP\\Free\\Loggers\\Logger' => true,
-            'Yoast\\WP\\Free\\Loggers\\Migration_Logger' => true,
-            'Yoast\\WP\\Free\\Oauth\\Client' => true,
-            'Yoast\\WP\\Free\\Repositories\\Indexable_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository' => true,
-            'Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder' => true,
+            'Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder' => true,
+            'Yoast\\WP\\SEO\\Config\\Dependency_Management' => true,
+            'Yoast\\WP\\SEO\\Database\\Ruckusing_Framework' => true,
+            'Yoast\\WP\\SEO\\Exceptions\\Missing_Method' => true,
+            'Yoast\\WP\\SEO\\Helpers\\Author_Archive_Helper' => true,
+            'Yoast\\WP\\SEO\\Helpers\\Home_Url_Helper' => true,
+            'Yoast\\WP\\SEO\\Loggers\\Logger' => true,
+            'Yoast\\WP\\SEO\\Loggers\\Migration_Logger' => true,
+            'Yoast\\WP\\SEO\\Oauth\\Client' => true,
+            'Yoast\\WP\\SEO\\Repositories\\Indexable_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository' => true,
+            'Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository' => true,
             'wp_query' => true,
             'wpdb' => true,
         ];
@@ -121,184 +123,184 @@ class Cached_Container extends Container
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Conditionals\Admin_Conditional' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Conditionals\Admin_Conditional' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Conditionals\Admin_Conditional
+     * @return \Yoast\WP\SEO\Conditionals\Admin_Conditional
      */
     protected function getAdminConditionalService()
     {
-        return $this->services['Yoast\\WP\\Free\\Conditionals\\Admin_Conditional'] = new \Yoast\WP\Free\Conditionals\Admin_Conditional();
+        return $this->services['Yoast\\WP\\SEO\\Conditionals\\Admin_Conditional'] = new \Yoast\WP\SEO\Conditionals\Admin_Conditional();
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Conditionals\Indexables_Feature_Flag_Conditional' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Conditionals\Indexables_Feature_Flag_Conditional' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Conditionals\Indexables_Feature_Flag_Conditional
+     * @return \Yoast\WP\SEO\Conditionals\Indexables_Feature_Flag_Conditional
      */
     protected function getIndexablesFeatureFlagConditionalService()
     {
-        return $this->services['Yoast\\WP\\Free\\Conditionals\\Indexables_Feature_Flag_Conditional'] = new \Yoast\WP\Free\Conditionals\Indexables_Feature_Flag_Conditional();
+        return $this->services['Yoast\\WP\\SEO\\Conditionals\\Indexables_Feature_Flag_Conditional'] = new \Yoast\WP\SEO\Conditionals\Indexables_Feature_Flag_Conditional();
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Database\Database_Setup' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Database\Database_Setup' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Database\Database_Setup
+     * @return \Yoast\WP\SEO\Database\Database_Setup
      */
     protected function getDatabaseSetupService()
     {
-        return $this->services['Yoast\\WP\\Free\\Database\\Database_Setup'] = new \Yoast\WP\Free\Database\Database_Setup(${($_ = isset($this->services['Yoast\\WP\\Free\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\Free\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\Free\\Loggers\\Logger'] = new \Yoast\WP\Free\Loggers\Logger())) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Database\\Database_Setup'] = new \Yoast\WP\SEO\Database\Database_Setup(${($_ = isset($this->services['Yoast\\WP\\SEO\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] = new \Yoast\WP\SEO\Loggers\Logger())) && false ?: '_'});
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Database\Migration_Runner' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Database\Migration_Runner' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Database\Migration_Runner
+     * @return \Yoast\WP\SEO\Database\Migration_Runner
      */
     protected function getMigrationRunnerService()
     {
-        $a = ${($_ = isset($this->services['Yoast\\WP\\Free\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\Free\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\Free\\Loggers\\Logger'] = new \Yoast\WP\Free\Loggers\Logger())) && false ?: '_'};
+        $a = ${($_ = isset($this->services['Yoast\\WP\\SEO\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] = new \Yoast\WP\SEO\Loggers\Logger())) && false ?: '_'};
 
-        return $this->services['Yoast\\WP\\Free\\Database\\Migration_Runner'] = new \Yoast\WP\Free\Database\Migration_Runner(new \Yoast\WP\Free\Database\Ruckusing_Framework(${($_ = isset($this->services['wpdb']) ? $this->services['wpdb'] : $this->getWpdbService()) && false ?: '_'}, new \Yoast\WP\Free\Config\Dependency_Management(), new \Yoast\WP\Free\Loggers\Migration_Logger($a)), $a);
+        return $this->services['Yoast\\WP\\SEO\\Database\\Migration_Runner'] = new \Yoast\WP\SEO\Database\Migration_Runner(new \Yoast\WP\SEO\Database\Ruckusing_Framework(${($_ = isset($this->services['wpdb']) ? $this->services['wpdb'] : $this->getWpdbService()) && false ?: '_'}, new \Yoast\WP\SEO\Config\Dependency_Management(), new \Yoast\WP\SEO\Loggers\Migration_Logger($a)), $a);
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Loader' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Loader' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Loader
+     * @return \Yoast\WP\SEO\Loader
      */
     protected function getLoaderService()
     {
-        $this->services['Yoast\\WP\\Free\\Loader'] = $instance = new \Yoast\WP\Free\Loader($this);
+        $this->services['Yoast\\WP\\SEO\\Loader'] = $instance = new \Yoast\WP\SEO\Loader($this);
 
-        $instance->register_initializer('Yoast\\WP\\Free\\Database\\Database_Setup');
-        $instance->register_initializer('Yoast\\WP\\Free\\Database\\Migration_Runner');
-        $instance->register_integration('Yoast\\WP\\Free\\Watchers\\Indexable_Author_Watcher');
-        $instance->register_integration('Yoast\\WP\\Free\\Watchers\\Indexable_Post_Watcher');
-        $instance->register_integration('Yoast\\WP\\Free\\Watchers\\Indexable_Term_Watcher');
-        $instance->register_integration('Yoast\\WP\\Free\\Watchers\\Primary_Term_Watcher');
+        $instance->register_initializer('Yoast\\WP\\SEO\\Database\\Database_Setup');
+        $instance->register_initializer('Yoast\\WP\\SEO\\Database\\Migration_Runner');
+        $instance->register_integration('Yoast\\WP\\SEO\\Watchers\\Indexable_Author_Watcher');
+        $instance->register_integration('Yoast\\WP\\SEO\\Watchers\\Indexable_Post_Watcher');
+        $instance->register_integration('Yoast\\WP\\SEO\\Watchers\\Indexable_Term_Watcher');
+        $instance->register_integration('Yoast\\WP\\SEO\\Watchers\\Primary_Term_Watcher');
 
         return $instance;
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Watchers\Indexable_Author_Watcher' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Watchers\Indexable_Author_Watcher' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Watchers\Indexable_Author_Watcher
+     * @return \Yoast\WP\SEO\Watchers\Indexable_Author_Watcher
      */
     protected function getIndexableAuthorWatcherService()
     {
-        return $this->services['Yoast\\WP\\Free\\Watchers\\Indexable_Author_Watcher'] = new \Yoast\WP\Free\Watchers\Indexable_Author_Watcher(${($_ = isset($this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder'] : ($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Author_Builder())) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Watchers\\Indexable_Author_Watcher'] = new \Yoast\WP\SEO\Watchers\Indexable_Author_Watcher(${($_ = isset($this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder'] : ($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Author_Builder())) && false ?: '_'});
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Watchers\Indexable_Post_Watcher' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Watchers\Indexable_Post_Watcher' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Watchers\Indexable_Post_Watcher
+     * @return \Yoast\WP\SEO\Watchers\Indexable_Post_Watcher
      */
     protected function getIndexablePostWatcherService()
     {
-        return $this->services['Yoast\\WP\\Free\\Watchers\\Indexable_Post_Watcher'] = new \Yoast\WP\Free\Watchers\Indexable_Post_Watcher(${($_ = isset($this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder'] : $this->getIndexablePostBuilderService()) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Watchers\\Indexable_Post_Watcher'] = new \Yoast\WP\SEO\Watchers\Indexable_Post_Watcher(${($_ = isset($this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder'] : $this->getIndexablePostBuilderService()) && false ?: '_'});
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Watchers\Indexable_Term_Watcher' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Watchers\Indexable_Term_Watcher' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Watchers\Indexable_Term_Watcher
+     * @return \Yoast\WP\SEO\Watchers\Indexable_Term_Watcher
      */
     protected function getIndexableTermWatcherService()
     {
-        return $this->services['Yoast\\WP\\Free\\Watchers\\Indexable_Term_Watcher'] = new \Yoast\WP\Free\Watchers\Indexable_Term_Watcher(${($_ = isset($this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder'] : ($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Term_Builder())) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Watchers\\Indexable_Term_Watcher'] = new \Yoast\WP\SEO\Watchers\Indexable_Term_Watcher(${($_ = isset($this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository']) ? $this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository'] : $this->getIndexableRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder'] : ($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Term_Builder())) && false ?: '_'});
     }
 
     /**
-     * Gets the public 'Yoast\WP\Free\Watchers\Primary_Term_Watcher' shared autowired service.
+     * Gets the public 'Yoast\WP\SEO\Watchers\Primary_Term_Watcher' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Watchers\Primary_Term_Watcher
+     * @return \Yoast\WP\SEO\Watchers\Primary_Term_Watcher
      */
     protected function getPrimaryTermWatcherService()
     {
-        return $this->services['Yoast\\WP\\Free\\Watchers\\Primary_Term_Watcher'] = new \Yoast\WP\Free\Watchers\Primary_Term_Watcher(${($_ = isset($this->services['Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository']) ? $this->services['Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository'] : $this->getPrimaryTermRepositoryService()) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Watchers\\Primary_Term_Watcher'] = new \Yoast\WP\SEO\Watchers\Primary_Term_Watcher(${($_ = isset($this->services['Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository']) ? $this->services['Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository'] : $this->getPrimaryTermRepositoryService()) && false ?: '_'});
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Builders\Indexable_Author_Builder' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Builders\Indexable_Author_Builder' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Builders\Indexable_Author_Builder
+     * @return \Yoast\WP\SEO\Builders\Indexable_Author_Builder
      */
     protected function getIndexableAuthorBuilderService()
     {
-        return $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Author_Builder();
+        return $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Author_Builder();
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Builders\Indexable_Post_Builder' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Builders\Indexable_Post_Builder' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Builders\Indexable_Post_Builder
+     * @return \Yoast\WP\SEO\Builders\Indexable_Post_Builder
      */
     protected function getIndexablePostBuilderService()
     {
-        return $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Post_Builder(${($_ = isset($this->services['Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository']) ? $this->services['Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository'] : $this->getSEOMetaRepositoryService()) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Post_Builder(${($_ = isset($this->services['Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository']) ? $this->services['Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository'] : $this->getSEOMetaRepositoryService()) && false ?: '_'});
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Builders\Indexable_Term_Builder' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Builders\Indexable_Term_Builder' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Builders\Indexable_Term_Builder
+     * @return \Yoast\WP\SEO\Builders\Indexable_Term_Builder
      */
     protected function getIndexableTermBuilderService()
     {
-        return $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Term_Builder();
+        return $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Term_Builder();
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Loggers\Logger' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Loggers\Logger' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Loggers\Logger
+     * @return \Yoast\WP\SEO\Loggers\Logger
      */
     protected function getLoggerService()
     {
-        return $this->services['Yoast\\WP\\Free\\Loggers\\Logger'] = new \Yoast\WP\Free\Loggers\Logger();
+        return $this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] = new \Yoast\WP\SEO\Loggers\Logger();
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Repositories\Indexable_Repository' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Repositories\Indexable_Repository' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Repositories\Indexable_Repository
+     * @return \Yoast\WP\SEO\Repositories\Indexable_Repository
      */
     protected function getIndexableRepositoryService()
     {
-        return $this->services['Yoast\\WP\\Free\\Repositories\\Indexable_Repository'] = \Yoast\WP\Free\Repositories\Indexable_Repository::get_instance(${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder'] : ($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Author_Builder())) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder'] : $this->getIndexablePostBuilderService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder']) ? $this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder'] : ($this->services['Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\Free\Builders\Indexable_Term_Builder())) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Free\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\Free\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\Free\\Loggers\\Logger'] = new \Yoast\WP\Free\Loggers\Logger())) && false ?: '_'});
+        return $this->services['Yoast\\WP\\SEO\\Repositories\\Indexable_Repository'] = \Yoast\WP\SEO\Repositories\Indexable_Repository::get_instance(${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder'] : ($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Author_Builder())) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder'] : $this->getIndexablePostBuilderService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder']) ? $this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder'] : ($this->services['Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder'] = new \Yoast\WP\SEO\Builders\Indexable_Term_Builder())) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\SEO\\Loggers\\Logger']) ? $this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] : ($this->services['Yoast\\WP\\SEO\\Loggers\\Logger'] = new \Yoast\WP\SEO\Loggers\Logger())) && false ?: '_'});
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Repositories\Primary_Term_Repository' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Repositories\Primary_Term_Repository' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Repositories\Primary_Term_Repository
+     * @return \Yoast\WP\SEO\Repositories\Primary_Term_Repository
      */
     protected function getPrimaryTermRepositoryService()
     {
-        return $this->services['Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository'] = \Yoast\WP\Free\Repositories\Primary_Term_Repository::get_instance();
+        return $this->services['Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository'] = \Yoast\WP\SEO\Repositories\Primary_Term_Repository::get_instance();
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Repositories\SEO_Links_Repository' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Repositories\SEO_Links_Repository' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Repositories\SEO_Links_Repository
+     * @return \Yoast\WP\SEO\Repositories\SEO_Links_Repository
      */
     protected function getSEOLinksRepositoryService()
     {
-        return $this->services['Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository'] = \Yoast\WP\Free\Repositories\SEO_Links_Repository::get_instance();
+        return $this->services['Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository'] = \Yoast\WP\SEO\Repositories\SEO_Links_Repository::get_instance();
     }
 
     /**
-     * Gets the private 'Yoast\WP\Free\Repositories\SEO_Meta_Repository' shared autowired service.
+     * Gets the private 'Yoast\WP\SEO\Repositories\SEO_Meta_Repository' shared autowired service.
      *
-     * @return \Yoast\WP\Free\Repositories\SEO_Meta_Repository
+     * @return \Yoast\WP\SEO\Repositories\SEO_Meta_Repository
      */
     protected function getSEOMetaRepositoryService()
     {
-        return $this->services['Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository'] = \Yoast\WP\Free\Repositories\SEO_Meta_Repository::get_instance();
+        return $this->services['Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository'] = \Yoast\WP\SEO\Repositories\SEO_Meta_Repository::get_instance();
     }
 
     /**
@@ -308,7 +310,7 @@ class Cached_Container extends Container
      */
     protected function getWpQueryService()
     {
-        return $this->services['wp_query'] = \Yoast\WP\Free\WordPress\Wrapper::get_wp_query();
+        return $this->services['wp_query'] = \Yoast\WP\SEO\WordPress\Wrapper::get_wp_query();
     }
 
     /**
@@ -318,6 +320,6 @@ class Cached_Container extends Container
      */
     protected function getWpdbService()
     {
-        return $this->services['wpdb'] = \Yoast\WP\Free\WordPress\Wrapper::get_wpdb();
+        return $this->services['wpdb'] = \Yoast\WP\SEO\WordPress\Wrapper::get_wpdb();
     }
 }

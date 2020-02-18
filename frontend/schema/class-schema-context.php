@@ -144,9 +144,9 @@ class WPSEO_Schema_Context {
 		$this->id          = get_queried_object_id();
 
 		// Site level variables.
-		$this->site_name 		= $this->set_site_name();
+		$this->site_name        = $this->set_site_name();
 		$this->site_description = get_bloginfo( 'description' );
-		$this->site_url  		= trailingslashit( WPSEO_Utils::home_url() );
+		$this->site_url         = trailingslashit( WPSEO_Utils::home_url() );
 
 		$this->set_breadcrumbs_variables();
 		$this->set_site_represents_variables();
@@ -159,7 +159,7 @@ class WPSEO_Schema_Context {
 	 * @return string
 	 */
 	private function set_site_name() {
-		if ( '' !== WPSEO_Options::get( 'website_name', '' ) ) {
+		if ( WPSEO_Options::get( 'website_name', '' ) !== '' ) {
 			return WPSEO_Options::get( 'website_name' );
 		}
 

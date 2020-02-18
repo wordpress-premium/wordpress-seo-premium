@@ -25,7 +25,7 @@ _deprecated_file( __FILE__, 'WPSEO 12.5' );
 <p>
 	<?php
 	// There is no target.
-	if ( in_array( $redirect->get_type(), array( WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ), true ) ) {
+	if ( in_array( $redirect->get_type(), [ WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ], true ) ) {
 		printf(
 			/* Translators: %1$s: expands to the current URL. */
 			esc_html__( 'You do not have to create a redirect for URL %1$s because a redirect already exists. If this is fine you can mark this issue as fixed. If not, please go to the redirects page and change the redirect.', 'wordpress-seo-premium' ),

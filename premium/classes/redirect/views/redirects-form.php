@@ -12,23 +12,23 @@
  * }
  */
 
-$yoast_premium_origin_label_value = $display_vars['origin_label_value'];
-$yoast_premium_redirect_types     = $display_vars['redirect_types'];
-$yoast_premium_input_suffix       = $display_vars['input_suffix'];
-$yoast_premium_values             = $display_vars['values'];
+$yoast_seo_origin_label_value = $display_vars['origin_label_value'];
+$yoast_seo_redirect_types     = $display_vars['redirect_types'];
+$yoast_seo_input_suffix       = $display_vars['input_suffix'];
+$yoast_seo_values             = $display_vars['values'];
 ?>
 <div class="redirect_form_row" id="row-wpseo_redirects_type">
-	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_type' . $yoast_premium_input_suffix ); ?>'>
+	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_type' . $yoast_seo_input_suffix ); ?>'>
 		<span class="title"><?php echo esc_html_x( 'Type', 'noun', 'wordpress-seo-premium' ); ?></span>
 	</label>
-	<select name='wpseo_redirects_type' id='<?php echo esc_attr( 'wpseo_redirects_type' . $yoast_premium_input_suffix ); ?>' class='select'>
+	<select name='wpseo_redirects_type' id='<?php echo esc_attr( 'wpseo_redirects_type' . $yoast_seo_input_suffix ); ?>' class='select'>
 		<?php
 		// Loop through the redirect types.
-		if ( count( $yoast_premium_redirect_types ) > 0 ) {
-			foreach ( $yoast_premium_redirect_types as $yoast_premium_redirect_type => $yoast_premium_redirect_desc ) {
-				echo '<option value="' . esc_attr( $yoast_premium_redirect_type ) . '"'
-					. sprintf( $yoast_premium_values['type'], $yoast_premium_redirect_type ) . '>'
-					. esc_html( $yoast_premium_redirect_desc ) . '</option>' . "\n";
+		if ( count( $yoast_seo_redirect_types ) > 0 ) {
+			foreach ( $yoast_seo_redirect_types as $yoast_seo_redirect_type => $yoast_seo_redirect_desc ) {
+				echo '<option value="' . esc_attr( $yoast_seo_redirect_type ) . '"'
+					. sprintf( $yoast_seo_values['type'], $yoast_seo_redirect_type ) . '>'
+					. esc_html( $yoast_seo_redirect_desc ) . '</option>' . "\n";
 			}
 		}
 		?>
@@ -47,17 +47,17 @@ $yoast_premium_values             = $display_vars['values'];
 </p>
 
 <div class='redirect_form_row' id="row-wpseo_redirects_origin">
-	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_origin' . $yoast_premium_input_suffix ); ?>'>
-		<span class="title"><?php echo esc_html( $yoast_premium_origin_label_value ); ?></span>
+	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_origin' . $yoast_seo_input_suffix ); ?>'>
+		<span class="title"><?php echo esc_html( $yoast_seo_origin_label_value ); ?></span>
 	</label>
-	<input type='text' class='textinput' name='wpseo_redirects_origin' id='<?php echo esc_attr( 'wpseo_redirects_origin' . $yoast_premium_input_suffix ); ?>' value='<?php echo esc_attr( $yoast_premium_values['origin'] ); ?>' />
+	<input type='text' class='textinput' name='wpseo_redirects_origin' id='<?php echo esc_attr( 'wpseo_redirects_origin' . $yoast_seo_input_suffix ); ?>' value='<?php echo esc_attr( $yoast_seo_values['origin'] ); ?>' />
 </div>
 <br class='clear'/>
 
 <div class="redirect_form_row wpseo_redirect_target_holder" id="row-wpseo_redirects_target">
-	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_target' . $yoast_premium_input_suffix ); ?>'>
+	<label class='textinput' for='<?php echo esc_attr( 'wpseo_redirects_target' . $yoast_seo_input_suffix ); ?>'>
 		<span class="title"><?php esc_html_e( 'URL', 'wordpress-seo-premium' ); ?></span>
 	</label>
-	<input type='text' class='textinput' name='wpseo_redirects_target' id='<?php echo esc_attr( 'wpseo_redirects_target' . $yoast_premium_input_suffix ); ?>' value='<?php echo esc_attr( $yoast_premium_values['target'] ); ?>' />
+	<input type='text' class='textinput' name='wpseo_redirects_target' id='<?php echo esc_attr( 'wpseo_redirects_target' . $yoast_seo_input_suffix ); ?>' value='<?php echo esc_attr( $yoast_seo_values['target'] ); ?>' />
 </div>
 <br class='clear'/>

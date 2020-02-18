@@ -22,7 +22,7 @@ abstract class WPSEO_Validation_Result {
 	 *
 	 * @var array
 	 */
-	private $fields = array();
+	private $fields = [];
 
 	/**
 	 * Gets the validation result type.
@@ -37,7 +37,7 @@ abstract class WPSEO_Validation_Result {
 	 * @param string       $message The validation message contained by the result.
 	 * @param string|array $fields  The fields that errored.
 	 */
-	public function __construct( $message, $fields = array() ) {
+	public function __construct( $message, $fields = [] ) {
 		$this->message = $message;
 		$this->set_fields( $fields );
 	}
@@ -57,11 +57,11 @@ abstract class WPSEO_Validation_Result {
 	 * @return array
 	 */
 	public function to_array() {
-		return array(
+		return [
 			'type'    => $this->get_type(),
 			'message' => $this->message,
 			'fields'  => $this->fields,
-		);
+		];
 	}
 
 	/**
@@ -71,7 +71,7 @@ abstract class WPSEO_Validation_Result {
 	 */
 	protected function set_fields( $fields = '' ) {
 		if ( ! is_array( $fields ) && is_string( $fields ) ) {
-			$fields = array( $fields );
+			$fields = [ $fields ];
 		}
 
 		$this->fields = $fields;

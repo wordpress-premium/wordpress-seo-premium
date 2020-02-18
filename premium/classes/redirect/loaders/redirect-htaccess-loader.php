@@ -32,7 +32,7 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	 * @return WPSEO_Redirect[] The loaded redirects.
 	 */
 	public function load() {
-		$redirects = array();
+		$redirects = [];
 
 		// Loop through patterns.
 		foreach ( self::regex_patterns() as $regex ) {
@@ -51,7 +51,7 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	 *
 	 * @param string $pattern The regular expression to match redirects.
 	 *
-	 * @return mixed;
+	 * @return array[];
 	 */
 	protected function match_redirects( $pattern ) {
 		preg_match_all( $pattern, $this->htaccess, $matches, PREG_SET_ORDER );
@@ -62,13 +62,13 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	/**
 	 * Converts matches to WPSEO_Redirect objects.
 	 *
-	 * @param mixed  $matches The redirects to save.
-	 * @param string $format  The format for the redirects.
+	 * @param array[] $matches The redirects to save.
+	 * @param string  $format  The format for the redirects.
 	 *
 	 * @return WPSEO_Redirect[] The redirects.
 	 */
 	protected function convert_redirects_from_matches( $matches, $format ) {
-		$redirects = array();
+		$redirects = [];
 
 		foreach ( $matches as $match ) {
 			$type   = trim( $match[1] );
@@ -88,8 +88,8 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	/**
 	 * Parses the target from a match.
 	 *
-	 * @param string $type  The status code of the redirect.
-	 * @param array  $match The match.
+	 * @param string   $type  The status code of the redirect.
+	 * @param string[] $match The match.
 	 *
 	 * @return bool|string The status code, false if no status code could be parsed.
 	 */
@@ -112,34 +112,34 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	/**
 	 * Returns regex patterns to match redirects in .htaccess files.
 	 *
-	 * @return array The regex patterns to test against.
+	 * @return array[] The regex patterns to test against.
 	 */
 	protected static function regex_patterns() {
-		return array(
-			array(
+		return [
+			[
 				'type'    => WPSEO_Redirect_Formats::PLAIN,
 				'pattern' => '`^Redirect ([0-9]{3}) ([^"\s]+) ([a-z0-9-_+/.:%&?=#\][]+)`im',
-			),
-			array(
+			],
+			[
 				'type'    => WPSEO_Redirect_Formats::PLAIN,
 				'pattern' => '`^Redirect ([0-9]{3}) "([^"]+)" ([a-z0-9-_+/.:%&?=#\][]+)`im',
-			),
-			array(
+			],
+			[
 				'type'    => WPSEO_Redirect_Formats::PLAIN,
 				'pattern' => '`^Redirect (410) ([^"\s]+)`im', // Matches a redirect without a target.
-			),
-			array(
+			],
+			[
 				'type'    => WPSEO_Redirect_Formats::PLAIN,
 				'pattern' => '`^Redirect (410) "([^"]+)"`im', // Matches a redirect without a target.
-			),
-			array(
+			],
+			[
 				'type'    => WPSEO_Redirect_Formats::REGEX,
 				'pattern' => '`^RedirectMatch ([0-9]{3}) ([^"\s]+) ([^\s]+)`im',
-			),
-			array(
+			],
+			[
 				'type'    => WPSEO_Redirect_Formats::REGEX,
 				'pattern' => '`^RedirectMatch ([0-9]{3}) "([^"]+)" ([^\s]+)`im',
-			),
-		);
+			],
+		];
 	}
 }

@@ -11,13 +11,13 @@
  * @var stdClass $import
  */
 
-$wpseo_i18n_import_redirects_from = sprintf(
+$yoast_seo_i18n_import_redirects_from = sprintf(
 	/* translators: %s: '.htaccess' file name */
 	__( 'Import redirects from %s', 'wordpress-seo-premium' ),
 	'<code>.htaccess</code>'
 );
 
-$wpseo_i18n_import_redirects_explain = sprintf(
+$yoast_seo_i18n_import_redirects_explain = sprintf(
 	/* translators: %1$s: '.htaccess' file name, %2$s: plugin name */
 	__( 'You can copy the contents of any %1$s file in here, and it will import the redirects into %2$s.', 'wordpress-seo-premium' ),
 	'<code>.htaccess</code>',
@@ -25,11 +25,11 @@ $wpseo_i18n_import_redirects_explain = sprintf(
 );
 
 // The plugins we have import functions for.
-$yoast_premium_plugins = array(
+$yoast_seo_plugins = [
 	'redirection'           => __( 'Redirection', 'wordpress-seo-premium' ) . '<br/>',
 	'safe_redirect_manager' => __( 'Safe Redirect Manager', 'wordpress-seo-premium' ) . '<br/>',
 	'simple-301-redirects'  => __( 'Simple 301 Redirects', 'wordpress-seo-premium' ) . '<br/>',
-);
+];
 
 ?>
 <div id="import-htaccess" class="wpseotab">
@@ -43,7 +43,7 @@ $yoast_premium_plugins = array(
 		<form action="" method="post" accept-charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
 			<?php wp_nonce_field( 'wpseo-import', '_wpnonce', true ); ?>
 			<?php
-				Yoast_Form::get_instance()->radio( 'import_plugin', $yoast_premium_plugins, __( 'Import from:', 'wordpress-seo-premium' ) );
+				Yoast_Form::get_instance()->radio( 'import_plugin', $yoast_seo_plugins, __( 'Import from:', 'wordpress-seo-premium' ) );
 			?>
 			<br/>
 			<input type="submit" class="button button-primary" name="import" value="<?php esc_attr_e( 'Import redirects', 'wordpress-seo-premium' ); ?>"/>
@@ -67,9 +67,9 @@ $yoast_premium_plugins = array(
 	<br/>
 
 	<div>
-		<h2><?php echo wp_kses( $wpseo_i18n_import_redirects_from, array( 'code' => array() ) ); ?></h2>
+		<h2><?php echo wp_kses( $yoast_seo_i18n_import_redirects_from, [ 'code' => [] ] ); ?></h2>
 		<p>
-			<?php echo wp_kses( $wpseo_i18n_import_redirects_explain, array( 'code' => array() ) ); ?>
+			<?php echo wp_kses( $yoast_seo_i18n_import_redirects_explain, [ 'code' => [] ] ); ?>
 		</p>
 		<form action="" method="post" accept-charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
 			<?php wp_nonce_field( 'wpseo-import', '_wpnonce', true ); ?>

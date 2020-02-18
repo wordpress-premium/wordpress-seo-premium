@@ -16,7 +16,7 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 	}
 
 	/**
@@ -29,7 +29,7 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 
 		$service         = new WPSEO_Premium_Link_Suggestions_Service();
 		$prominent_words = get_the_terms( $post_ID, WPSEO_Premium_Prominent_Words_Registration::TERM_NAME );
-		if ( false === $prominent_words || is_wp_error( $prominent_words ) ) {
+		if ( $prominent_words === false || is_wp_error( $prominent_words ) ) {
 			return false;
 		}
 
@@ -51,7 +51,7 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	public function add_meta_boxes() {
 		$post_types = $this->get_post_types();
 
-		array_map( array( $this, 'add_meta_box' ), $post_types );
+		array_map( [ $this, 'add_meta_box' ], $post_types );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	 *
 	 * @param string $post_type The post type for which to check if the link suggestions are available.
 	 *
-	 * @return boolean Whether the link suggestions are available for the given post type.
+	 * @return bool Whether the link suggestions are available for the given post type.
 	 */
 	public function is_available( $post_type ) {
 		$allowed_post_types = $this->get_post_types();
@@ -134,13 +134,13 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 				__( '%s internal linking', 'wordpress-seo-premium' ),
 				'Yoast'
 			),
-			array( $this, 'render_metabox_content' ),
+			[ $this, 'render_metabox_content' ],
 			$post_type,
 			'side',
 			'low',
-			array(
+			[
 				'__block_editor_compatible_meta_box' => true,
-			)
+			]
 		);
 	}
 }

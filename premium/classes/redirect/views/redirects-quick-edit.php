@@ -10,28 +10,28 @@
  * }
  */
 
-$yoast_premium_total_columns  = $display_data['total_columns'];
-$yoast_premium_form_presenter = $display_data['form_presenter'];
+$yoast_seo_total_columns  = $display_data['total_columns'];
+$yoast_seo_form_presenter = $display_data['form_presenter'];
 
 ?>
 	<script type="text/plain" id="tmpl-redirects-inline-edit">
 			<tr id="inline-edit" class="inline-edit-row hidden">
-				<td colspan="<?php echo (int) $yoast_premium_total_columns; ?>" class="colspanchange">
+				<td colspan="<?php echo (int) $yoast_seo_total_columns; ?>" class="colspanchange">
 
 					<fieldset>
 						<legend class="inline-edit-legend"><?php esc_html_e( 'Edit redirect', 'wordpress-seo-premium' ); ?></legend>
 						<div class="inline-edit-col">
 							<div class="wpseo_redirect_form">
 								<?php
-								$yoast_premium_form_presenter->display(
-									array(
+								$yoast_seo_form_presenter->display(
+									[
 										'input_suffix' => '{{data.suffix}}',
-										'values'       => array(
+										'values'       => [
 											'origin' => '{{data.origin}}',
 											'target' => '{{data.target}}',
 											'type'   => '<# if(data.type === %1$s) {  #> selected="selected"<# } #>',
-										),
-									)
+										],
+									]
 								);
 								?>
 							</div>

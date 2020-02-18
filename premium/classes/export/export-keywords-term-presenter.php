@@ -40,7 +40,7 @@ class WPSEO_Export_Keywords_Term_Presenter implements WPSEO_Export_Keywords_Pres
 	 */
 	public function present( array $result ) {
 		if ( ! $this->validate_result( $result ) ) {
-			return array();
+			return [];
 		}
 
 		$result['ID'] = (int) $result['term_id'];
@@ -150,10 +150,10 @@ class WPSEO_Export_Keywords_Term_Presenter implements WPSEO_Export_Keywords_Pres
 		$keyword = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'focuskw' );
 
 		if ( $keyword === false || empty( $keyword ) ) {
-			return array();
+			return [];
 		}
 
-		return array( (string) $keyword );
+		return [ (string) $keyword ];
 	}
 
 	/**
@@ -167,11 +167,11 @@ class WPSEO_Export_Keywords_Term_Presenter implements WPSEO_Export_Keywords_Pres
 		$keyword_score = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'linkdex' );
 
 		if ( $keyword_score === false || empty( $keyword_score ) ) {
-			return array();
+			return [];
 		}
 
 		$keyword_score_label = WPSEO_Rank::from_numeric_score( (int) $keyword_score )->get_label();
 
-		return array( $keyword_score_label );
+		return [ $keyword_score_label ];
 	}
 }

@@ -63,7 +63,7 @@ class WPSEO_Export_Keywords_CSV {
 	 * @return string The headers in CSV format.
 	 */
 	protected function get_headers() {
-		$header_columns = array(
+		$header_columns = [
 			'title'             => esc_html__( 'title', 'wordpress-seo-premium' ),
 			'url'               => esc_html__( 'url', 'wordpress-seo-premium' ),
 			'readability_score' => esc_html__( 'readability score', 'wordpress-seo-premium' ),
@@ -71,7 +71,7 @@ class WPSEO_Export_Keywords_CSV {
 			'keywords_score'    => esc_html__( 'keyphrase score', 'wordpress-seo-premium' ),
 			'seo_title'         => esc_html__( 'seo title', 'wordpress-seo-premium' ),
 			'meta_description'  => esc_html__( 'meta description', 'wordpress-seo-premium' ),
-		);
+		];
 
 		$csv  = $this->sanitize_csv_column( esc_html__( 'ID', 'wordpress-seo-premium' ) );
 		$csv .= ',' . $this->sanitize_csv_column( esc_html_x( 'type', 'post_type of a post or the taxonomy of a term', 'wordpress-seo-premium' ) );
@@ -135,11 +135,11 @@ class WPSEO_Export_Keywords_CSV {
 	 * @return string CSV formatted column.
 	 */
 	protected function get_csv_column_from_result( array $result, $key, $keywords_index ) {
-		if ( in_array( $key, array( 'title', 'url', 'seo_title', 'meta_description', 'readability_score' ), true ) ) {
+		if ( in_array( $key, [ 'title', 'url', 'seo_title', 'meta_description', 'readability_score' ], true ) ) {
 			return $this->get_csv_string_column_from_result( $result, $key );
 		}
 
-		if ( in_array( $key, array( 'keywords', 'keywords_score' ), true ) ) {
+		if ( in_array( $key, [ 'keywords', 'keywords_score' ], true ) ) {
 			return $this->get_csv_array_column_from_result( $result, $key, $keywords_index );
 		}
 
@@ -159,7 +159,7 @@ class WPSEO_Export_Keywords_CSV {
 			return $result[ $key ];
 		}
 
-		return array();
+		return [];
 	}
 
 	/**

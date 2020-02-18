@@ -26,10 +26,10 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 *
 	 * @var array
 	 */
-	private $filter = array(
+	private $filter = [
 		'redirect_type' => null,
 		'search_string' => null,
-	);
+	];
 
 	/**
 	 * The name of the first column.
@@ -53,13 +53,13 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 * @param WPSEO_Redirect[] $redirects      The redirects.
 	 */
 	public function __construct( $type, $current_column, $redirects ) {
-		parent::__construct( array( 'plural' => $type ) );
+		parent::__construct( [ 'plural' => $type ] );
 
 		$this->current_column = $current_column;
 
 		$this->set_items( $redirects );
 
-		add_filter( 'list_table_primary_column', array( $this, 'redirect_list_table_primary_column' ), 10, 2 );
+		add_filter( 'list_table_primary_column', [ $this, 'redirect_list_table_primary_column' ], 10, 2 );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 				}
 				?>
 			</select>
-			<?php submit_button( __( 'Filter', 'wordpress-seo-premium' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) ); ?>
+			<?php submit_button( __( 'Filter', 'wordpress-seo-premium' ), '', 'filter_action', false, [ 'id' => 'post-query-submit' ] ); ?>
 		</div>
 		<?php
 	}
@@ -105,17 +105,15 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	/**
 	 * Set the table columns.
 	 *
-	 * @return array The table columns.
+	 * @return string[] The table columns.
 	 */
 	public function get_columns() {
-		$columns = array(
+		return [
 			'cb'   => '<input type="checkbox" />',
 			'type' => _x( 'Type', 'noun', 'wordpress-seo-premium' ),
 			'old'  => $this->current_column,
 			'new'  => __( 'New URL', 'wordpress-seo-premium' ),
-		);
-
-		return $columns;
+		];
 	}
 
 	/**
@@ -136,7 +134,7 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 * @return string The primary table column.
 	 */
 	public function redirect_list_table_primary_column( $column, $screen ) {
-		if ( 'seo_page_wpseo_redirects' === $screen ) {
+		if ( $screen === 'seo_page_wpseo_redirects' ) {
 			$column = $this->primary_column;
 		}
 
@@ -151,16 +149,16 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 		// Setup the columns.
-		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
+		$this->_column_headers = [ $this->get_columns(), [], $this->get_sortable_columns() ];
 
 		// Get variables needed for pagination.
 		$per_page        = $this->get_items_per_page( 'redirects_per_page', 25 );
 		$total_items     = count( $this->items );
-		$pagination_args = array(
+		$pagination_args = [
 			'total_items' => $total_items,
 			'total_pages' => ceil( $total_items / $per_page ),
 			'per_page'    => $per_page,
-		);
+		];
 
 		// Set pagination.
 		$this->set_pagination_args( $pagination_args );
@@ -184,16 +182,14 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	/**
 	 * Returns the columns that are sortable.
 	 *
-	 * @return array An array containing the sortable columns.
+	 * @return array[] An array containing the sortable columns.
 	 */
 	public function get_sortable_columns() {
-		$sortable_columns = array(
-			'old'  => array( 'old', false ),
-			'new'  => array( 'new', false ),
-			'type' => array( 'type', false ),
-		);
-
-		return $sortable_columns;
+		return [
+			'old'  => [ 'old', false ],
+			'new'  => [ 'new', false ],
+			'type' => [ 'type', false ],
+		];
 	}
 
 	/**
@@ -210,12 +206,12 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 			INPUT_GET,
 			'orderby',
 			FILTER_VALIDATE_REGEXP,
-			array(
-				'options' => array(
+			[
+				'options' => [
 					'default' => 'old',
 					'regexp'  => '/^(old|new|type)$/',
-				),
-			)
+				],
+			]
 		);
 
 		// If no order, default to asc.
@@ -223,19 +219,19 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 			INPUT_GET,
 			'order',
 			FILTER_VALIDATE_REGEXP,
-			array(
-				'options' => array(
+			[
+				'options' => [
 					'default' => 'asc',
 					'regexp'  => '/^(asc|desc)$/',
-				),
-			)
+				],
+			]
 		);
 
 		// Determine sort order.
 		$result = strcmp( $a[ $orderby ], $b[ $orderby ] );
 
 		// Send final sort direction to usort.
-		return ( $order === 'asc' ) ? $result : ( - $result );
+		return ( $order === 'asc' ) ? $result : ( -$result );
 	}
 
 	/**
@@ -269,7 +265,7 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 
 		switch ( $column_name ) {
 			case 'new':
-				$classes = array( 'val' );
+				$classes = [ 'val' ];
 				$new_url = $item['new'];
 
 				if ( ! $is_regex && WPSEO_Redirect_Util::requires_trailing_slash( $new_url ) ) {
@@ -277,8 +273,8 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 				}
 
 				if (
-					'' === $new_url ||
-					'/' === $new_url ||
+					$new_url === '' ||
+					$new_url === '/' ||
 					! WPSEO_Redirect_Util::is_relative_url( $new_url )
 				) {
 					$classes[] = 'remove-slashes';
@@ -305,14 +301,12 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	/**
 	 * Returns the available bulk actions.
 	 *
-	 * @return array Array containing the available bulk actions.
+	 * @return string[] Array containing the available bulk actions.
 	 */
 	public function get_bulk_actions() {
-		$actions = array(
+		return [
 			'delete' => __( 'Delete', 'wordpress-seo-premium' ),
-		);
-
-		return $actions;
+		];
 	}
 
 	/**
@@ -330,7 +324,7 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 
 		// Sort the results.
 		if ( count( $this->items ) > 0 ) {
-			usort( $this->items, array( $this, 'do_reorder' ) );
+			usort( $this->items, [ $this, 'do_reorder' ] );
 		}
 	}
 
@@ -342,18 +336,18 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 * @return array The filtered items.
 	 */
 	private function filter_items( array $items ) {
-		$search_string = filter_input( INPUT_GET, 's', FILTER_DEFAULT, array( 'options' => array( 'default' => '' ) ) );
+		$search_string = filter_input( INPUT_GET, 's', FILTER_DEFAULT, [ 'options' => [ 'default' => '' ] ] );
 		if ( $search_string !== '' ) {
 			$this->filter['search_string'] = trim( $search_string, '/' );
 
-			$items = array_filter( $items, array( $this, 'filter_by_search_string' ) );
+			$items = array_filter( $items, [ $this, 'filter_by_search_string' ] );
 		}
 
 		$redirect_type = (int) filter_input( INPUT_GET, 'redirect-type' );
 		if ( ! empty( $redirect_type ) ) {
 			$this->filter['redirect_type'] = $redirect_type;
 
-			$items = array_filter( $items, array( $this, 'filter_by_type' ) );
+			$items = array_filter( $items, [ $this, 'filter_by_type' ] );
 		}
 
 		return $items;
@@ -364,17 +358,17 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 */
 	private function format_items() {
 		// Format the data.
-		$formatted_items = array();
+		$formatted_items = [];
 
 		$counter = 1;
 
-		foreach ( $this->items as $old => $redirect ) {
-			$formatted_items[] = array(
+		foreach ( $this->items as $redirect ) {
+			$formatted_items[] = [
 				'old'        => $redirect->get_origin(),
 				'new'        => $redirect->get_target(),
 				'type'       => $redirect->get_type(),
 				'row_number' => $counter,
-			);
+			];
 
 			$counter++;
 		}
@@ -413,10 +407,10 @@ class WPSEO_Redirect_Table extends WP_List_Table {
 	 */
 	private function get_row_actions( $column ) {
 		if ( $column === $this->primary_column ) {
-			$actions = array(
+			$actions = [
 				'edit'  => '<a href="#" role="button" class="redirect-edit">' . __( 'Edit', 'wordpress-seo-premium' ) . '</a>',
 				'trash' => '<a href="#" role="button" class="redirect-delete">' . __( 'Delete', 'wordpress-seo-premium' ) . '</a>',
-			);
+			];
 
 			return $this->row_actions( $actions );
 		}

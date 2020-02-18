@@ -35,7 +35,7 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 	/**
 	 * Returns a text explaining this filter.
 	 *
-	 * @return string The explanation.
+	 * @return string|null The explanation or null if the current post stype is unknown.
 	 */
 	protected function get_explanation() {
 		$post_type_object = get_post_type_object( $this->get_current_post_type() );
@@ -144,7 +144,7 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 	/**
 	 * Returns the total amount of articles that are orphaned content.
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	protected function get_post_total() {
 		global $wpdb;

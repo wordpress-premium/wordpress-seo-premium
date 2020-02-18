@@ -130,6 +130,11 @@ class WPSEO_Admin {
 	 * Schedules a rewrite flush to happen at shutdown.
 	 */
 	public function schedule_rewrite_flush() {
+		// Bail if this is a multisite installation and the site has been switched.
+		if ( is_multisite() && ms_is_switched() ) {
+			return;
+		}
+
 		add_action( 'shutdown', 'flush_rewrite_rules' );
 	}
 
@@ -146,7 +151,7 @@ class WPSEO_Admin {
 	 * Register assets needed on admin pages.
 	 */
 	public function enqueue_assets() {
-		if ( 'wpseo_licenses' === filter_input( INPUT_GET, 'page' ) ) {
+		if ( filter_input( INPUT_GET, 'page' ) === 'wpseo_licenses' ) {
 			$asset_manager = new WPSEO_Admin_Asset_Manager();
 			$asset_manager->enqueue_style( 'extensions' );
 		}
@@ -201,7 +206,7 @@ class WPSEO_Admin {
 	 * @return int
 	 */
 	public function save_bulk_edit_options( $status, $option, $value ) {
-		if ( 'wpseo_posts_per_page' === $option && ( $value > 0 && $value < 1000 ) ) {
+		if ( $option && ( $value > 0 && $value < 1000 ) === 'wpseo_posts_per_page' ) {
 			return $value;
 		}
 
@@ -303,8 +308,8 @@ class WPSEO_Admin {
 	 */
 	private function localize_admin_global_script() {
 		return [
-			/* translators: %1$s: '%%term_title%%' variable used in titles and meta's template that's not compatible with the given template, %2$s: expands to 'HelpScout beacon' */
 			'variable_warning'        => sprintf(
+				/* translators: %1$s: '%%term_title%%' variable used in titles and meta's template that's not compatible with the given template, %2$s: expands to 'HelpScout beacon' */
 				__( 'Warning: the variable %1$s cannot be used in this template. See the %2$s for more info.', 'wordpress-seo' ),
 				'<code>%s</code>',
 				'HelpScout beacon'
@@ -348,7 +353,7 @@ class WPSEO_Admin {
 	 * @returns bool
 	 */
 	protected function on_dashboard_page() {
-		return 'index.php' === $GLOBALS['pagenow'];
+		return $GLOBALS['pagenow'] === 'index.php';
 	}
 
 	/**

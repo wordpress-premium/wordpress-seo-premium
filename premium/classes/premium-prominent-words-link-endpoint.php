@@ -35,32 +35,32 @@ class WPSEO_Premium_Prominent_Words_Link_Endpoint implements WPSEO_WordPress_Int
 	 * Registers all hooks to WordPress.
 	 */
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register' ) );
+		add_action( 'rest_api_init', [ $this, 'register' ] );
 	}
 
 	/**
 	 * Registers the REST endpoint to WordPress.
 	 */
 	public function register() {
-		$route_args = array(
+		$route_args = [
 			'methods'             => 'POST',
-			'args'                => array(
-				WPSEO_Premium_Prominent_Words_Registration::TERM_NAME => array(
+			'args'                => [
+				WPSEO_Premium_Prominent_Words_Registration::TERM_NAME => [
 					'required'    => false,
 					'type'        => 'array',
-					'items'       => array( 'type' => 'integer' ),
+					'items'       => [ 'type' => 'integer' ],
 					'description' => 'The prominent words to link',
-				),
-			),
-			'callback'            => array(
+				],
+			],
+			'callback'            => [
 				$this->service,
 				'save',
-			),
-			'permission_callback' => array(
+			],
+			'permission_callback' => [
 				$this,
 				'can_retrieve_data',
-			),
-		);
+			],
+		];
 		register_rest_route( self::REST_NAMESPACE, self::ENDPOINT_QUERY . '/(?P<id>[\d]+)', $route_args );
 	}
 

@@ -35,7 +35,7 @@ class WPSEO_Redirect_Util {
 	 * @return bool
 	 */
 	public static function has_permalink_trailing_slash() {
-		if ( null === self::$has_permalink_trailing_slash ) {
+		if ( self::$has_permalink_trailing_slash === null ) {
 			$permalink_structure = get_option( 'permalink_structure' );
 
 			self::$has_permalink_trailing_slash = substr( $permalink_structure, -1 ) === '/';
@@ -51,7 +51,7 @@ class WPSEO_Redirect_Util {
 	 * @return bool
 	 */
 	public static function has_query_parameters( $url ) {
-		return false !== strpos( $url, '?' );
+		return strpos( $url, '?' ) !== false;
 	}
 
 	/**
@@ -63,7 +63,7 @@ class WPSEO_Redirect_Util {
 	 */
 	public static function has_fragment_identifier( $url ) {
 		// Deal with this case if the last character is a hash.
-		if ( '#' === substr( $url, -1 ) ) {
+		if ( substr( $url, -1 ) === '#' ) {
 			return true;
 		}
 
@@ -82,7 +82,7 @@ class WPSEO_Redirect_Util {
 	public static function has_extension( $url ) {
 		$parsed = wp_parse_url( $url, PHP_URL_PATH );
 
-		return false !== strpos( $parsed, '.' );
+		return strpos( $parsed, '.' ) !== false;
 	}
 
 	/**
@@ -93,7 +93,7 @@ class WPSEO_Redirect_Util {
 	 * @return bool
 	 */
 	public static function requires_trailing_slash( $target_url ) {
-		return '/' !== $target_url &&
+		return $target_url !== '/' &&
 			self::has_permalink_trailing_slash() &&
 			self::is_relative_url( $target_url ) &&
 			! self::has_query_parameters( $target_url ) &&

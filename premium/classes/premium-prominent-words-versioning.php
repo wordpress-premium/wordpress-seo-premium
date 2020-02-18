@@ -37,7 +37,7 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 			return;
 		}
 
-		add_action( 'rest_api_init', array( $this, 'register_rest_argument' ) );
+		add_action( 'rest_api_init', [ $this, 'register_rest_argument' ] );
 	}
 
 	/**
@@ -47,8 +47,8 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 	 */
 	public function register_rest_argument() {
 		foreach ( $this->get_post_types() as $post_type ) {
-			add_filter( 'rest_' . $post_type . '_query', array( $this, 'rest_add_query_args' ), 10, 2 );
-			add_filter( 'rest_' . $post_type . '_collection_params', array( $this, 'rest_register_collection_param' ) );
+			add_filter( 'rest_' . $post_type . '_query', [ $this, 'rest_add_query_args' ], 10, 2 );
+			add_filter( 'rest_' . $post_type . '_collection_params', [ $this, 'rest_register_collection_param' ] );
 		}
 	}
 
@@ -72,11 +72,11 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 	 * @return array The altered query params.
 	 */
 	public function rest_register_collection_param( $query_params ) {
-		$query_params[ self::COLLECTION_PARAM ] = array(
+		$query_params[ self::COLLECTION_PARAM ] = [
 			'description' => __( 'Limit result set to items that are unindexed.', 'wordpress-seo-premium' ),
 			'type'        => 'boolean',
 			'default'     => false,
-		);
+		];
 
 		return $query_params;
 	}
@@ -102,7 +102,7 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 
 			// Make sure WP_Query uses our list, especially when it's empty!
 			if ( empty( $post_ids ) ) {
-				$post_ids = array( 0 );
+				$post_ids = [ 0 ];
 			}
 
 			$args['post__in'] = $post_ids;

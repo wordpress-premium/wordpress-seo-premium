@@ -41,12 +41,12 @@ final class WPSEO_Executable_Redirect {
 	/**
 	 * WPSEO_Redirect constructor.
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @param string $origin The origin of the redirect.
 	 * @param string $target The target of the redirect.
 	 * @param int    $type   The type of the redirect.
 	 * @param string $format The format of the redirect.
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function __construct( $origin, $target, $type, $format ) {
 		$this->origin = $origin;

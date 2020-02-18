@@ -59,7 +59,7 @@ class WPSEO_Premium_Autoloader {
 	 *                                ending in the respective suffix. The associative array hould contain
 	 *                                $suffix_pattern => $subdirectory pairs. Default empty array.
 	 */
-	public function __construct( $search_pattern, $directory, $file_replace = '', $suffix_patterns = array() ) {
+	public function __construct( $search_pattern, $directory, $file_replace = '', $suffix_patterns = [] ) {
 		_deprecated_constructor( 'WPSEO_Premium_Autoloader', 'WPSEO 9.4' );
 
 		$this->search_pattern        = $search_pattern;
@@ -68,7 +68,7 @@ class WPSEO_Premium_Autoloader {
 		$this->suffix_patterns       = $suffix_patterns;
 		$this->suffix_patterns_regex = $this->generate_suffix_patterns_regex( $this->suffix_patterns );
 
-		spl_autoload_register( array( $this, 'load' ) );
+		spl_autoload_register( [ $this, 'load' ] );
 	}
 
 	/**
@@ -94,7 +94,7 @@ class WPSEO_Premium_Autoloader {
 	 * @return bool
 	 */
 	private function contains_search_pattern( $class ) {
-		return 0 === strpos( $class, $this->search_pattern );
+		return strpos( $class, $this->search_pattern ) === 0;
 	}
 
 	/**
@@ -109,7 +109,7 @@ class WPSEO_Premium_Autoloader {
 		$file_name = $this->get_file_name( strtolower( $class ) );
 
 		// Full file path.
-		$class_path = dirname( __FILE__ ) . '/' . $this->directory;
+		$class_path = __DIR__ . '/' . $this->directory;
 
 		// Match against suffix patterns, if any are present.
 		if ( ! empty( $this->suffix_patterns_regex ) && preg_match( $this->suffix_patterns_regex, $class, $matches ) ) {

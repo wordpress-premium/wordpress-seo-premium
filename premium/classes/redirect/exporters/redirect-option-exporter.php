@@ -18,10 +18,10 @@ class WPSEO_Redirect_Option_Exporter implements WPSEO_Redirect_Exporter {
 	 * @return bool
 	 */
 	public function export( $redirects ) {
-		$formatted_redirects = array(
-			WPSEO_Redirect_Formats::PLAIN => array(),
-			WPSEO_Redirect_Formats::REGEX => array(),
-		);
+		$formatted_redirects = [
+			WPSEO_Redirect_Formats::PLAIN => [],
+			WPSEO_Redirect_Formats::REGEX => [],
+		];
 
 		foreach ( $redirects as $redirect ) {
 			$formatted_redirects[ $redirect->get_format() ][ $redirect->get_origin() ] = $this->format( $redirect );
@@ -41,12 +41,12 @@ class WPSEO_Redirect_Option_Exporter implements WPSEO_Redirect_Exporter {
 	 *
 	 * @param WPSEO_Redirect $redirect The redirect to format.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function format( WPSEO_Redirect $redirect ) {
-		return array(
+		return [
 			'url'  => $redirect->get_target(),
 			'type' => $redirect->get_type(),
-		);
+		];
 	}
 }

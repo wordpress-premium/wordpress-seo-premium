@@ -69,7 +69,7 @@ class WPSEO_CLI_Redirect_Base_Command extends WP_CLI_Command {
 	protected function delete_redirect( $origin ) {
 		$redirect = new WPSEO_Redirect( $origin );
 
-		return $this->redirect_manager->delete_redirects( array( $redirect ) );
+		return $this->redirect_manager->delete_redirects( [ $redirect ] );
 	}
 
 	/**

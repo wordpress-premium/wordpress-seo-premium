@@ -13,9 +13,9 @@ class WPSEO_Redirect_Accessible_Validation extends WPSEO_Redirect_Abstract_Valid
 	/**
 	 * Validates if the target is accessible and based on its response code it will set a warning (if applicable).
 	 *
-	 * @param WPSEO_Redirect $redirect     The redirect to validate.
-	 * @param WPSEO_Redirect $old_redirect The old redirect to compare.
-	 * @param array|null     $redirects    Unused.
+	 * @param WPSEO_Redirect      $redirect     The redirect to validate.
+	 * @param WPSEO_Redirect|null $old_redirect The old redirect to compare.
+	 * @param array|null          $redirects    Unused.
 	 *
 	 * @return bool Whether or not the target is valid.
 	 */
@@ -23,7 +23,7 @@ class WPSEO_Redirect_Accessible_Validation extends WPSEO_Redirect_Abstract_Valid
 		// Do the request.
 		$target      = $this->parse_target( $redirect->get_target() );
 		$decoded_url = rawurldecode( $target );
-		$response    = $this->remote_head( $decoded_url, array( 'sslverify' => false ) );
+		$response    = $this->remote_head( $decoded_url, [ 'sslverify' => false ] );
 
 		if ( is_wp_error( $response ) ) {
 			$error = __( 'The URL you entered could not be resolved.', 'wordpress-seo-premium' );
@@ -83,7 +83,7 @@ class WPSEO_Redirect_Accessible_Validation extends WPSEO_Redirect_Abstract_Valid
 	 *
 	 * @return array|WP_Error The response or WP_Error if something goes wrong.
 	 */
-	protected function remote_head( $url, $options = array() ) {
+	protected function remote_head( $url, $options = [] ) {
 		return wp_remote_head( $url, $options );
 	}
 
@@ -95,7 +95,7 @@ class WPSEO_Redirect_Accessible_Validation extends WPSEO_Redirect_Abstract_Valid
 	 * @return bool
 	 */
 	protected function is_temporary( $response_code ) {
-		return in_array( $response_code, array( 302, 307 ), true ) || in_array( substr( $response_code, 0, 2 ), array( '40', '50' ), true );
+		return in_array( $response_code, [ 302, 307 ], true ) || in_array( substr( $response_code, 0, 2 ), [ '40', '50' ], true );
 	}
 
 	/**

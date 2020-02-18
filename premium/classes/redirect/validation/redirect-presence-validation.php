@@ -15,9 +15,9 @@ class WPSEO_Redirect_Presence_Validation extends WPSEO_Redirect_Abstract_Validat
 	 * - For a 410 and 451 type redirect the target isn't necessary.
 	 * - For all other redirect types the target is required.
 	 *
-	 * @param WPSEO_Redirect $redirect     The redirect to validate.
-	 * @param WPSEO_Redirect $old_redirect The old redirect to compare.
-	 * @param array|null     $redirects    Unused.
+	 * @param WPSEO_Redirect      $redirect     The redirect to validate.
+	 * @param WPSEO_Redirect|null $old_redirect The old redirect to compare.
+	 * @param array|null          $redirects    Unused.
 	 *
 	 * @return bool
 	 */
@@ -45,7 +45,7 @@ class WPSEO_Redirect_Presence_Validation extends WPSEO_Redirect_Abstract_Validat
 	 * @return bool
 	 */
 	private function allow_empty_target( $redirect_type ) {
-		$allowed_redirect_types = array( WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE );
+		$allowed_redirect_types = [ WPSEO_Redirect_Types::DELETED, WPSEO_Redirect_Types::UNAVAILABLE ];
 
 		return in_array( (int) $redirect_type, $allowed_redirect_types, true );
 	}

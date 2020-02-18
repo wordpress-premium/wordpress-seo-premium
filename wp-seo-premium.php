@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     12.7.1
+ * Version:     13.0
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
@@ -60,10 +60,10 @@ if ( ! is_admin() ) {
  * @return array
  */
 function wpseo_premium_add_general_option_defaults( array $wpseo_defaults ) {
-	$premium_defaults = array(
+	$premium_defaults = [
 		'enable_metabox_insights' => true,
 		'enable_link_suggestions' => true,
-	);
+	];
 
 	return array_merge( $wpseo_defaults, $premium_defaults );
 }
@@ -72,10 +72,10 @@ add_filter( 'wpseo_option_wpseo_defaults', 'wpseo_premium_add_general_option_def
 // Load the WordPress SEO plugin.
 require_once dirname( WPSEO_FILE ) . '/wp-seo-main.php';
 
-$yoast_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload.php';
+$yoast_seo_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload.php';
 
-if ( is_readable( $yoast_premium_autoload_file ) ) {
-	require $yoast_premium_autoload_file;
+if ( is_readable( $yoast_seo_premium_autoload_file ) ) {
+	require $yoast_seo_premium_autoload_file;
 }
 elseif ( ! class_exists( 'WPSEO_Options' ) ) { // Still checking since might be site-level autoload R.
 	add_action( 'admin_init', 'yoast_wpseo_missing_autoload', 1 );
@@ -115,5 +115,5 @@ if ( ! wp_installing() ) {
 
 // Activation hook.
 if ( is_admin() ) {
-	register_activation_hook( __FILE__, array( 'WPSEO_Premium', 'install' ) );
+	register_activation_hook( __FILE__, [ 'WPSEO_Premium', 'install' ] );
 }

@@ -36,72 +36,72 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 	 * Registers all hooks to WordPress.
 	 */
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register' ) );
+		add_action( 'rest_api_init', [ $this, 'register' ] );
 	}
 
 	/**
 	 * Register the REST endpoint to WordPress.
 	 */
 	public function register() {
-		$args = array(
-			'origin' => array(
+		$args = [
+			'origin' => [
 				'required'    => true,
 				'type'        => 'string',
 				'description' => 'The origin to redirect',
-			),
-			'target' => array(
+			],
+			'target' => [
 				'required'    => false,
 				'type'        => 'string',
 				'description' => 'The redirect target',
-			),
-			'type' => array(
+			],
+			'type' => [
 				'required'    => true,
 				'type'        => 'integer',
 				'description' => 'The redirect type',
-			),
-		);
+			],
+		];
 
 		register_rest_route(
 			self::REST_NAMESPACE,
 			self::ENDPOINT_QUERY,
-			array(
+			[
 				'methods'             => 'POST',
 				'args'                => $args,
-				'callback'            => array(
+				'callback'            => [
 					$this->service,
 					'save',
-				),
-				'permission_callback' => array(
+				],
+				'permission_callback' => [
 					$this,
 					'can_retrieve_data',
-				),
-			)
+				],
+			]
 		);
 
 		register_rest_route(
 			self::REST_NAMESPACE,
 			self::ENDPOINT_UNDO,
-			array(
+			[
 				'methods'             => 'POST',
 				'args'                => array_merge(
 					$args,
-					array(
-						'type' => array(
+					[
+						'type' => [
 							'required'    => false,
 							'type'        => 'string',
 							'description' => 'The redirect format',
-						),
-					)
+						],
+					]
 				),
-				'callback'            => array(
+				'callback'            => [
 					$this->service,
 					'delete',
-				),
-				'permission_callback' => array(
+				],
+				'permission_callback' => [
 					$this,
 					'can_retrieve_data',
-				),
-			)
+				],
+			]
 		);
 	}
 

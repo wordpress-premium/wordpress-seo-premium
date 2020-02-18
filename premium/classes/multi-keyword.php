@@ -16,12 +16,12 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 * @codeCoverageIgnore It relies on dependencies.
 	 */
 	public function register_hooks() {
-		add_filter( 'wpseo_metabox_entries_general', array( $this, 'add_focus_keywords_input' ) );
-		add_filter( 'wpseo_metabox_entries_general', array( $this, 'add_keyword_synonyms_input' ) );
+		add_filter( 'wpseo_metabox_entries_general', [ $this, 'add_focus_keywords_input' ] );
+		add_filter( 'wpseo_metabox_entries_general', [ $this, 'add_keyword_synonyms_input' ] );
 
-		add_filter( 'wpseo_taxonomy_content_fields', array( $this, 'add_focus_keywords_taxonomy_input' ) );
-		add_filter( 'wpseo_taxonomy_content_fields', array( $this, 'add_keyword_synonyms_taxonomy_input' ) );
-		add_filter( 'wpseo_add_extra_taxmeta_term_defaults', array( $this, 'register_taxonomy_metafields' ) );
+		add_filter( 'wpseo_taxonomy_content_fields', [ $this, 'add_focus_keywords_taxonomy_input' ] );
+		add_filter( 'wpseo_taxonomy_content_fields', [ $this, 'add_keyword_synonyms_taxonomy_input' ] );
+		add_filter( 'wpseo_add_extra_taxmeta_term_defaults', [ $this, 'register_taxonomy_metafields' ] );
 	}
 
 	/**
@@ -33,10 +33,10 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 */
 	public function add_focus_keywords_input( $field_defs ) {
 		if ( is_array( $field_defs ) ) {
-			$field_defs['focuskeywords'] = array(
+			$field_defs['focuskeywords'] = [
 				'type'  => 'hidden',
 				'title' => 'focuskeywords',
-			);
+			];
 		}
 
 		return $field_defs;
@@ -51,10 +51,10 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 */
 	public function add_keyword_synonyms_input( $field_defs ) {
 		if ( is_array( $field_defs ) ) {
-			$field_defs['keywordsynonyms'] = array(
+			$field_defs['keywordsynonyms'] = [
 				'type'  => 'hidden',
 				'title' => 'keywordsynonyms',
-			);
+			];
 		}
 
 		return $field_defs;
@@ -69,12 +69,12 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 */
 	public function add_focus_keywords_taxonomy_input( $fields ) {
 		if ( is_array( $fields ) ) {
-			$fields['focuskeywords'] = array(
+			$fields['focuskeywords'] = [
 				'label'       => '',
 				'description' => '',
 				'type'        => 'hidden',
 				'options'     => '',
-			);
+			];
 		}
 
 		return $fields;
@@ -89,12 +89,12 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 */
 	public function add_keyword_synonyms_taxonomy_input( $fields ) {
 		if ( is_array( $fields ) ) {
-			$fields['keywordsynonyms'] = array(
+			$fields['keywordsynonyms'] = [
 				'label'       => '',
 				'description' => '',
 				'type'        => 'hidden',
 				'options'     => '',
-			);
+			];
 		}
 
 		return $fields;

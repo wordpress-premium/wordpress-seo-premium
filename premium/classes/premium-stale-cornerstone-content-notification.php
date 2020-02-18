@@ -33,20 +33,20 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 	/**
 	 * Registers all hooks to WordPress
 	 *
-	 * @return void
-	 *
 	 * @codeCoverageIgnore
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'admin_init', array( $this, 'handle_notice' ), 15 );
+		add_action( 'admin_init', [ $this, 'handle_notice' ], 15 );
 	}
 
 	/**
 	 * Shows the notification when applicable.
 	 *
-	 * @return void.
-	 *
 	 * @codeCoverageIgnore
+	 *
+	 * @return void.
 	 */
 	public function handle_notice() {
 		if ( $this->show_notice( WPSEO_Options::get( 'enable_cornerstone_content' ) ) ) {
@@ -63,9 +63,9 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 	/**
 	 * Returns the notification.
 	 *
-	 * @return Yoast_Notification The notification for the notification center.
-	 *
 	 * @codeCoverageIgnore
+	 *
+	 * @return Yoast_Notification The notification for the notification center.
 	 */
 	protected function get_notification() {
 		$message  = $this->get_notification_message( WPSEO_Post_Type::get_accessible_post_types() );
@@ -80,12 +80,12 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 			'</a>'
 		);
 
-		$notification_options = array(
+		$notification_options = [
 			'type'         => Yoast_Notification::WARNING,
 			'id'           => 'wpseo-' . $this->notification_identifier,
 			'priority'     => 1.0,
 			'capabilities' => 'wpseo_manage_options',
-		);
+		];
 
 		return new Yoast_Notification( $message, $notification_options );
 	}
@@ -93,11 +93,11 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 	/**
 	 * Generates the notification message based on the available post type.
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @param array $post_types The accessible post types.
 	 *
 	 * @return string The notification message.
-	 *
-	 * @codeCoverageIgnore
 	 */
 	protected function get_notification_message( array $post_types ) {
 		if ( array_key_exists( 'post', $post_types ) ) {
@@ -133,11 +133,11 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 	/**
 	 * Determines if the notice should be shown.
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @param bool $is_cornerstone_content_enabled Is the cornerstone content enabled.
 	 *
 	 * @return bool True when a notice should be shown.
-	 *
-	 * @codeCoverageIgnore
 	 */
 	protected function show_notice( $is_cornerstone_content_enabled ) {
 		return $is_cornerstone_content_enabled;
@@ -146,9 +146,9 @@ class WPSEO_Premium_Stale_Cornerstone_Content_Notification implements WPSEO_Word
 	/**
 	 * Retrieves an instance of the notification center.
 	 *
-	 * @return Yoast_Notification_Center Instance of the notification center.
-	 *
 	 * @codeCoverageIgnore
+	 *
+	 * @return Yoast_Notification_Center Instance of the notification center.
 	 */
 	protected function get_notification_center() {
 		return Yoast_Notification_Center::get();
