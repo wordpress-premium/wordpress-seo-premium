@@ -71,8 +71,8 @@ class WPSEO_MyYoast_Api_Request {
 	 */
 	public function fire() {
 		try {
-			//$response       = $this->do_request( $this->url, $this->args );
-			//$this->response = $this->decode_response( $response );
+			$response       = $this->do_request( $this->url, $this->args );
+			$this->response = $this->decode_response( $response );
 
 			return true;
 		}

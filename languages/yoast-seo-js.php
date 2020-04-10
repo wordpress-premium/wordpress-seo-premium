@@ -441,8 +441,7 @@ $generated_i18n_strings = array(
 	_n_noop( '%1$sSlug stopwords%3$s: The slug for this page contains a stop word. %2$sRemove it%3$s!', '%1$sSlug stopwords%3$s: The slug for this page contains stop words. %2$sRemove them%3$s!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessor.js:216
-	// Reference: node_modules/yoastseo/src/parsedPaper/assess/TreeAssessor.js:105
-	// Reference: node_modules/yoastseo/src/worker/AnalysisWebWorker.js:999
+	// Reference: node_modules/yoastseo/src/worker/AnalysisWebWorker.js:1010
 	/* Translators: %1$s expands to the name of the assessment. */
 	__( 'An error occurred in the \'%1$s\' assessment', 'wordpress-seo' ),
 

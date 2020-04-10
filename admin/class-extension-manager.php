@@ -88,7 +88,6 @@ class WPSEO_Extension_Manager {
 	 * @return bool True when the plugin is activated.
 	 */
 	public function is_activated( $extension_name ) {
-		return true;
 		if ( self::$active_extensions === null ) {
 			// Force re-check on license & dashboard pages.
 			$current_page = $this->get_current_page();

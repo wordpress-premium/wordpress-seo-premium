@@ -182,6 +182,15 @@ class WPSEO_Addon_Manager {
 	 */
 	public function has_valid_subscription( $slug ) {
 		return true;
+
+		$subscription = $this->get_subscription( $slug );
+
+		// An non-existing subscription is never valid.
+		if ( $subscription === false ) {
+			return false;
+		}
+
+		return ! $this->has_subscription_expired( $subscription );
 	}
 
 	/**
@@ -210,6 +219,17 @@ class WPSEO_Addon_Manager {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Checks if there are any installed addons.
+	 *
+	 * @return bool True when there are installed Yoast addons.
+	 */
+	public function has_installed_addons() {
+		$installed_addons = $this->get_installed_addons();
+
+		return ! empty( $installed_addons );
 	}
 
 	/**
@@ -288,7 +308,7 @@ class WPSEO_Addon_Manager {
 	 * @return array The installed plugins.
 	 */
 	protected function get_installed_addons() {
-		return $this->filter_by_key( $this->get_plugins(), [ $this, 'is_yoast_addon' ] );
+		return array_filter( $this->get_plugins(), [ $this, 'is_yoast_addon' ], ARRAY_FILTER_USE_KEY );
 	}
 
 	/**
@@ -297,7 +317,7 @@ class WPSEO_Addon_Manager {
 	 * @return array The active addons.
 	 */
 	protected function get_active_addons() {
-		return $this->filter_by_key( $this->get_installed_addons(), [ $this, 'is_plugin_active' ] );
+		return array_filter( $this->get_installed_addons(), [ $this, 'is_plugin_active' ], ARRAY_FILTER_USE_KEY );
 	}
 
 	/**
@@ -402,41 +422,6 @@ class WPSEO_Addon_Manager {
 			'url'           => WPSEO_Utils::get_home_url(),
 			'subscriptions' => [],
 		];
-	}
-
-	/**
-	 * Checks if there are any installed addons.
-	 *
-	 * @return bool True when there are installed Yoast addons.
-	 */
-	protected function has_installed_addons() {
-		$installed_addons = $this->get_installed_addons();
-
-		return ! empty( $installed_addons );
-	}
-
-	/**
-	 * Filters the given array by its keys.
-	 *
-	 * This method is temporary. When WordPress has minimal PHP 5.6 support we can change this to:
-	 *
-	 * array_filter( $array_to_filter, $filter, ARRAY_FILTER_USE_KEY )
-	 *
-	 * @codeCoverageIgnore
-	 *
-	 * @param array    $array_to_filter The array to filter.
-	 * @param callable $callback        The filter callback.
-	 *
-	 * @return array The filtered array,
-	 */
-	private function filter_by_key( $array_to_filter, $callback ) {
-		$keys_to_filter = array_filter( array_keys( $array_to_filter ), $callback );
-		$filtered_array = [];
-		foreach ( $keys_to_filter as $filtered_key ) {
-			$filtered_array[ $filtered_key ] = $array_to_filter[ $filtered_key ];
-		}
-
-		return $filtered_array;
 	}
 
 	/**
