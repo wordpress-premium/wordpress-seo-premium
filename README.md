@@ -1,17 +1,18 @@
-#Yoast SEO
-Contributors: yoast, joostdevalk, tacoverdo, omarreiss, atimmer, jipmoors
-Donate link: https://yoa.st/1up
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl.html
-Tags: SEO, XML sitemap, Content analysis, Readability
-Requires at least: 5.3
-Tested up to: 5.4
-Stable tag: 14.0.2
-Requires PHP: 5.6.20
+# Yoast SEO 
+**Contributors:** yoast, joostdevalk, tacoverdo, omarreiss, atimmer, jipmoors  
+**Donate link:** https://yoa.st/1up  
+**License:** GPLv3  
+**License URI:** http://www.gnu.org/licenses/gpl.html  
+**Tags:** SEO, XML sitemap, Content analysis, Readability  
+**Requires at least:** 5.3  
+**Tested up to:** 5.4  
+**Stable tag:** 14.0.2  
+**Requires PHP:** 5.6.20  
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
 
-##Description
+
+## Description 
 
 ### Yoast SEO: the #1 WordPress SEO plugin
 
@@ -98,7 +99,8 @@ For more info on search engine optimization and WordPress SEO in specific, check
 * Other [WordPress Plugins](https://yoa.st/1v9) by the same team.
 * Follow Yoast on [Facebook](https://facebook.com/yoast), [Instagram](https://www.instagram.com/yoast/) & [Twitter](https://twitter.com/yoast).
 
-##Installation
+
+## Installation 
 Starting with Yoast SEO consists of just two steps: installing and setting up the plugin. Yoast SEO is designed to work with your site’s specific needs, so don’t forget to go through the Yoast SEO configuration wizard as explained in the ‘after activation’ step!
 
 ### INSTALL YOAST SEO FROM WITHIN WORDPRESS
@@ -120,14 +122,17 @@ Starting with Yoast SEO consists of just two steps: installing and setting up th
 1. Go through the configuration wizard and set up the plugin for your site;
 1. You’re done!
 
-##Frequently Asked Questions
 
-# How do the XML Sitemaps in the Yoast SEO plugin work?
+## Frequently Asked Questions 
+
+
+### How do the XML Sitemaps in the Yoast SEO plugin work? 
 
 Having an XML sitemap can be beneficial for SEO, as Google can retrieve essential pages of a website very fast, even if the internal linking of a site isn’t flawless.
 The sitemap index and individual sitemaps are updated automatically as you add or remove content and will include the post types you want search engines to index. Post Types marked as noindex will not appear in the sitemap. [Learn more about XML Sitemaps](https://yoa.st/3qt).
 
-# How can I add my website to Google Search Console?
+
+### How can I add my website to Google Search Console? 
 
 It is straightforward to add your website to Google Search Console.
 1. Create a Google Search Console account and login into your account.
@@ -144,7 +149,8 @@ It is straightforward to add your website to Google Search Console.
 
 If you want more details steps, please visit [our article on our knowledge base](https://yoa.st/3qu).
 
-# How do I implement Yoast SEO breadcrumbs?
+
+### How do I implement Yoast SEO breadcrumbs? 
 
 The steps below are a temporary solution as manual edits made to theme files may be overwritten with future theme updates. Please contact the theme developer for a permanent solution. We’ve written an article about the [importance of breadcrumbs for SEO](https://yoa.st/3qv).
 
@@ -166,11 +172,13 @@ Alternatively, you can manually add the breadcrumb shortcode to individual posts
 
 If you need more details or a step by step guide, read our [Implementation guide for Yoast SEO breadcrumbs](https://yoa.st/3qx).
 
-# How do I noindex URLS?
+
+### How do I noindex URLS? 
 
 Yoast SEO provides multiple options for setting a URL or group of URLs to noindex. [Read more about how to do this in this guide](https://yoa.st/3qy/).
 
-# Google shows the wrong description, how do I fix this?
+
+### Google shows the wrong description, how do I fix this? 
 
 If you’ve crafted nice meta descriptions for your blog posts, nothing is more annoying than Google showing another description for your site completely in the search result snippet.
 
@@ -182,11 +190,13 @@ Possible causes could be:
 
 You can [read more here on how to solve the issue with the wrong description](https://yoa.st/3qz).
 
-# How often is Yoast SEO updated?
+
+### How often is Yoast SEO updated? 
 
 Yoast SEO is updated every two weeks. If you want to know why, please read [this post on why we release every two weeks](https://yoa.st/3q-)!
 
-# How do I get support?
+
+### How do I get support? 
 
 As our free plugin is used by millions of people worldwide, we cannot offer you all one on one support. If you have trouble with the Yoast SEO for WordPress plugin, you can get help on the support forums here at [wordpress.org](https://wordpress.org/support/plugin/wordpress-seo/) or by checking out or knowledge base at [kb.yoast.com](https://yoa.st/3r1).
 
@@ -194,22 +204,38 @@ The plugins you buy at Yoast are called ‘premium plugins’ (even if Premium i
 
 [Read more on how to get support](https://yoa.st/3r2)
 
-# I have a different question than listed here
+
+### I have a different question than listed here 
 
 Your question has most likely been answered on our knowledge base: [kb.yoast.com](https://yoa.st/1va).
 
-##Screenshots
 
-1. The Yoast SEO plugin general meta box. You'll see this on edit post pages, for posts, pages and custom post types.
-2. Example of the SEO analysis functionality.
-3. Example of the readability analysis functionality.
-4. Overview of site-wide SEO problems and possible improvements.
-5. Control over which features you want to use.
-6. Easily import SEO data from other SEO plugins like All In One SEO pack, HeadSpace2 SEO and wpSEO.de.
+## Screenshots 
 
-##Changelog
+### 1. The Yoast SEO plugin general meta box. You'll see this on edit post pages, for posts, pages and custom post types.
+[missing image]
 
-# 14.0.2
+### 2. Example of the SEO analysis functionality.
+[missing image]
+
+### 3. Example of the readability analysis functionality.
+[missing image]
+
+### 4. Overview of site-wide SEO problems and possible improvements.
+[missing image]
+
+### 5. Control over which features you want to use.
+[missing image]
+
+### 6. Easily import SEO data from other SEO plugins like All In One SEO pack, HeadSpace2 SEO and wpSEO.de.
+[missing image]
+
+
+
+## Changelog 
+
+
+### 14.0.2 
 Release Date: April 29th, 2020
 
 Because we’ve changed the underlying framework of our Indexables technology, we’ve chosen to rebuild the table. This means you will have to go through the indexing process again. We’re sorry. For sites with more than 10,000 posts, we advise using the [WP CLI command to do the indexation on the server](https://yoa.st/wp-cli-index).
@@ -231,7 +257,8 @@ Other:
 
 * Removes all usages of `PDO` and `mysqli` directly and uses `wpdb` everywhere. This should prevent a lot of errors for database installations that have different encodings or configurations than what is generally seen.
 
-# 14.0.1
+
+### 14.0.1 
 Release Date: April 28th, 2020
 
 Bugfixes:
@@ -250,7 +277,8 @@ Other:
 
 * Yoast SEO needs to have the right to create a database index. If you have restricted the creation of database indexes on your setup, please make sure to temporarily allow Yoast SEO to create indexes before updating.
 
-# 14.0
+
+### 14.0 
 Release Date: April 28th, 2020
 
 Today is a special day. Today, a project we’ve been working on for a year sees the light of day. Yoast SEO 14.0 rewrites the playbook on how a WordPress SEO plugin can work. Thanks to an approach we call indexables, we bring you a much faster experience and a new foundation that helps us get ready for an exciting future! Read more about this release in [our release post](https://yoa.st/release-14-0)!
@@ -304,7 +332,8 @@ Other:
 * Adds the `/wp-json/yoast/v1/get_head` endpoint to get the our head for an URL. This endpoint takes a single parameter, `url` which should be the absolute URL of the page to get the head for.
 * Removes the minimum and maximum size requirements when outputting `og:image` meta tags.
 
-# 13.5
+
+### 13.5 
 Release Date: April 14th, 2020
 
 While we’re working on getting [Yoast SEO 14.0](https://yoa.st/3zs) ready for the world, you can enjoy today’s release of Yoast SEO 13.5. Read all about Yoast SEO 13.5 in [our release post](https://yoa.st/release-13-5)!
@@ -318,5 +347,6 @@ Other:
 
 * Sets minimum supported WordPress version to 5.3.
 
-# Earlier versions
+
+### Earlier versions 
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).
