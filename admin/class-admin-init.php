@@ -359,10 +359,7 @@ class WPSEO_Admin_Init {
 	 * @return void
 	 */
 	private function register_premium_upsell_admin_block() {
-		if ( ! WPSEO_Utils::is_yoast_seo_premium() ) {
-			$upsell_block = new WPSEO_Premium_Upsell_Admin_Block( 'wpseo_admin_promo_footer' );
-			$upsell_block->register_hooks();
-		}
+		
 	}
 
 	/**
@@ -439,6 +436,26 @@ class WPSEO_Admin_Init {
 			'wpseo_genesis_force_adjacent_rel_home' => [
 				'version'     => '9.4',
 				'alternative' => null,
+			],
+			'wpseo_opengraph'                       => [
+				'version'     => '14.0',
+				'alternative' => null,
+			],
+			'wpseo_twitter'                         => [
+				'version'     => '14.0',
+				'alternative' => null,
+			],
+			'wpseo_twitter_taxonomy_image'          => [
+				'version'     => '14.0',
+				'alternative' => null,
+			],
+			'wpseo_twitter_metatag_key'             => [
+				'version'     => '14.0',
+				'alternative' => null,
+			],
+			'wp_seo_get_bc_ancestors'               => [
+				'version'     => '14.0',
+				'alternative' => 'wpseo_breadcrumb_links',
 			],
 		];
 

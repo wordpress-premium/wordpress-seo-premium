@@ -28,27 +28,7 @@ class WPSEO_Config_Component_Suggestions implements WPSEO_Config_Component {
 		$field = new WPSEO_Config_Field_Suggestions();
 
 		// Only show Premium upsell when we are not inside a Premium install.
-		if ( ! WPSEO_Utils::is_yoast_seo_premium() ) {
-			$field->add_suggestion(
-				/* translators: %s resolves to Yoast SEO Premium */
-				sprintf( __( 'Outrank the competition with %s', 'wordpress-seo' ), 'Yoast SEO Premium' ),
-				/* translators: %1$s resolves to Yoast SEO Premium */
-				sprintf( __( 'Do you want to outrank your competition? %1$s gives you awesome additional features that\'ll help you to set up your SEO strategy like a professional. Add synonyms and related keywords, use our Premium SEO analysis, the redirect manager and our internal linking tool. %1$s will also give you access to premium support.', 'wordpress-seo' ), 'Yoast SEO Premium' ),
-				[
-					'label' => __( 'Upgrade to Premium', 'wordpress-seo' ),
-					'type'  => 'primary',
-					'href'  => WPSEO_Shortlinker::get( 'https://yoa.st/wizard-suggestion-premium' ),
-				],
-				[
-					'url'   => WPSEO_Shortlinker::get( 'https://yoa.st/video-yoast-seo-premium' ),
-					'title' => sprintf(
-						/* translators: %1$s expands to Yoast SEO Premium. */
-						__( '%1$s video', 'wordpress-seo' ),
-						'Yoast SEO Premium'
-					),
-				]
-			);
-		}
+		
 
 		$field->add_suggestion(
 			__( 'Find out what words your audience uses to find you', 'wordpress-seo' ),
@@ -73,7 +53,7 @@ class WPSEO_Config_Component_Suggestions implements WPSEO_Config_Component {
 		);
 
 		// When we are running in Yoast SEO Premium and don't have Local SEO installed, show Local SEO as suggestion.
-		if ( WPSEO_Utils::is_yoast_seo_premium() && ! defined( 'WPSEO_LOCAL_FILE' ) ) {
+		if (  ! defined( 'WPSEO_LOCAL_FILE' ))  {
 			$field->add_suggestion(
 				__( 'Attract more customers near you', 'wordpress-seo' ),
 				/* translators: %1$s resolves to Local SEO */

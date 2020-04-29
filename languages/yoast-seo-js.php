@@ -468,14 +468,24 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/yoastseo/src/config/presenter.js:13
 	__( 'Has feedback', 'wordpress-seo' ),
 
+	// Reference: node_modules/yoastseo/src/config/presenter.js:18
 	// Reference: node_modules/yoastseo/src/config/presenter.js:19
+	// Reference: node_modules/yoastseo/src/config/presenter.js:20
 	__( 'Needs improvement', 'wordpress-seo' ),
 
+	// Reference: node_modules/yoastseo/src/config/presenter.js:24
 	// Reference: node_modules/yoastseo/src/config/presenter.js:25
 	__( 'OK SEO score', 'wordpress-seo' ),
 
+	// Reference: node_modules/yoastseo/src/config/presenter.js:26
+	__( 'OK', 'wordpress-seo' ),
+
+	// Reference: node_modules/yoastseo/src/config/presenter.js:30
 	// Reference: node_modules/yoastseo/src/config/presenter.js:31
 	__( 'Good SEO score', 'wordpress-seo' ),
+
+	// Reference: node_modules/yoastseo/src/config/presenter.js:32
+	__( 'Good', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/renderers/AssessorPresenter.js:361
 	__( 'Marks are disabled in current view', 'wordpress-seo' ),

@@ -139,9 +139,9 @@ class WPSEO_Post_Metabox_Formatter implements WPSEO_Metabox_Formatter_Interface 
 		$keyword = WPSEO_Meta::get_value( 'focuskw', $this->post->ID );
 		$usage   = [ $keyword => $this->get_keyword_usage_for_current_post( $keyword ) ];
 
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
-			return $this->get_premium_keywords( $usage );
-		}
+		
+		return $this->get_premium_keywords( $usage );
+	
 
 		return $usage;
 	}

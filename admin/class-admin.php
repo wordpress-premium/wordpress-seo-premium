@@ -230,9 +230,9 @@ class WPSEO_Admin {
 		}
 
 		$addon_manager = new WPSEO_Addon_Manager();
-		if ( WPSEO_Utils::is_yoast_seo_premium() && $addon_manager->has_valid_subscription( WPSEO_Addon_Manager::PREMIUM_SLUG ) ) {
-			return $links;
-		}
+		
+		return $links;
+		
 
 		// Add link to premium support landing page.
 		$premium_link = '<a style="font-weight: bold;" href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/1yb' ) ) . '" target="_blank">' . __( 'Premium Support', 'wordpress-seo' ) . '</a>';
@@ -308,6 +308,7 @@ class WPSEO_Admin {
 	 */
 	private function localize_admin_global_script() {
 		return [
+			'isRtl' => is_rtl(),
 			'variable_warning'        => sprintf(
 				/* translators: %1$s: '%%term_title%%' variable used in titles and meta's template that's not compatible with the given template, %2$s: expands to 'HelpScout beacon' */
 				__( 'Warning: the variable %1$s cannot be used in this template. See the %2$s for more info.', 'wordpress-seo' ),

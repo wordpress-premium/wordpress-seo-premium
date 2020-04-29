@@ -834,6 +834,7 @@ class WPSEO_Metabox extends WPSEO_Meta {
 		$asset_manager->enqueue_style( 'metabox-css' );
 		$asset_manager->enqueue_style( 'scoring' );
 		$asset_manager->enqueue_style( 'select2' );
+		$asset_manager->enqueue_style( 'monorepo' );
 
 		$asset_manager->enqueue_script( 'metabox' );
 		$asset_manager->enqueue_script( 'admin-media' );
@@ -1083,11 +1084,8 @@ class WPSEO_Metabox extends WPSEO_Meta {
 	 */
 	protected function get_product_title() {
 		$product_title = 'Yoast SEO';
-
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
-			$product_title .= ' Premium';
-		}
-
+		$product_title .= ' Premium';
+	
 		return $product_title;
 	}
 

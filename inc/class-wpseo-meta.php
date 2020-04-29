@@ -959,13 +959,13 @@ class WPSEO_Meta {
 		];
 
 		// If Yoast SEO Premium is active, get the additional keywords as well.
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+		
 			$query['meta_query'][] = [
 				'key'     => '_yoast_wpseo_focuskeywords',
 				'value'   => sprintf( '"keyword":"%s"', $keyword ),
 				'compare' => 'LIKE',
 			];
-		}
+		
 
 		$get_posts = new WP_Query( $query );
 

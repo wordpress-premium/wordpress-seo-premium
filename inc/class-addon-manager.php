@@ -181,16 +181,10 @@ class WPSEO_Addon_Manager {
 	 * @return bool True when the subscription is valid.
 	 */
 	public function has_valid_subscription( $slug ) {
-		return true;
-
 		$subscription = $this->get_subscription( $slug );
 
-		// An non-existing subscription is never valid.
-		if ( $subscription === false ) {
-			return false;
-		}
-
-		return ! $this->has_subscription_expired( $subscription );
+		
+		return true;
 	}
 
 	/**
@@ -240,7 +234,7 @@ class WPSEO_Addon_Manager {
 	 * @return bool Has the plugin expired.
 	 */
 	protected function has_subscription_expired( $subscription ) {
-		return ( strtotime( $subscription->expiry_date ) - time() ) < 0;
+		return false;
 	}
 
 	/**
@@ -289,9 +283,9 @@ class WPSEO_Addon_Manager {
 		$addons = self::$addons;
 
 		// Yoast SEO Free isn't an addon, but we needed it in Premium to fetch translations.
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
-			$addons['wp-seo.php'] = self::FREE_SLUG;
-		}
+		
+		$addons['wp-seo.php'] = self::FREE_SLUG;
+		
 
 		foreach ( $addons as $addon => $addon_slug ) {
 			if ( strpos( $plugin_file, $addon ) !== false ) {

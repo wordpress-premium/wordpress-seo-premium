@@ -207,7 +207,7 @@ class WPSEO_Premium_Post_Data_Service {
 	/**
 	 * Check if there is a modified SEO-title available to save.
 	 * If the SEO title was not modified, check if the user specified a default SEO title for this content type.
-	 * Otherwise use the absolute default title '%%title%% %%sep%% %%sitename%%' (WPSEO_Frontend::$default_title).
+	 * Otherwise use the absolute default title '%%title%% %%sep%% %%sitename%%'.
 	 *
 	 * @param string $post_type The content type to use default for.
 	 *
@@ -221,7 +221,7 @@ class WPSEO_Premium_Post_Data_Service {
 		}
 
 		// Return the absolute default value, which is currently set to '%%title%% %%sep%% %%sitename%%'.
-		return WPSEO_Frontend::$default_title;
+		return '%%title%% %%sep%% %%sitename%%';
 	}
 
 	/**
@@ -288,7 +288,7 @@ class WPSEO_Premium_Post_Data_Service {
 			 *
 			 * For title we need to check if there is a modified SEO-title available and save it.
 			 * If the SEO title was not modified, we check if the user specified a default SEO title for this content type.
-			 * Otherwise we use a default title '%%title%% %%sep%% %%sitename%%' (WPSEO_Frontend::$default_title).
+			 * Otherwise we use the default title '%%title%% %%sep%% %%sitename%%'.
 			 *
 			 * If the meta description was not modified, we check if the user specified a default meta description for this content type.
 			 */
