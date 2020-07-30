@@ -8,15 +8,20 @@
 namespace Yoast\WP\SEO\Actions\Indexation;
 
 use wpdb;
-use Yoast\WP\SEO\Builders\Indexable_Builder;
+use Yoast\WP\Lib\Model;
 use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
 use Yoast\WP\SEO\Models\Indexable;
-use Yoast\WP\Lib\Model;
+use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
  * Indexable_Term_Indexation_Action class.
  */
 class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
+
+	/**
+	 * The transient cache key.
+	 */
+	const TRANSIENT_CACHE_KEY = 'wpseo_total_unindexed_terms';
 
 	/**
 	 * The post type helper.
@@ -26,11 +31,11 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 	protected $taxonomy;
 
 	/**
-	 * The indexable builder.
+	 * The indexable repository.
 	 *
-	 * @var Indexable_Builder
+	 * @var Indexable_Repository
 	 */
-	protected $builder;
+	protected $repository;
 
 	/**
 	 * The WordPress database instance.
@@ -42,14 +47,14 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 	/**
 	 * Indexable_Term_Indexation_Action constructor
 	 *
-	 * @param Taxonomy_Helper   $taxonomy The taxonomy helper.
-	 * @param Indexable_Builder $builder  The indexable builder.
-	 * @param wpdb              $wpdb     The WordPress database instance.
+	 * @param Taxonomy_Helper      $taxonomy   The taxonomy helper.
+	 * @param Indexable_Repository $repository The indexable repository.
+	 * @param wpdb                 $wpdb       The WordPress database instance.
 	 */
-	public function __construct( Taxonomy_Helper $taxonomy, Indexable_Builder $builder, wpdb $wpdb ) {
-		$this->taxonomy = $taxonomy;
-		$this->builder  = $builder;
-		$this->wpdb     = $wpdb;
+	public function __construct( Taxonomy_Helper $taxonomy, Indexable_Repository $repository, wpdb $wpdb ) {
+		$this->taxonomy   = $taxonomy;
+		$this->repository = $repository;
+		$this->wpdb       = $wpdb;
 	}
 
 	/**
@@ -58,6 +63,11 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 	 * @return int|false The amount of unindexed terms. False if the query fails.
 	 */
 	public function get_total_unindexed() {
+		$transient = \get_transient( static::TRANSIENT_CACHE_KEY );
+		if ( $transient !== false ) {
+			return (int) $transient;
+		}
+
 		$query = $this->get_query( true );
 
 		$result = $this->wpdb->get_var( $query );
@@ -65,6 +75,8 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 		if ( \is_null( $result ) ) {
 			return false;
 		}
+
+		\set_transient( static::TRANSIENT_CACHE_KEY, $result, \DAY_IN_SECONDS );
 
 		return (int) $result;
 	}
@@ -80,8 +92,10 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 
 		$indexables = [];
 		foreach ( $term_ids as $term_id ) {
-			$indexables[] = $this->builder->build_for_id_and_type( (int) $term_id, 'term' );
+			$indexables[] = $this->repository->find_by_id_and_type( (int) $term_id, 'term' );
 		}
+
+		\delete_transient( static::TRANSIENT_CACHE_KEY );
 
 		return $indexables;
 	}
@@ -114,7 +128,6 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 	 */
 	protected function get_query( $count, $limit = 1 ) {
 		$public_taxonomies = $this->taxonomy->get_public_taxonomies();
-		$placeholders      = \implode( ', ', \array_fill( 0, \count( $public_taxonomies ), '%s' ) );
 		$indexable_table   = Model::get_table_name( 'Indexable' );
 		$replacements      = $public_taxonomies;
 
@@ -128,11 +141,18 @@ class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 			$replacements[] = $limit;
 		}
 
-		return $this->wpdb->prepare( "
+		return $this->wpdb->prepare(
+			"
 			SELECT $select
 			FROM {$this->wpdb->term_taxonomy}
-			WHERE term_id NOT IN (SELECT object_id FROM $indexable_table WHERE object_type = 'term') AND taxonomy IN ($placeholders)
-			$limit_query
-		", $replacements );
+			WHERE term_id NOT IN (
+				SELECT object_id
+				FROM $indexable_table
+				WHERE object_type = 'term'
+			)
+			AND taxonomy IN (" . \implode( ', ', \array_fill( 0, \count( $public_taxonomies ), '%s' ) ) . ")
+			$limit_query",
+			$replacements
+		);
 	}
 }

@@ -65,8 +65,7 @@ class WPSEO_Extensions {
 	 * @return bool Returns true when valid.
 	 */
 	public function is_valid( $extension ) {
-		$addon_manager = new WPSEO_Addon_Manager();
-		return $addon_manager->has_valid_subscription( $this->extensions[ $extension ]['my-yoast-slug'] );
+		return true;
 	}
 
 	/**

@@ -7,10 +7,10 @@
 
 namespace Yoast\WP\SEO\Presentations;
 
+use Yoast\WP\SEO\Helpers\Date_Helper;
 use Yoast\WP\SEO\Helpers\Pagination_Helper;
 use Yoast\WP\SEO\Helpers\Post_Helper;
 use Yoast\WP\SEO\Helpers\Post_Type_Helper;
-use Yoast\WP\SEO\Helpers\Date_Helper;
 
 /**
  * Class Indexable_Post_Type_Presentation
@@ -59,7 +59,7 @@ class Indexable_Post_Type_Presentation extends Indexable_Presentation {
 		Post_Type_Helper $post_type,
 		Date_Helper $date,
 		Pagination_Helper $pagination,
-	    Post_Helper $post
+		Post_Helper $post
 	) {
 		$this->post_type  = $post_type;
 		$this->date       = $date;
@@ -251,7 +251,7 @@ class Indexable_Post_Type_Presentation extends Indexable_Presentation {
 			 *
 			 * @api bool Whether or not to show publish date.
 			 */
-			if ( ! apply_filters( 'wpseo_opengraph_show_publish_date', false, $this->post->get_post_type( $this->source ) ) ) {
+			if ( ! \apply_filters( 'wpseo_opengraph_show_publish_date', false, $this->post->get_post_type( $this->source ) ) ) {
 				return '';
 			}
 		}
@@ -284,7 +284,7 @@ class Indexable_Post_Type_Presentation extends Indexable_Presentation {
 	 */
 	public function generate_robots() {
 		$robots = $this->get_base_robots();
-		$robots = array_merge(
+		$robots = \array_merge(
 			$robots,
 			[
 				'noimageindex' => ( $this->model->is_robots_noimageindex === true ) ? 'noimageindex' : null,

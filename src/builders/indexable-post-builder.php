@@ -8,10 +8,14 @@
 namespace Yoast\WP\SEO\Builders;
 
 use Exception;
+use WPSEO_Meta;
+use WPSEO_Utils;
 use Yoast\WP\SEO\Helpers\Post_Helper;
+use Yoast\WP\SEO\Loggers\Logger;
 use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 use Yoast\WP\SEO\Repositories\SEO_Meta_Repository;
+use YoastSEO_Vendor\Psr\Log\LogLevel;
 
 /**
  * Formats the post meta to indexable format.
@@ -41,16 +45,25 @@ class Indexable_Post_Builder {
 	protected $post;
 
 	/**
+	 * Holds the logger.
+	 *
+	 * @var Logger
+	 */
+	protected $logger;
+
+	/**
 	 * Indexable_Post_Builder constructor.
 	 *
 	 * @codeCoverageIgnore This is dependency injection only.
 	 *
 	 * @param SEO_Meta_Repository $seo_meta_repository The SEO Meta repository.
 	 * @param Post_Helper         $post                The post helper.
+	 * @param Logger              $logger              The logger.
 	 */
-	public function __construct( SEO_Meta_Repository $seo_meta_repository, Post_Helper $post ) {
+	public function __construct( SEO_Meta_Repository $seo_meta_repository, Post_Helper $post, Logger $logger ) {
 		$this->seo_meta_repository = $seo_meta_repository;
 		$this->post                = $post;
+		$this->logger              = $logger;
 	}
 
 	/**
@@ -82,7 +95,13 @@ class Indexable_Post_Builder {
 		$indexable->object_id       = $post_id;
 		$indexable->object_type     = 'post';
 		$indexable->object_sub_type = $post->post_type;
-		$indexable->permalink       = \get_permalink( $post_id );
+		if ( $post->post_type !== 'attachment' ) {
+			$indexable->permalink = \get_permalink( $post_id );
+		}
+		else {
+			$indexable->permalink = \wp_get_attachment_url( $post_id );
+		}
+
 
 		$indexable->primary_focus_keyword_score = $this->get_keyword_score(
 			$this->get_meta_value( $post_id, 'focuskw' ),
@@ -126,7 +145,7 @@ class Indexable_Post_Builder {
 		$indexable->is_protected     = $post->post_password !== '';
 		$indexable->is_public        = $this->is_public( $indexable );
 		$indexable->has_public_posts = $this->has_public_posts( $indexable );
-		$indexable->blog_id         = \get_current_blog_id();
+		$indexable->blog_id          = \get_current_blog_id();
 
 		return $indexable;
 	}
@@ -310,8 +329,8 @@ class Indexable_Post_Builder {
 				$indexable->link_count          = $seo_meta->internal_link_count;
 				$indexable->incoming_link_count = $seo_meta->incoming_link_count;
 			}
-		} catch ( Exception $exception ) { // @codingStandardsIgnoreLine Generic.CodeAnalysis.EmptyStatement.DetectedCATCH -- There is nothing to do.
-			// Do nothing here.
+		} catch ( Exception $exception ) {
+			$this->logger->log( LogLevel::ERROR, $exception->getMessage() );
 		}
 
 		return $indexable;
@@ -326,7 +345,7 @@ class Indexable_Post_Builder {
 	 * @return mixed The value of the indexable entry to use.
 	 */
 	protected function get_meta_value( $post_id, $meta_key ) {
-		$value = \WPSEO_Meta::get_value( $meta_key, $post_id );
+		$value = WPSEO_Meta::get_value( $meta_key, $post_id );
 		if ( \is_string( $value ) && $value === '' ) {
 			return null;
 		}
@@ -343,8 +362,8 @@ class Indexable_Post_Builder {
 	 */
 	protected function find_alternative_image( Indexable $indexable ) {
 		if (
-			$indexable->object_sub_type === 'attachment' &&
-			$this->image->is_valid_attachment( $indexable->object_id )
+			$indexable->object_sub_type === 'attachment'
+			&& $this->image->is_valid_attachment( $indexable->object_id )
 		) {
 			return [
 				'image_id' => $indexable->object_id,
@@ -446,7 +465,7 @@ class Indexable_Post_Builder {
 
 		if ( ! empty( $image ) ) {
 			$indexable->open_graph_image      = $image['url'];
-			$indexable->open_graph_image_meta = wp_json_encode( $image );
+			$indexable->open_graph_image_meta = WPSEO_Utils::format_json_encode( $image );
 		}
 	}
 }

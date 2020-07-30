@@ -3,12 +3,8 @@
  * WPSEO Premium plugin file.
  *
  * @package WPSEO\Premium\Views
- */
-
-/**
- * The import result object.
  *
- * @var stdClass $import
+ * @uses stdClass $import The import result object.
  */
 
 $yoast_seo_i18n_import_redirects_from = sprintf(

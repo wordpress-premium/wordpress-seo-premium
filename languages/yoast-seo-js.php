@@ -401,23 +401,27 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:113
 	/* Translators: %1$s expands to a link on yoast.com,
 	   %2$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in title%2$s: The exact match of the keyphrase appears at the beginning of the SEO title. Good job!', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in title%2$s: The exact match of the focus keyphrase appears at the beginning of the SEO title. Good job!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:121
 	/* Translators: %1$s and %2$s expand to a link on yoast.com,
 	   %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in title%3$s: The exact match of the keyphrase appears in the SEO title, but not at the beginning. %2$sTry to move it to the beginning%3$s.', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in title%3$s: The exact match of the focus keyphrase appears in the SEO title, but not at the beginning. %2$sMove it to the beginning for the best results%3$s.', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:131
+	/* Translators: %1$s and %2$s expand to a link on yoast.com,
+	   %3$s expands to the anchor end tag. */
+	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put it at the beginning of the title%3$s.', 'wordpress-seo' ),
+
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:141
 	/* Translators: %1$s and %2$s expand to a link on yoast.com,
 	   %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title%3$s.', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put the keyphrase at the beginning of the title%3$s.', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:150
 	/* Translators: %1$s and %2$s expand to a link on yoast.com,
 	   %3$s expands to the anchor end tag, %4$s expands to the keyword of the article. */
-	__( '%1$sKeyphrase in title%3$s: Not all the words from your keyphrase "%4$s" appear in the SEO title. %2$sTry to use the exact match of your keyphrase in the SEO title%3$s.', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in title%3$s: Not all the words from your keyphrase "%4$s" appear in the SEO title. %2$sFor the best SEO results write the exact match of your keyphrase in the SEO title, and put the keyphrase at the beginning of the title%3$s.', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/UrlKeywordAssessment.js:97
 	/* Translators:  %1$s expands to a link on yoast.com, %2$s expands to the anchor end tag */

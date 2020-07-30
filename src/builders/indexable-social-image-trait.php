@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\SEO\Builders;
 
+use WPSEO_Utils;
 use Yoast\WP\SEO\Helpers\Image_Helper;
 use Yoast\WP\SEO\Helpers\Open_Graph\Image_Helper as Open_Graph_Image_Helper;
 use Yoast\WP\SEO\Helpers\Twitter\Image_Helper as Twitter_Image_Helper;
@@ -43,7 +44,7 @@ trait Indexable_Social_Image_Trait {
 	 *
 	 * @required
 	 *
-	 * @param Image_Helper            $image     The image helper.
+	 * @param Image_Helper            $image            The image helper.
 	 * @param Open_Graph_Image_Helper $open_graph_image The Open Graph image helper.
 	 * @param Twitter_Image_Helper    $twitter_image    The Twitter image helper.
 	 */
@@ -106,7 +107,7 @@ trait Indexable_Social_Image_Trait {
 
 		if ( ! empty( $image ) ) {
 			$indexable->open_graph_image      = $image['url'];
-			$indexable->open_graph_image_meta = wp_json_encode( $image );
+			$indexable->open_graph_image_meta = WPSEO_Utils::format_json_encode( $image );
 		}
 	}
 

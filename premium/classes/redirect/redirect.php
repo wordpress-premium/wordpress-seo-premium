@@ -166,8 +166,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * @param string $offset An offset to check for.
 	 *
 	 * @return bool True on success or false on failure.
-	 *
-	 * The return value will be casted to boolean if non-boolean was returned.
+	 *              The return value will be cast to boolean if non-boolean was returned.
 	 */
 	public function offsetExists( $offset ) {
 		return in_array( $offset, [ 'url', 'type' ], true );

@@ -88,6 +88,6 @@ class WPSEO_Redirect_Importer {
 			return;
 		}
 
-		$this->total_imported++;
+		++$this->total_imported;
 	}
 }

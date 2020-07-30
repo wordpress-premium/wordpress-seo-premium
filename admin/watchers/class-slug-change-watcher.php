@@ -17,9 +17,9 @@ class WPSEO_Slug_Change_Watcher implements WPSEO_WordPress_Integration {
 	 */
 	public function register_hooks() {
 		// If the current plugin is Yoast SEO Premium, stop registering.
-		
-		return;
-		
+		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+			return;
+		}
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 

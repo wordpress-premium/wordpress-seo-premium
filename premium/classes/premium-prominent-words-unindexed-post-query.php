@@ -115,7 +115,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 			return '';
 		}
 
-		if ( isset( $post_type_object->rest_base ) && $post_type_object->rest_base !== false ) {
+		if ( isset( $post_type_object->rest_base ) && ! empty( $post_type_object->rest_base ) ) {
 			return $post_type_object->rest_base;
 		}
 

@@ -7,9 +7,9 @@
 
 namespace Yoast\WP\SEO\Integrations\Watchers;
 
+use Yoast\WP\Lib\Model;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
-use Yoast\WP\Lib\Model;
 use Yoast\WP\SEO\WordPress\Wrapper;
 
 /**
@@ -107,19 +107,21 @@ class Option_Titles_Watcher implements Integration_Interface {
 			return false;
 		}
 
-		$wpdb             = Wrapper::get_wpdb();
-		$total            = \count( $post_types );
-		$placeholders     = \array_fill( 0, $total, '%s' );
-		$placeholders     = \implode( ', ', $placeholders );
-		$hierarchy_table  = Model::get_table_name( 'Indexable_Hierarchy' );
-		$indexable_table  = Model::get_table_name( 'Indexable' );
+		$wpdb            = Wrapper::get_wpdb();
+		$total           = \count( $post_types );
+		$hierarchy_table = Model::get_table_name( 'Indexable_Hierarchy' );
+		$indexable_table = Model::get_table_name( 'Indexable' );
 
 		$result = $wpdb->query(
-			$wpdb->prepare( "
+			$wpdb->prepare(
+				"
 				DELETE FROM `$hierarchy_table`
 				WHERE indexable_id IN(
-					SELECT id FROM `$indexable_table` WHERE object_type = 'post' AND object_sub_type IN( $placeholders )
-				)",
+					SELECT id
+					FROM `$indexable_table`
+					WHERE object_type = 'post'
+					AND object_sub_type IN( " . \implode( ', ', \array_fill( 0, $total, '%s' ) ) . ' )
+				)',
 				$post_types
 			)
 		);

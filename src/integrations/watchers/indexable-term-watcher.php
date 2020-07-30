@@ -7,8 +7,8 @@
 
 namespace Yoast\WP\SEO\Integrations\Watchers;
 
-use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Builders\Indexable_Builder;
+use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Helpers\Site_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
@@ -17,13 +17,6 @@ use Yoast\WP\SEO\Repositories\Indexable_Repository;
  * Watcher for terms to fill the related Indexable.
  */
 class Indexable_Term_Watcher implements Integration_Interface {
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_conditionals() {
-		return [ Migrations_Conditional::class ];
-	}
 
 	/**
 	 * The indexable repository.
@@ -45,6 +38,13 @@ class Indexable_Term_Watcher implements Integration_Interface {
 	 * @var Site_Helper
 	 */
 	protected $site;
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_conditionals() {
+		return [ Migrations_Conditional::class ];
+	}
 
 	/**
 	 * Indexable_Term_Watcher constructor.
@@ -99,6 +99,16 @@ class Indexable_Term_Watcher implements Integration_Interface {
 	public function build_indexable( $term_id ) {
 		// Bail if this is a multisite installation and the site has been switched.
 		if ( $this->site->is_multisite_and_switched() ) {
+			return;
+		}
+
+		$term = \get_term( $term_id );
+
+		if ( $term === null || \is_wp_error( $term ) ) {
+			return;
+		}
+
+		if ( ! \is_taxonomy_viewable( $term->taxonomy ) ) {
 			return;
 		}
 

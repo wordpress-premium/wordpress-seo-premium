@@ -132,7 +132,8 @@ abstract class WPSEO_Watcher {
 			'Yoast SEO Premium',
 			$this->get_delete_action_list( $url, $id ),
 			'<a target="_blank" href="' . WPSEO_Shortlinker::get( 'https://yoa.st/2jd' ) . '">',
-			'</a>'
+			'</a>',
+			'<code>' . esc_url( trim( $url ) ) . '</code>'
 		);
 
 		$this->create_notification( $message, 'delete' );

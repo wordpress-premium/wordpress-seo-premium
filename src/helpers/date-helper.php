@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\SEO\Helpers;
 
+use WPSEO_Date_Helper;
 
 /**
  * Class Date_Helper
@@ -16,7 +17,7 @@ class Date_Helper {
 	/**
 	 * The date helper.
 	 *
-	 * @var \WPSEO_Date_Helper
+	 * @var WPSEO_Date_Helper
 	 */
 	protected $date;
 
@@ -26,7 +27,7 @@ class Date_Helper {
 	 * @codeCoverageIgnore It only sets dependencies.
 	 */
 	public function __construct() {
-		$this->date = new \WPSEO_Date_Helper();
+		$this->date = new WPSEO_Date_Helper();
 	}
 
 	/**
@@ -43,7 +44,7 @@ class Date_Helper {
 	 * @return string Formatted date string.
 	 */
 	public function mysql_date_to_w3c_format( $date, $translate = false ) {
-		return \mysql2date( DATE_W3C, $date, $translate );
+		return \mysql2date( \DATE_W3C, $date, $translate );
 	}
 
 	/**
@@ -56,7 +57,7 @@ class Date_Helper {
 	 *
 	 * @return string The formatted date.
 	 */
-	public function format( $date, $format = DATE_W3C ) {
+	public function format( $date, $format = \DATE_W3C ) {
 		return $this->date->format( $date, $format );
 	}
 }

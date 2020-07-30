@@ -18,6 +18,13 @@ class WPSEO_Addon_Manager {
 	const SITE_INFORMATION_TRANSIENT = 'wpseo_site_information';
 
 	/**
+	 * Holds the name of the transient.
+	 *
+	 * @var string
+	 */
+	const SITE_INFORMATION_TRANSIENT_QUICK = 'wpseo_site_information_quick';
+
+	/**
 	 * Holds the slug for YoastSEO free.
 	 *
 	 * @var string
@@ -181,9 +188,6 @@ class WPSEO_Addon_Manager {
 	 * @return bool True when the subscription is valid.
 	 */
 	public function has_valid_subscription( $slug ) {
-		$subscription = $this->get_subscription( $slug );
-
-		
 		return true;
 	}
 
@@ -254,10 +258,9 @@ class WPSEO_Addon_Manager {
 			'homepage'      => $subscription->product->store_url,
 			'download_link' => $subscription->product->download,
 			'package'       => $subscription->product->download,
-			'sections'      =>
-				[
-					'changelog' => $subscription->product->changelog,
-				],
+			'sections'      => [
+				'changelog' => $subscription->product->changelog,
+			],
 		];
 	}
 
@@ -283,9 +286,9 @@ class WPSEO_Addon_Manager {
 		$addons = self::$addons;
 
 		// Yoast SEO Free isn't an addon, but we needed it in Premium to fetch translations.
-		
-		$addons['wp-seo.php'] = self::FREE_SLUG;
-		
+		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+			$addons['wp-seo.php'] = self::FREE_SLUG;
+		}
 
 		foreach ( $addons as $addon => $addon_slug ) {
 			if ( strpos( $plugin_file, $addon ) !== false ) {
@@ -342,15 +345,16 @@ class WPSEO_Addon_Manager {
 
 		// Force re-check on license & dashboard pages.
 		$current_page = $this->get_current_page();
+
 		// Check whether the licenses are valid or whether we need to show notifications.
-		$exclude_cache = ( $current_page === 'wpseo_licenses' || $current_page === 'wpseo_dashboard' );
+		$quick = ( $current_page === 'wpseo_licenses' || $current_page === 'wpseo_dashboard' );
 
 		// Also do a fresh request on Plugins & Core Update pages.
-		$exclude_cache = $exclude_cache || $pagenow === 'plugins.php';
-		$exclude_cache = $exclude_cache || $pagenow === 'update-core.php';
+		$quick = $quick || $pagenow === 'plugins.php';
+		$quick = $quick || $pagenow === 'update-core.php';
 
-		if ( $exclude_cache ) {
-			return false;
+		if ( $quick ) {
+			return get_transient( self::SITE_INFORMATION_TRANSIENT_QUICK );
 		}
 
 		return get_transient( self::SITE_INFORMATION_TRANSIENT );
@@ -378,6 +382,7 @@ class WPSEO_Addon_Manager {
 	 */
 	protected function set_site_information_transient( $site_information ) {
 		set_transient( self::SITE_INFORMATION_TRANSIENT, $site_information, DAY_IN_SECONDS );
+		set_transient( self::SITE_INFORMATION_TRANSIENT_QUICK, $site_information, 60 );
 	}
 
 	/**
@@ -388,6 +393,9 @@ class WPSEO_Addon_Manager {
 	 * @return array The plugins.
 	 */
 	protected function get_plugins() {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		return get_plugins();
 	}
 

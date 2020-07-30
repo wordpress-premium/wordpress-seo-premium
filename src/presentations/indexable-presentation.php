@@ -10,6 +10,8 @@ namespace Yoast\WP\SEO\Presentations;
 use Yoast\WP\SEO\Context\Meta_Tags_Context;
 use Yoast\WP\SEO\Generators\Breadcrumbs_Generator;
 use Yoast\WP\SEO\Generators\Open_Graph_Image_Generator;
+use Yoast\WP\SEO\Generators\Open_Graph_Locale_Generator;
+use Yoast\WP\SEO\Generators\Schema_Generator;
 use Yoast\WP\SEO\Generators\Twitter_Image_Generator;
 use Yoast\WP\SEO\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Helpers\Image_Helper;
@@ -17,8 +19,6 @@ use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\Url_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
 use Yoast\WP\SEO\Models\Indexable;
-use Yoast\WP\SEO\Generators\Open_Graph_Locale_Generator;
-use Yoast\WP\SEO\Generators\Schema_Generator;
 
 /**
  * Class Indexable_Presentation
@@ -257,7 +257,7 @@ class Indexable_Presentation extends Abstract_Presentation {
 		 */
 		$robots_filtered = \apply_filters( 'wpseo_robots', $robots_string, $this );
 
-		if ( is_string( $robots_filtered ) ) {
+		if ( \is_string( $robots_filtered ) ) {
 			$robots_values = \explode( ', ', $robots_filtered );
 			$robots_new    = [];
 
@@ -269,14 +269,21 @@ class Indexable_Presentation extends Abstract_Presentation {
 				$robots_new[ $key ] = $value;
 			}
 
-			return \array_filter( $robots_new );
+			$robots = $robots_new;
 		}
 
 		if ( ! $robots_filtered ) {
 			return [];
 		}
 
-		return \array_filter( $robots );
+		/**
+		 * Filter: 'wpseo_robots_array' - Allows filtering of the meta robots output array of Yoast SEO.
+		 *
+		 * @api array $robots The meta robots directives to be used.
+		 *
+		 * @param Indexable_Presentation $presentation The presentation of an indexable.
+		 */
+		return \apply_filters( 'wpseo_robots_array', \array_filter( $robots ), $this );
 	}
 
 	/**
@@ -303,7 +310,7 @@ class Indexable_Presentation extends Abstract_Presentation {
 	 * @return array The googlebot value.
 	 */
 	private function generate_snippet_opt_in() {
-		if ( in_array( 'noindex', $this->robots, true ) ) {
+		if ( \in_array( 'noindex', $this->robots, true ) ) {
 			return [];
 		}
 
@@ -558,13 +565,13 @@ class Indexable_Presentation extends Abstract_Presentation {
 	 */
 	public function generate_twitter_site() {
 		switch ( $this->context->site_represents ) {
-			case 'person' :
+			case 'person':
 				$twitter = $this->user->get_the_author_meta( 'twitter', (int) $this->context->site_user_id );
 				if ( empty( $twitter ) ) {
 					$twitter = $this->options->get( 'twitter_site' );
 				}
 				break;
-			case 'company' :
+			case 'company':
 			default:
 				$twitter = $this->options->get( 'twitter_site' );
 				break;
@@ -602,5 +609,17 @@ class Indexable_Presentation extends Abstract_Presentation {
 	 */
 	public function generate_breadcrumbs() {
 		return $this->breadcrumbs_generator->generate( $this->context );
+	}
+
+	/**
+	 * Strips all nested dependencies from the debug info.
+	 *
+	 * @return array
+	 */
+	public function __debugInfo() {
+		return [
+			'model'   => $this->model,
+			'context' => $this->context,
+		];
 	}
 }

@@ -15,7 +15,7 @@ class WPSEO_Premium_Prominent_Words_Language_Support {
 	 *
 	 * @var string[]
 	 */
-	protected $supported_languages = [ 'en', 'de', 'nl', 'es', 'fr', 'it', 'pt', 'ru', 'pl', 'sv' ];
+	protected $supported_languages = [ 'en', 'de', 'nl', 'es', 'fr', 'it', 'pt', 'ru', 'pl', 'sv', 'id' ];
 
 	/**
 	 * Returns whether the current language is supported for the link suggestions.

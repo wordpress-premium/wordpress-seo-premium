@@ -82,7 +82,7 @@ final class WPSEO_CLI_Redirect_Follow_Command extends WPSEO_CLI_Redirect_Base_Co
 		$steps = 0;
 
 		while ( ! $this->detected_loop && $redirect !== false ) {
-			$steps++;
+			++$steps;
 			if ( $limit > 0 && $steps >= $limit ) {
 				break;
 			}

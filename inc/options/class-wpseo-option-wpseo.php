@@ -26,31 +26,35 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 	 */
 	protected $defaults = [
 		// Non-form fields, set via (ajax) function.
-		'ms_defaults_set'                 => false,
-		'ignore_indexation_warning'       => false,
+		'ms_defaults_set'                          => false,
+		'ignore_search_engines_discouraged_notice' => false,
+		'ignore_indexation_warning'                => false,
+		'indexation_warning_hide_until'            => false,
+		'indexation_started'                       => false,
+		'indexables_indexation_completed'          => false,
 		// Non-form field, should only be set via validation routine.
-		'version'                         => '', // Leave default as empty to ensure activation/upgrade works.
-
+		'version'                                  => '', // Leave default as empty to ensure activation/upgrade works.
+		'previous_version'                         => '',
 		// Form fields.
-		'disableadvanced_meta'            => true,
-		'enable_headless_rest_endpoints'  => true,
-		'ryte_indexability'               => true,
-		'baiduverify'                     => '', // Text field.
-		'googleverify'                    => '', // Text field.
-		'msverify'                        => '', // Text field.
-		'yandexverify'                    => '',
-		'site_type'                       => '', // List of options.
-		'has_multiple_authors'            => '',
-		'environment_type'                => '',
-		'content_analysis_active'         => true,
-		'keyword_analysis_active'         => true,
-		'enable_admin_bar_menu'           => true,
-		'enable_cornerstone_content'      => true,
-		'enable_xml_sitemap'              => true,
-		'enable_text_link_counter'        => true,
-		'show_onboarding_notice'          => false,
-		'first_activated_on'              => false,
-		'myyoast-oauth'                   => [
+		'disableadvanced_meta'                     => true,
+		'enable_headless_rest_endpoints'           => true,
+		'ryte_indexability'                        => true,
+		'baiduverify'                              => '', // Text field.
+		'googleverify'                             => '', // Text field.
+		'msverify'                                 => '', // Text field.
+		'yandexverify'                             => '',
+		'site_type'                                => '', // List of options.
+		'has_multiple_authors'                     => '',
+		'environment_type'                         => '',
+		'content_analysis_active'                  => true,
+		'keyword_analysis_active'                  => true,
+		'enable_admin_bar_menu'                    => true,
+		'enable_cornerstone_content'               => true,
+		'enable_xml_sitemap'                       => true,
+		'enable_text_link_counter'                 => true,
+		'show_onboarding_notice'                   => false,
+		'first_activated_on'                       => false,
+		'myyoast-oauth'                            => [
 			'config'        => [
 				'clientId' => null,
 				'secret'   => null,
@@ -65,6 +69,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 	 * @var array
 	 */
 	public $ms_exclude = [
+		'ignore_search_engines_discouraged_notice',
 		/* Privacy. */
 		'baiduverify',
 		'googleverify',
@@ -128,6 +133,13 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 	 */
 	protected function __construct() {
 		parent::__construct();
+
+		/**
+		 * Filter: 'wpseo_enable_tracking' - Enables the data tracking of Yoast SEO Premium.
+		 *
+		 * @api string $is_enabled The enabled state. Default is false.
+		 */
+		$this->defaults['tracking'] = apply_filters( 'wpseo_enable_tracking', false );
 
 		/* Clear the cache on update/add. */
 		add_action( 'add_option_' . $this->option_name, [ 'WPSEO_Utils', 'clear_cache' ] );
@@ -230,6 +242,11 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 				case 'version':
 					$clean[ $key ] = WPSEO_VERSION;
 					break;
+				case 'previous_version':
+					if ( isset( $dirty[ $key ] ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
+					break;
 
 				/* Verification strings. */
 				case 'baiduverify':
@@ -243,6 +260,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 				 * Boolean dismiss warnings - not fields - may not be in form
 				 * (and don't need to be either as long as the default is false).
 				 */
+				case 'ignore_search_engines_discouraged_notice':
 				case 'ms_defaults_set':
 					if ( isset( $dirty[ $key ] ) ) {
 						$clean[ $key ] = WPSEO_Utils::validate_bool( $dirty[ $key ] );
@@ -275,6 +293,8 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 					break;
 
 				case 'first_activated_on':
+				case 'indexation_started':
+				case 'indexation_warning_hide_until':
 					$clean[ $key ] = false;
 					if ( isset( $dirty[ $key ] ) ) {
 						if ( $dirty[ $key ] === false || WPSEO_Utils::validate_int( $dirty[ $key ] ) ) {
@@ -309,6 +329,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 				 *  'enable_headless_rest_endpoints'
 				 *  'yoast_tracking'
 				 */
+				case 'tracking':
 				default:
 					$clean[ $key ] = ( isset( $dirty[ $key ] ) ? WPSEO_Utils::validate_bool( $dirty[ $key ] ) : false );
 					break;
@@ -393,6 +414,24 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 	 * @return array Cleaned option.
 	 */
 	protected function clean_option( $option_value, $current_version = null, $all_old_option_values = null ) {
+		// Deal with value change from text string to boolean.
+		$value_change = [
+			'ignore_search_engines_discouraged_notice',
+		];
+
+		$target_values = [
+			'ignore',
+			'done',
+		];
+
+		foreach ( $value_change as $key ) {
+			if ( isset( $option_value[ $key ] )
+				&& in_array( $option_value[ $key ], $target_values, true )
+			) {
+				$option_value[ $key ] = true;
+			}
+		}
+
 		return $option_value;
 	}
 }

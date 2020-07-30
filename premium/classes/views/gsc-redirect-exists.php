@@ -5,21 +5,13 @@
  * This is the view for the modal box, when the url is already redirected.
  *
  * @package WPSEO\Admin|Google_Search_Console
+ *
+ * @uses WPSEO_Redirect $redirect Instance of the WPSEO_Redirect class, containing data about the existing redirect.
+ * @uses string         $url      The old URL that redirects to the new URL.
  */
 
 _deprecated_file( __FILE__, 'WPSEO 12.5' );
 
-/**
- * Instance of the WPSEO_Redirect class, containing data about the existing redirect.
- *
- * @var WPSEO_Redirect $redirect
- */
-
-/**
- * The old URL that redirects to the new URL.
- *
- * @var string $url
- */
 ?>
 <h1 class="wpseo-redirect-url-title"><?php esc_html_e( 'Error: a redirect for this URL already exists', 'wordpress-seo-premium' ); ?></h1>
 <p>

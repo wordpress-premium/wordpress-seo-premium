@@ -5,12 +5,8 @@
  * This is the view for the modal box that appears when the url can be added as a redirect.
  *
  * @package WPSEO\Admin|Google_Search_Console
- */
-
-/**
- * The old URL that redirects to the new URL.
  *
- * @var string $url
+ * @uses string $url The old URL that redirects to the new URL.
  */
 
 _deprecated_file( __FILE__, 'WPSEO 12.5' );

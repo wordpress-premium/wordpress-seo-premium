@@ -65,7 +65,7 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 *
 	 * @param array $fields The current fields.
 	 *
-	 * @return array $fields with our added field.
+	 * @return array Fields including our added field.
 	 */
 	public function add_focus_keywords_taxonomy_input( $fields ) {
 		if ( is_array( $fields ) ) {
@@ -85,7 +85,7 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 *
 	 * @param array $fields The current fields.
 	 *
-	 * @return array $fields with our added field.
+	 * @return array Fields including our added field.
 	 */
 	public function add_keyword_synonyms_taxonomy_input( $fields ) {
 		if ( is_array( $fields ) ) {
@@ -105,7 +105,7 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 *
 	 * @param array $defaults The defaults to extend.
 	 *
-	 * @return array $defaults The extended defaults.
+	 * @return array The extended defaults.
 	 */
 	public function register_taxonomy_metafields( $defaults ) {
 		$defaults['wpseo_focuskeywords']   = '';

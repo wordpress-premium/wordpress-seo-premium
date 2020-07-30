@@ -26,7 +26,7 @@ class WPSEO_Twitter {
 	 *
 	 * @var array
 	 */
-	public $shown_images = array();
+	public $shown_images = [];
 
 	/**
 	 * Class constructor.
@@ -61,4 +61,4 @@ class WPSEO_Twitter {
 
 		return null;
 	}
-} /* End of class */
+}

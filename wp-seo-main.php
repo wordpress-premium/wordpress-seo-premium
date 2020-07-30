@@ -15,7 +15,7 @@ if ( ! function_exists( 'add_filter' ) ) {
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_VERSION', '14.0.2' );
+define( 'WPSEO_VERSION', '14.6.1' );
 
 
 if ( ! defined( 'WPSEO_PATH' ) ) {
@@ -323,7 +323,6 @@ function wpseo_init() {
 
 	$integrations   = [];
 	$integrations[] = new WPSEO_Slug_Change_Watcher();
-	$integrations[] = new WPSEO_Structured_Data_Blocks();
 
 	foreach ( $integrations as $integration ) {
 		$integration->register_hooks();
@@ -357,7 +356,7 @@ function wpseo_init_rest_api() {
 	$configuration_service = new WPSEO_Configuration_Service();
 	$configuration_service->initialize();
 
-	$statistics_service    = new WPSEO_Statistics_Service( new WPSEO_Statistics() );
+	$statistics_service = new WPSEO_Statistics_Service( new WPSEO_Statistics() );
 
 	$endpoints   = [];
 	$endpoints[] = new WPSEO_Link_Reindex_Post_Endpoint( new WPSEO_Link_Reindex_Post_Service() );
@@ -386,7 +385,7 @@ function wpseo_admin_init() {
  * on PHP 5.3+, the constant should only be set when requirements are met.
  */
 function wpseo_cli_init() {
-	
+	if ( WPSEO_Utils::is_yoast_seo_premium() ) {
 		WP_CLI::add_command(
 			'yoast redirect list',
 			'WPSEO_CLI_Redirect_List_Command',
@@ -422,7 +421,7 @@ function wpseo_cli_init() {
 			'WPSEO_CLI_Redirect_Follow_Command',
 			[ 'before_invoke' => 'WPSEO_CLI_Premium_Requirement::enforce' ]
 		);
-	
+	}
 
 	// Only add the namespace if the required base class exists (WP-CLI 1.5.0+).
 	// This is optional and only adds the description of the root `yoast`
@@ -456,7 +455,7 @@ if ( ! wp_installing() && ( $spl_autoload_exists && $filter_exists ) ) {
 
 	if ( is_admin() ) {
 
-		new Yoast_Alerts();
+		new Yoast_Notifications();
 
 		$yoast_addon_manager = new WPSEO_Addon_Manager();
 		$yoast_addon_manager->register_hooks();

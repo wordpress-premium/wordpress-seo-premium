@@ -56,7 +56,7 @@ class Breadcrumbs_Presenter extends Abstract_Indexable_Presenter {
 	 */
 	public function present() {
 		$breadcrumbs = $this->get();
-		if ( ! is_array( $breadcrumbs ) || empty( $breadcrumbs ) ) {
+		if ( ! \is_array( $breadcrumbs ) || empty( $breadcrumbs ) ) {
 			return '';
 		}
 
@@ -106,7 +106,7 @@ class Breadcrumbs_Presenter extends Abstract_Indexable_Presenter {
 		/**
 		 * Filter: 'wpseo_breadcrumb_output' - Allow changing the HTML output of the Yoast SEO breadcrumbs class.
 		 *
-		 * @param Indexable_Presentation $this->presentation The presentation of an indexable.
+		 * @param Indexable_Presentation $presentation The presentation of an indexable.
 		 *
 		 * @api string $output The HTML output.
 		 */
@@ -135,15 +135,15 @@ class Breadcrumbs_Presenter extends Abstract_Indexable_Presenter {
 		$text = \trim( $breadcrumb['text'] );
 
 		if (
-			$index < ( $total - 1 ) &&
-			isset( $breadcrumb['url'] ) &&
-			\is_string( $breadcrumb['url'] ) &&
-			! empty( $breadcrumb['url'] )
+			$index < ( $total - 1 )
+			&& isset( $breadcrumb['url'] )
+			&& \is_string( $breadcrumb['url'] )
+			&& ! empty( $breadcrumb['url'] )
 		) {
 			// If it's not the last element and we have a url.
-			$link       .= '<' . $this->get_element() . '>';
-			$title_attr = isset( $breadcrumb['title'] ) ? ' title="' . esc_attr( $breadcrumb['title'] ) . '"' : '';
-			$link       .= '<a href="' . esc_url( $breadcrumb['url'] ) . '"' . $title_attr . '>' . $text . '</a>';
+			$link      .= '<' . $this->get_element() . '>';
+			$title_attr = isset( $breadcrumb['title'] ) ? ' title="' . \esc_attr( $breadcrumb['title'] ) . '"' : '';
+			$link      .= '<a href="' . \esc_url( $breadcrumb['url'] ) . '"' . $title_attr . '>' . $text . '</a>';
 		}
 		elseif ( $index === ( $total - 1 ) ) {
 			// If it's the last element.
@@ -156,7 +156,7 @@ class Breadcrumbs_Presenter extends Abstract_Indexable_Presenter {
 			// This is the last element, now close all previous elements.
 			while ( $index > 0 ) {
 				$link .= '</' . $this->get_element() . '>';
-				$index--;
+				--$index;
 			}
 		}
 		else {
@@ -234,7 +234,7 @@ class Breadcrumbs_Presenter extends Abstract_Indexable_Presenter {
 		if ( ! $this->wrapper ) {
 			$this->wrapper = \apply_filters( 'wpseo_breadcrumb_output_wrapper', 'span' );
 			$this->wrapper = \tag_escape( $this->wrapper );
-			if ( ! is_string( $this->wrapper ) || $this->wrapper === '' ) {
+			if ( ! \is_string( $this->wrapper ) || $this->wrapper === '' ) {
 				$this->wrapper = 'span';
 			}
 		}

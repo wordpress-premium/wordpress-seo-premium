@@ -87,7 +87,7 @@ class WPSEO_Premium_Prominent_Words_Versioning implements WPSEO_WordPress_Integr
 	 * @param array           $args    The previous arguments.
 	 * @param WP_REST_Request $request The current request object.
 	 *
-	 * @return array $args The altered arguments.
+	 * @return array The altered arguments.
 	 */
 	public function rest_add_query_args( $args, WP_REST_Request $request ) {
 		if ( $request->get_param( self::COLLECTION_PARAM ) === true ) {

@@ -90,11 +90,19 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 */
 	public function send_data_to_assets() {
 		$analysis_seo = new WPSEO_Metabox_Analysis_SEO();
+		$locale       = get_locale();
+		$current_user = wp_get_current_user();
 
 		$data = [
 			'restApi'            => $this->get_rest_api_config(),
 			'seoAnalysisEnabled' => $analysis_seo->is_enabled(),
 			'licensedURL'        => WPSEO_Utils::get_home_url(),
+			'languageBeacon'     => [
+				'show'           => in_array( $locale, [ 'fr_FR', 'fr_CA', 'fr_BE', 'ru_RU', 'it_IT', 'id_ID', 'pt_PT', 'pt_BR', 'pt_AO' ], true ),
+				'id'             => '1060600e-401f-4e6a-88b2-47429e942e74',
+				'name'           => trim( $current_user->user_firstname . ' ' . $current_user->user_lastname ),
+				'email'          => $current_user->user_email,
+			],
 		];
 
 		if ( WPSEO_Metabox::is_post_edit( $this->get_current_page() ) ) {
@@ -105,7 +113,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		}
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.
-		wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'premium-metabox', 'wpseoPremiumMetaboxData', [ 'data' => $data ] );
+		wp_localize_script( 'yoast-seo-premium-metabox', 'wpseoPremiumMetaboxData', [ 'data' => $data ] );
 	}
 
 	/**

@@ -7,10 +7,10 @@
 
 namespace Yoast\WP\SEO\Surfaces;
 
-use Yoast\WP\SEO\Surfaces\Values\Meta;
 use Yoast\WP\SEO\Context\Meta_Tags_Context;
 use Yoast\WP\SEO\Memoizers\Meta_Tags_Context_Memoizer;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
+use Yoast\WP\SEO\Surfaces\Values\Meta;
 use Yoast\WP\SEO\Wrappers\WP_Rewrite_Wrapper;
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,7 +38,6 @@ class Meta_Surface {
 	 * @var WP_Rewrite_Wrapper
 	 */
 	private $wp_rewrite_wrapper;
-
 
 	/**
 	 * Meta_Surface constructor.
@@ -309,15 +308,15 @@ class Meta_Surface {
 	 * @return boolean
 	 */
 	protected function is_date_archive_url( $url ) {
-		$path = \wp_parse_url( $url, PHP_URL_PATH );
+		$path = \wp_parse_url( $url, \PHP_URL_PATH );
 		$path = \ltrim( $path, '/' );
 
 		$wp_rewrite   = $this->wp_rewrite_wrapper->get();
-		$date_rewrite = $wp_rewrite->generate_rewrite_rules( $wp_rewrite->get_date_permastruct(), EP_DATE );
+		$date_rewrite = $wp_rewrite->generate_rewrite_rules( $wp_rewrite->get_date_permastruct(), \EP_DATE );
 		$date_rewrite = \apply_filters( 'date_rewrite_rules', $date_rewrite );
 
 		foreach ( (array) $date_rewrite as $match => $query ) {
-			if ( preg_match( "#^$match#", $path ) ) {
+			if ( \preg_match( "#^$match#", $path ) ) {
 				return true;
 			}
 		}

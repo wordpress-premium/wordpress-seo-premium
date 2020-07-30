@@ -275,9 +275,9 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return string
 	 */
 	protected function get_delete_notification() {
-		/* translators: %1$s: Yoast SEO Premium, %2$s: List with actions, %3$s: <a href='{post_with_explaination.}'>, %4$s: </a> */
+		/* translators: %1$s: Yoast SEO Premium, %2$s: List with actions, %3$s: <a href='{post_with_explaination.}'>, %4$s: </a>, %5%s: The removed url. */
 		return __(
-			'%1$s detected that you deleted a term. You can either: %2$s Don\'t know what to do? %3$sRead this post %4$s.',
+			'%1$s detected that you deleted a term (%5$s). You can either: %2$s Don\'t know what to do? %3$sRead this post %4$s.',
 			'wordpress-seo-premium'
 		);
 	}
@@ -310,7 +310,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool True when in an AJAX-request and the action is inline-save.
 	 */
 	protected function is_action_inline_save_tax() {
-		return ( defined( 'DOING_AJAX' ) && DOING_AJAX && filter_input( INPUT_POST, 'action' ) === 'inline-save-tax' );
+		return ( wp_doing_ajax() && filter_input( INPUT_POST, 'action' ) === 'inline-save-tax' );
 	}
 
 	/**
@@ -319,6 +319,6 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool True when in an AJAX-request and the action is delete-tag.
 	 */
 	protected function is_action_delete_tag() {
-		return ( defined( 'DOING_AJAX' ) && DOING_AJAX && filter_input( INPUT_POST, 'action' ) === 'delete-tag' );
+		return ( wp_doing_ajax() && filter_input( INPUT_POST, 'action' ) === 'delete-tag' );
 	}
 }

@@ -50,6 +50,7 @@ class WPSEO_Premium_Redirect_Service {
 				[
 					'title'   => __( 'Redirect deleted.', 'wordpress-seo-premium' ),
 					'message' => __( 'The redirect was deleted successfully.', 'wordpress-seo-premium' ),
+					'success' => true,
 				]
 			);
 		}
@@ -58,6 +59,7 @@ class WPSEO_Premium_Redirect_Service {
 			[
 				'title'   => __( 'Redirect not deleted.', 'wordpress-seo-premium' ),
 				'message' => __( 'Something went wrong when deleting this redirect.', 'wordpress-seo-premium' ),
+				'success' => false,
 			],
 			400
 		);

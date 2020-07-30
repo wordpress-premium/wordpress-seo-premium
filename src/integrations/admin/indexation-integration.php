@@ -8,6 +8,7 @@
 namespace Yoast\WP\SEO\Integrations\Admin;
 
 use WPSEO_Admin_Asset_Manager;
+use Yoast\WP\SEO\Actions\Indexation\Indexable_Complete_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexation\Indexable_General_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexation\Indexable_Post_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexation\Indexable_Post_Type_Archive_Indexation_Action;
@@ -26,17 +27,6 @@ use Yoast\WP\SEO\Routes\Indexable_Indexation_Route;
  * Indexation_Integration class
  */
 class Indexation_Integration implements Integration_Interface {
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_conditionals() {
-		return [
-			Admin_Conditional::class,
-			Yoast_Admin_And_Dashboard_Conditional::class,
-			Migrations_Conditional::class,
-		];
-	}
 
 	/**
 	 * The post indexation action.
@@ -74,6 +64,13 @@ class Indexation_Integration implements Integration_Interface {
 	protected $general_indexation;
 
 	/**
+	 * Represented the indexation completed action.
+	 *
+	 * @var Indexable_Complete_Indexation_Action
+	 */
+	protected $complete_indexation_action;
+
+	/**
 	 * Represents tha admin asset manager.
 	 *
 	 * @var WPSEO_Admin_Asset_Manager
@@ -88,12 +85,24 @@ class Indexation_Integration implements Integration_Interface {
 	private $total_unindexed;
 
 	/**
+	 * @inheritDoc
+	 */
+	public static function get_conditionals() {
+		return [
+			Admin_Conditional::class,
+			Yoast_Admin_And_Dashboard_Conditional::class,
+			Migrations_Conditional::class,
+		];
+	}
+
+	/**
 	 * Indexation_Integration constructor.
 	 *
 	 * @param Indexable_Post_Indexation_Action              $post_indexation              The post indexation action.
 	 * @param Indexable_Term_Indexation_Action              $term_indexation              The term indexation action.
 	 * @param Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation The archive indexation action.
 	 * @param Indexable_General_Indexation_Action           $general_indexation           The general indexation action.
+	 * @param Indexable_Complete_Indexation_Action          $complete_indexation_action   The complete indexation action.
 	 * @param Options_Helper                                $options_helper               The options helper.
 	 * @param WPSEO_Admin_Asset_Manager                     $asset_manager                The admin asset manager.
 	 */
@@ -102,6 +111,7 @@ class Indexation_Integration implements Integration_Interface {
 		Indexable_Term_Indexation_Action $term_indexation,
 		Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation,
 		Indexable_General_Indexation_Action $general_indexation,
+		Indexable_Complete_Indexation_Action $complete_indexation_action,
 		Options_Helper $options_helper,
 		WPSEO_Admin_Asset_Manager $asset_manager
 	) {
@@ -109,6 +119,7 @@ class Indexation_Integration implements Integration_Interface {
 		$this->term_indexation              = $term_indexation;
 		$this->post_type_archive_indexation = $post_type_archive_indexation;
 		$this->general_indexation           = $general_indexation;
+		$this->complete_indexation_action   = $complete_indexation_action;
 		$this->options_helper               = $options_helper;
 		$this->asset_manager                = $asset_manager;
 	}
@@ -130,11 +141,28 @@ class Indexation_Integration implements Integration_Interface {
 		// We aren't able to determine whether or not anything needs to happen at register_hooks as post types aren't registered yet.
 		// So we do most of our add_action calls here.
 		if ( $this->get_total_unindexed() === 0 ) {
+			$this->complete_indexation_action->complete();
+
 			return;
 		}
 
+		/**
+		 * Filter 'wpseo_shutdown_indexation_limit' - Allow filtering the amount of objects that can be indexed during shutdown.
+		 *
+		 * @api int The maximum number of objects indexed.
+		 */
+		$shutdown_limit = \apply_filters( 'wpseo_shutdown_indexation_limit', 25 );
+
+		if ( $this->get_total_unindexed() < $shutdown_limit ) {
+			\register_shutdown_function( [ $this, 'shutdown_indexation' ] );
+
+			return;
+		}
+
+		$this->options_helper->set( 'indexables_indexation_completed', false );
+
 		\add_action( 'admin_footer', [ $this, 'render_indexation_modal' ], 20 );
-		if ( $this->options_helper->get( 'ignore_indexation_warning', false ) === false ) {
+		if ( $this->is_indexation_warning_hidden() === false ) {
 			\add_action( 'admin_notices', [ $this, 'render_indexation_warning' ], 10 );
 		}
 
@@ -150,21 +178,23 @@ class Indexation_Integration implements Integration_Interface {
 			'restApi' => [
 				'root'      => \esc_url_raw( \rest_url() ),
 				'endpoints' => [
+					'prepare'  => Indexable_Indexation_Route::FULL_PREPARE_ROUTE,
 					'posts'    => Indexable_Indexation_Route::FULL_POSTS_ROUTE,
 					'terms'    => Indexable_Indexation_Route::FULL_TERMS_ROUTE,
 					'archives' => Indexable_Indexation_Route::FULL_POST_TYPE_ARCHIVES_ROUTE,
 					'general'  => Indexable_Indexation_Route::FULL_GENERAL_ROUTE,
+					'complete' => Indexable_Indexation_Route::FULL_COMPLETE_ROUTE,
 				],
 				'nonce'     => \wp_create_nonce( 'wp_rest' ),
 			],
 			'message' => [
 				'indexingCompleted' => '<span class="wpseo-checkmark-ok-icon"></span>' . \esc_html__( 'Good job! You\'ve sped up your site.', 'wordpress-seo' ),
-				'indexingFailed'    => __( 'Something went wrong while optimizing the SEO data of your site. Please try again later.', 'wordpress-seo' ),
+				'indexingFailed'    => \__( 'Something went wrong while optimizing the SEO data of your site. Please try again later.', 'wordpress-seo' ),
 			],
 			'l10n'    => [
-				'calculationInProgress' => __( 'Optimization in progress...', 'wordpress-seo' ),
-				'calculationCompleted'  => __( 'Optimization completed.', 'wordpress-seo' ),
-				'calculationFailed'     => __( 'Optimization failed, please try again later.', 'wordpress-seo' ),
+				'calculationInProgress' => \__( 'Optimization in progress...', 'wordpress-seo' ),
+				'calculationCompleted'  => \__( 'Optimization completed.', 'wordpress-seo' ),
+				'calculationFailed'     => \__( 'Optimization failed, please try again later.', 'wordpress-seo' ),
 			],
 		];
 
@@ -177,7 +207,9 @@ class Indexation_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function render_indexation_warning() {
-		echo new Indexation_Warning_Presenter();
+		if ( current_user_can( 'manage_options' ) ) {
+			echo new Indexation_Warning_Presenter( $this->get_total_unindexed(), $this->options_helper );
+		}
 	}
 
 	/**
@@ -186,9 +218,11 @@ class Indexation_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function render_indexation_modal() {
-		\add_thickbox();
+		if ( current_user_can( 'manage_options' ) ) {
+			\add_thickbox();
 
-		echo new Indexation_Modal_Presenter( $this->get_total_unindexed() );
+			echo new Indexation_Modal_Presenter( $this->get_total_unindexed() );
+		}
 	}
 
 	/**
@@ -197,7 +231,21 @@ class Indexation_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function render_indexation_list_item() {
-		echo new Indexation_List_Item_Presenter( $this->get_total_unindexed() );
+		if ( current_user_can( 'manage_options' ) ) {
+			echo new Indexation_List_Item_Presenter( $this->get_total_unindexed() );
+		}
+	}
+
+	/**
+	 * Run a single indexation pass of each indexation action. Intended for use as a shutdown function.
+	 *
+	 * @return void
+	 */
+	public function shutdown_indexation() {
+		$this->post_indexation->index();
+		$this->term_indexation->index();
+		$this->general_indexation->index();
+		$this->post_type_archive_indexation->index();
 	}
 
 	/**
@@ -205,7 +253,7 @@ class Indexation_Integration implements Integration_Interface {
 	 *
 	 * @return int
 	 */
-	protected function get_total_unindexed() {
+	public function get_total_unindexed() {
 		if ( \is_null( $this->total_unindexed ) ) {
 			$this->total_unindexed  = $this->post_indexation->get_total_unindexed();
 			$this->total_unindexed += $this->term_indexation->get_total_unindexed();
@@ -214,5 +262,24 @@ class Indexation_Integration implements Integration_Interface {
 		}
 
 		return $this->total_unindexed;
+	}
+
+	/**
+	 * Returns if the indexation warning is temporarily hidden.
+	 *
+	 * @return bool True if hidden.
+	 */
+	protected function is_indexation_warning_hidden() {
+		if ( $this->options_helper->get( 'ignore_indexation_warning', false ) === true ) {
+			return true;
+		}
+
+		// When the indexation is started, but not completed.
+		if ( $this->options_helper->get( 'indexation_started', false ) > ( \time() - \MONTH_IN_SECONDS ) ) {
+			return true;
+		}
+
+		$hide_until = (int) $this->options_helper->get( 'indexation_warning_hide_until' );
+		return ( $hide_until !== 0 && $hide_until >= \time() );
 	}
 }
