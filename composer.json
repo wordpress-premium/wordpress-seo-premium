@@ -1,5 +1,5 @@
 {
-    "name": "wordpress-premium/plugins/yoast-seo-premium",
+    "name": "wordpress-premium/yoast-seo-premium",
 	"description": "Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin",
 	"time": "2020-07-21",
     "type": "wordpress-plugin",
