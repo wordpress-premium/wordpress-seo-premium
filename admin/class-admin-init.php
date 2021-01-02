@@ -36,11 +36,13 @@ class WPSEO_Admin_Init {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_dismissible' ] );
 		add_action( 'admin_init', [ $this, 'yoast_plugin_suggestions_notification' ], 15 );
+		add_action( 'admin_init', [ $this, 'yoast_plugin_update_notification' ] );
 		add_action( 'admin_init', [ $this, 'unsupported_php_notice' ], 15 );
 		add_action( 'admin_init', [ $this->asset_manager, 'register_assets' ] );
 		add_action( 'admin_init', [ $this, 'show_hook_deprecation_warnings' ] );
 		add_action( 'admin_init', [ 'WPSEO_Plugin_Conflict', 'hook_check_for_plugin_conflicts' ] );
 		add_action( 'admin_notices', [ $this, 'permalink_settings_notice' ] );
+		add_action( 'post_submitbox_misc_actions', [ $this, 'add_publish_box_section' ] );
 
 		/*
 		 * The `admin_notices` hook fires on single site admin pages vs.
@@ -126,6 +128,106 @@ class WPSEO_Admin_Init {
 			[
 				'id'   => 'wpseo-suggested-plugin-' . $name,
 				'type' => Yoast_Notification::WARNING,
+			]
+		);
+	}
+
+	/**
+	 * Determines whether a update notification needs to be displayed.
+	 *
+	 * @return void
+	 */
+	public function yoast_plugin_update_notification() {
+		$notification_center   = Yoast_Notification_Center::get();
+		$current_minor_version = $this->get_major_minor_version( WPSEO_Options::get( 'version', WPSEO_VERSION ) );
+		$file                  = plugin_dir_path( WPSEO_FILE ) . 'release-info.json';
+
+		// Remove if file is not present.
+		if ( ! file_exists( $file ) ) {
+			$notification_center->remove_notification_by_id( 'wpseo-plugin-updated' );
+			return;
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Retrieving a local file.
+		$release_json = file_get_contents( $file );
+
+		/**
+		 * Filter: 'wpseo_update_notice_content' - Allow filtering of the content
+		 * of the update notice read from the release-info.json file.
+		 *
+		 * @api object The object from the release-info.json file.
+		 */
+		$release_info = apply_filters( 'wpseo_update_notice_content', json_decode( $release_json ) );
+
+		// Remove if file is malformed or for a different version.
+		if ( is_null( $release_info )
+			|| empty( $release_info->version )
+			|| version_compare( $this->get_major_minor_version( $release_info->version ), $current_minor_version, '!=' )
+			|| empty( $release_info->release_description )
+		) {
+			$notification_center->remove_notification_by_id( 'wpseo-plugin-updated' );
+			return;
+		}
+
+		$notification = $this->get_yoast_seo_update_notification( $release_info );
+
+		// Restore notification if it was dismissed in a previous minor version.
+		$last_dismissed_version = get_user_option( $notification->get_dismissal_key() );
+		if ( ! $last_dismissed_version
+			|| version_compare( $this->get_major_minor_version( $last_dismissed_version ), $current_minor_version, '<' )
+		) {
+			Yoast_Notification_Center::restore_notification( $notification );
+		}
+		$notification_center->add_notification( $notification );
+	}
+
+	/**
+	 * Helper to truncate the version string up to the minor number
+	 *
+	 * @param string $version The version string to extract the major.minor number from.
+	 * @return string The version string up to the minor number.
+	 */
+	private function get_major_minor_version( $version ) {
+		$version_parts = preg_split( '/[^0-9]+/', $version, 3 );
+		return join( '.', array_slice( $version_parts, 0, 2 ) );
+	}
+
+	/**
+	 * Builds Yoast SEO update notification.
+	 *
+	 * @param object $release_info The release information.
+	 *
+	 * @return Yoast_Notification The notification for the present version
+	 */
+	private function get_yoast_seo_update_notification( $release_info ) {
+		$info_message  = '<strong>';
+		$info_message .= sprintf(
+			/* translators: %1$s expands to Yoast SEO, %2$s expands to the plugin version. */
+			__( 'New in %1$s %2$s: ', 'wordpress-seo' ),
+			'Yoast SEO',
+			$release_info->version
+		);
+		$info_message .= '</strong>';
+		$info_message .= $release_info->release_description;
+
+		if ( ! empty( $release_info->shortlink ) ) {
+			$link          = esc_url( WPSEO_Shortlinker::get( $release_info->shortlink ) );
+			$info_message .= ' <a href="' . esc_url( $link ) . '" target="_blank">';
+			$info_message .= sprintf(
+				/* translators: %s expands to the plugin version. */
+				__( 'Read all about version %s here', 'wordpress-seo' ),
+				$release_info->version
+			);
+			$info_message .= '</a>';
+		}
+
+		return new Yoast_Notification(
+			$info_message,
+			[
+				'id'            => 'wpseo-plugin-updated',
+				'type'          => Yoast_Notification::UPDATED,
+				'data_json'     => [ 'dismiss_value' => WPSEO_Options::get( 'version', WPSEO_VERSION ) ],
+				'dismissal_key' => 'wpseo-plugin-updated',
 			]
 		);
 	}
@@ -333,25 +435,33 @@ class WPSEO_Admin_Init {
 				'version'     => '9.4',
 				'alternative' => null,
 			],
-			'wpseo_opengraph'                       => [
+			'wpseo_opengraph' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter'                         => [
+			'wpseo_twitter' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter_taxonomy_image'          => [
+			'wpseo_twitter_taxonomy_image' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter_metatag_key'             => [
+			'wpseo_twitter_metatag_key' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wp_seo_get_bc_ancestors'               => [
+			'wp_seo_get_bc_ancestors' => [
 				'version'     => '14.0',
 				'alternative' => 'wpseo_breadcrumb_links',
+			],
+			'validate_facebook_app_id_api_response_code' => [
+				'version'     => '15.5',
+				'alternative' => null,
+			],
+			'validate_facebook_app_id_api_response_body' => [
+				'version'     => '15.5',
+				'alternative' => null,
 			],
 		];
 
@@ -364,13 +474,13 @@ class WPSEO_Admin_Init {
 		// Show notice for each deprecated filter or action that has been registered.
 		foreach ( $deprecated_notices as $deprecated_filter ) {
 			$deprecation_info = $deprecated_filters[ $deprecated_filter ];
-			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- only uses the hardcoded values from above.
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Only uses the hardcoded values from above.
 			_deprecated_hook(
 				$deprecated_filter,
 				'WPSEO ' . $deprecation_info['version'],
 				$deprecation_info['alternative']
 			);
-			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped.
+			// phpcs:enable
 		}
 	}
 
@@ -451,6 +561,27 @@ class WPSEO_Admin_Init {
 			esc_js( wp_create_nonce( 'wpseo-ignore' ) ),
 			esc_html__( 'I don\'t want this site to show in the search results.', 'wordpress-seo' )
 		);
+	}
+
+	/**
+	 * Adds a custom Yoast section within the Classic Editor publish box.
+	 *
+	 * @param \WP_Post $post The current post object.
+	 *
+	 * @return void
+	 */
+	public function add_publish_box_section( $post ) {
+		if ( in_array( $this->pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+			?>
+			<div id="yoast-seo-publishbox-section"></div>
+			<?php
+			/**
+			 * Fires after the post time/date setting in the Publish meta box.
+			 *
+			 * @api \WP_Post The current post object.
+			 */
+			do_action( 'wpseo_publishbox_misc_actions', $post );
+		}
 	}
 
 	/* ********************* DEPRECATED METHODS ********************* */
@@ -537,8 +668,7 @@ class WPSEO_Admin_Init {
 		$blog_description         = get_bloginfo( 'description' );
 		$default_blog_description = 'Just another WordPress site';
 
-		// We are checking against the WordPress internal translation.
-		// @codingStandardsIgnoreLine
+		// We are using the WordPress internal translation.
 		$translated_blog_description = __( 'Just another WordPress site', 'default' );
 
 		return $translated_blog_description === $blog_description || $default_blog_description === $blog_description;

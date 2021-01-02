@@ -19,7 +19,7 @@ $yoast_seo_csv_export_explain = sprintf(
 ?>
 <div id="keywords-export" class="wpseotab">
 	<h2><?php esc_html_e( 'Export keyphrases to a CSV file', 'wordpress-seo-premium' ); ?></h2>
-	<p><?php echo $yoast_seo_csv_export_explain; // phpcs:ignore WordPress.Security.EscapeOutput -- See above. ?></p>
+	<p><?php echo $yoast_seo_csv_export_explain; /* phpcs:ignore WordPress.Security.EscapeOutput -- See above. */ ?></p>
 	<p><?php esc_html_e( 'You can add or remove columns to be included in the export using the checkboxes below.', 'wordpress-seo-premium' ); ?></p>
 
 	<form action="" method="post" accept-charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">

@@ -5,6 +5,7 @@
  * @package WPSEO\Premium
  */
 
+use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Integrations\Blocks\Siblings_Block;
 use Yoast\WP\SEO\Integrations\Blocks\Subpages_Block;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
@@ -39,7 +40,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '14.6.1';
+	const PLUGIN_VERSION_NAME = '15.5';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -72,39 +73,19 @@ class WPSEO_Premium {
 
 		// Create the upload directory.
 		WPSEO_Redirect_File_Util::create_upload_dir();
-	}
 
-	/**
-	 * Creates instance of license manager if needed and returns the instance of it.
-	 *
-	 * @codeCoverageIgnore
-	 *
-	 * @deprecated 10.1
-	 */
-	public static function get_license_manager() {
-		_deprecated_function( __FUNCTION__, '10.1' );
+		// Enable tracking.
+		WPSEO_Options::set( 'tracking', true );
 	}
 
 	/**
 	 * WPSEO_Premium Constructor
 	 */
 	public function __construct() {
-		$link_suggestions_service        = new WPSEO_Premium_Link_Suggestions_Service();
-		$prominent_words_unindexed_query = new WPSEO_Premium_Prominent_Words_Unindexed_Post_Query();
-		$prominent_words_support         = new WPSEO_Premium_Prominent_Words_Support();
-
 		$this->integrations = [
-			'premium-metabox'                        => new WPSEO_Premium_Metabox(),
+			'premium-metabox'                        => new WPSEO_Premium_Metabox( YoastSEO()->classes->get( Prominent_Words_Helper::class ) ),
 			'premium-assets'                         => new WPSEO_Premium_Assets(),
-			'prominent-words-registration'           => new WPSEO_Premium_Prominent_Words_Registration(),
-			'prominent-words-endpoint'               => new WPSEO_Premium_Prominent_Words_Endpoint( new WPSEO_Premium_Prominent_Words_Service() ),
-			'prominent-words-recalculation'          => new WPSEO_Premium_Prominent_Words_Recalculation( $prominent_words_unindexed_query, $prominent_words_support ),
-			'prominent-words-recalculation-link'     => new WPSEO_Premium_Prominent_Words_Link_Endpoint( new WPSEO_Premium_Prominent_Words_Link_Service() ),
-			'prominent-words-recalculation-notifier' => new WPSEO_Premium_Prominent_Words_Recalculation_Notifier(),
-			'prominent-words-recalculation-endpoint' => new WPSEO_Premium_Prominent_Words_Recalculation_Endpoint( new WPSEO_Premium_Prominent_Words_Recalculation_Service() ),
-			'prominent-words-version'                => new WPSEO_Premium_Prominent_Words_Versioning(),
 			'link-suggestions'                       => new WPSEO_Metabox_Link_Suggestions(),
-			'link-suggestions-endpoint'              => new WPSEO_Premium_Link_Suggestions_Endpoint( $link_suggestions_service ),
 			'redirects-endpoint'                     => new WPSEO_Premium_Redirect_EndPoint( new WPSEO_Premium_Redirect_Service() ),
 			'redirect-export-manager'                => new WPSEO_Premium_Redirect_Export_Manager(),
 			'keyword-export-manager'                 => new WPSEO_Premium_Keyword_Export_Manager(),
@@ -115,13 +96,6 @@ class WPSEO_Premium {
 			'request-free-translations'              => new WPSEO_Premium_Free_Translations(),
 			'expose-javascript-shortlinks'           => new WPSEO_Premium_Expose_Shortlinks(),
 			'multi-keyword'                          => new WPSEO_Multi_Keyword(),
-			'post-data'                              => new WPSEO_Premium_Post_Data_Endpoint(
-				new WPSEO_Premium_Post_Data_Service(
-					new WPSEO_Replace_Vars(),
-					new WPSEO_Premium_Prominent_Words_Unindexed_Post_Query(),
-					new WPSEO_Premium_Prominent_Words_Support()
-				)
-			),
 			'siblings-block'                         => new Siblings_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
 			'subpages-block'                         => new Subpages_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
 		];
@@ -141,28 +115,22 @@ class WPSEO_Premium {
 	 * @return array
 	 */
 	public function add_feature_toggles( array $feature_toggles ) {
-		$language = WPSEO_Language_Utils::get_language( get_locale() );
-
-		$language_support = new WPSEO_Premium_Prominent_Words_Language_Support();
-
-		if ( $language_support->is_language_supported( $language ) ) {
-			$feature_toggles[] = (object) [
-				'name'            => __( 'Insights', 'wordpress-seo-premium' ),
-				'setting'         => 'enable_metabox_insights',
-				'label'           => __( 'The Insights section in our metabox shows you useful data about your content, like what words you use most often.', 'wordpress-seo-premium' ),
-				'read_more_label' => __( 'Read more about how the insights can help you improve your content.', 'wordpress-seo-premium' ),
-				'read_more_url'   => 'https://yoa.st/2ai',
-				'order'           => 41,
-			];
-			$feature_toggles[] = (object) [
-				'name'            => __( 'Link suggestions', 'wordpress-seo-premium' ),
-				'setting'         => 'enable_link_suggestions',
-				'label'           => __( 'The link suggestions metabox contains a list of posts on your blog with similar content that might be interesting to link to.', 'wordpress-seo-premium' ),
-				'read_more_label' => __( 'Read more about how internal linking can improve your site structure.', 'wordpress-seo-premium' ),
-				'read_more_url'   => 'https://yoa.st/17g',
-				'order'           => 42,
-			];
-		}
+		$feature_toggles[] = (object) [
+			'name'            => __( 'Insights', 'wordpress-seo-premium' ),
+			'setting'         => 'enable_metabox_insights',
+			'label'           => __( 'The Insights section in our metabox shows you useful data about your content, like what words you use most often.', 'wordpress-seo-premium' ),
+			'read_more_label' => __( 'Read more about how the insights can help you improve your content.', 'wordpress-seo-premium' ),
+			'read_more_url'   => 'https://yoa.st/2ai',
+			'order'           => 41,
+		];
+		$feature_toggles[] = (object) [
+			'name'            => __( 'Link suggestions', 'wordpress-seo-premium' ),
+			'setting'         => 'enable_link_suggestions',
+			'label'           => __( 'The link suggestions metabox contains a list of posts on your blog with similar content that might be interesting to link to.', 'wordpress-seo-premium' ),
+			'read_more_label' => __( 'Read more about how internal linking can improve your site structure.', 'wordpress-seo-premium' ),
+			'read_more_url'   => 'https://yoa.st/17g',
+			'order'           => 42,
+		];
 
 		return $feature_toggles;
 	}
@@ -177,6 +145,7 @@ class WPSEO_Premium {
 
 		$this->redirect_setup();
 
+		add_action( 'init', [ 'WPSEO_Premium_Option', 'register_option' ] );
 		add_action( 'init', [ 'WPSEO_Premium_Redirect_Option', 'register_option' ] );
 
 		if ( is_admin() ) {
@@ -220,6 +189,9 @@ class WPSEO_Premium {
 
 			// Add Premium imports.
 			$this->integrations[] = new WPSEO_Premium_Import_Manager();
+
+			// Filter the content of the update notice.
+			add_filter( 'wpseo_update_notice_content', [ $this, 'filter_update_notice_content' ] );
 		}
 
 		// Only activate post and term watcher if permalink structure is enabled.
@@ -491,36 +463,25 @@ class WPSEO_Premium {
 	}
 
 	/**
-	 * Adds multi keyword functionality if we are on the correct pages.
+	 * Filters the content of the update notice with data for premium.
 	 *
-	 * @deprecated 8.4
-	 * @codeCoverageIgnore
+	 * @param object $free_release_data The object with content for free version of the plugin.
+	 *
+	 * @return mixed The filtered object with premium data, or null if file non existent or malformed
 	 */
-	public function enqueue_multi_keyword() {
-		_deprecated_function( 'WPSEO_Premium::enqueue_multi_keyword', '8.4' );
-	}
+	public function filter_update_notice_content( $free_release_data ) {
+		$release_data = $free_release_data;
+		$file         = plugin_dir_path( WPSEO_FILE ) . '/premium/release-info.json';
 
-	/**
-	 * Loads the autoloader
-	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public static function autoloader() {
-		_deprecated_function( __METHOD__, '9.4' );
-	}
+		if ( file_exists( $file ) ) {
+			$premium_release_json = file_get_contents( $file );
+			$premium_release_data = json_decode( $premium_release_json );
 
-	/**
-	 * Adds multi keyword functionality if we are on the correct pages
-	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function enqueue_social_previews() {
-		_deprecated_function( 'WPSEO_Premium::enqueue_social_previews', '9.4' );
+			// If file existing and not malformed, filter and use premium data instead of free.
+			if ( ! is_null( $premium_release_data ) ) {
+				$release_data = $premium_release_data;
+			}
+		}
+		return $release_data;
 	}
 }

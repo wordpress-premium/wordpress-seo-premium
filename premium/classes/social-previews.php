@@ -62,40 +62,4 @@ class WPSEO_Social_Previews implements WPSEO_WordPress_Integration {
 		_deprecated_function( __METHOD__, '14.5' );
 		return false;
 	}
-
-	/**
-	 * Enqueues the assets.
-	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function set_hooks() {
-		_deprecated_function( 'WPSEO_Social_Previews::set_hooks', '9.4', 'WPSEO_Social_Previews::register_hooks' );
-	}
-
-	/**
-	 * Sets the hooks necessary for AJAX.
-	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function set_ajax_hooks() {
-		_deprecated_function( 'WPSEO_Social_Previews::set_ajax_hooks', '9.4' );
-	}
-
-	/**
-	 * Register the required assets.
-	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function register_assets() {
-		_deprecated_function( 'WPSEO_Social_Previews::set_ajax_hooks', '9.4' );
-	}
 }

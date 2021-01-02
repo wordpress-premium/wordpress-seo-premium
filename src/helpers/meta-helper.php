@@ -1,16 +1,12 @@
 <?php
-/**
- * A helper object for meta.
- *
- * @package Yoast\YoastSEO\Helpers
- */
 
 namespace Yoast\WP\SEO\Helpers;
 
 use WPSEO_Meta;
+use WPSEO_Taxonomy_Meta;
 
 /**
- * Class Meta_Helper
+ * A helper object for meta.
  */
 class Meta_Helper {
 
@@ -38,5 +34,34 @@ class Meta_Helper {
 	 */
 	public function get_value( $key, $postid = 0 ) {
 		return WPSEO_Meta::get_value( $key, $postid );
+	}
+
+	/**
+	 * Retrieve a taxonomy term's meta value(s).
+	 *
+	 * @param mixed  $term     Term to get the meta value for
+	 *                         either (string) term name, (int) term id or (object) term.
+	 * @param string $taxonomy Name of the taxonomy to which the term is attached.
+	 * @param string $meta     Optional. Meta value to get (without prefix).
+	 *
+	 * @return mixed|bool Value for the $meta if one is given, might be the default.
+	 *                    If no meta is given, an array of all the meta data for the term.
+	 *                    False if the term does not exist or the $meta provided is invalid.
+	 */
+	public function get_term_value( $term, $taxonomy, $meta = null ) {
+		return WPSEO_Taxonomy_Meta::get_term_meta( $term, $taxonomy, $meta );
+	}
+
+	/**
+	 * Set a custom post meta value.
+	 *
+	 * @param string $key        Internal key of the value to set (without prefix).
+	 * @param mixed  $meta_value The value to set the meta value to.
+	 * @param int    $post_id    Post ID of the post to set the value for.
+	 *
+	 * @return bool Whether the value was changed.
+	 */
+	public function set_value( $key, $meta_value, $post_id ) {
+		return WPSEO_Meta::set_value( $key, $meta_value, $post_id );
 	}
 }

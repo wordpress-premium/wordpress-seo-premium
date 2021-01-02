@@ -316,6 +316,10 @@ class WPSEO_Redirect_Handler {
 			return false;
 		}
 
+		if ( defined( 'WP_CLI' ) && WP_CLI === true ) {
+			return false;
+		}
+
 		global $wpdb;
 
 		$options = $wpdb->get_row( "SELECT option_value FROM {$wpdb->options} WHERE option_name = 'wpseo_redirect'" );

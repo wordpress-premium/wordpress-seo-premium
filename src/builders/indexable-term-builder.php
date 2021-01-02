@@ -1,9 +1,4 @@
 <?php
-/**
- * Term Builder for the indexables.
- *
- * @package Yoast\YoastSEO\Builders
- */
 
 namespace Yoast\WP\SEO\Builders;
 
@@ -11,6 +6,8 @@ use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
 use Yoast\WP\SEO\Models\Indexable;
 
 /**
+ * Term Builder for the indexables.
+ *
  * Formats the term meta to indexable format.
  */
 class Indexable_Term_Builder {
@@ -28,7 +25,9 @@ class Indexable_Term_Builder {
 	 *
 	 * @param Taxonomy_Helper $taxonomy The taxonomy helper.
 	 */
-	public function __construct( Taxonomy_Helper $taxonomy ) {
+	public function __construct(
+		Taxonomy_Helper $taxonomy
+	) {
 		$this->taxonomy = $taxonomy;
 	}
 
@@ -81,8 +80,9 @@ class Indexable_Term_Builder {
 
 		$this->handle_social_images( $indexable );
 
+		$indexable->is_cornerstone = $this->get_meta_value( 'wpseo_is_cornerstone', $term_meta );
+
 		// Not implemented yet.
-		$indexable->is_cornerstone         = false;
 		$indexable->is_robots_nofollow     = null;
 		$indexable->is_robots_noarchive    = null;
 		$indexable->is_robots_noimageindex = null;

@@ -61,6 +61,7 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		'wpseo_content_score'         => '',
 		'wpseo_focuskeywords'         => '[]',
 		'wpseo_keywordsynonyms'       => '[]',
+		'wpseo_is_cornerstone'        => '0',
 
 		// Social fields.
 		'wpseo_opengraph-title'       => '',
@@ -99,10 +100,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		parent::__construct();
 
 		self::$name = $this->option_name;
-
-		/* On succesfull update/add of the option, flush the W3TC cache. */
-		add_action( 'add_option_' . $this->option_name, [ 'WPSEO_Utils', 'flush_w3tc_cache' ] );
-		add_action( 'update_option_' . $this->option_name, [ 'WPSEO_Utils', 'flush_w3tc_cache' ] );
 	}
 
 	/**

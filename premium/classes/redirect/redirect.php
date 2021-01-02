@@ -13,55 +13,6 @@ use Yoast\WP\SEO\Helpers\Home_Url_Helper;
 class WPSEO_Redirect implements ArrayAccess {
 
 	/**
-	 * Permanent redirect HTTP status code.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Types::PERMANENT instead.
-	 */
-	const PERMANENT = WPSEO_Redirect_Types::PERMANENT;
-
-	/**
-	 * Redirect found HTTP status code.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Types::FOUND instead.
-	 */
-	const FOUND = WPSEO_Redirect_Types::FOUND;
-
-	/**
-	 * Temporary redirect HTTP status code.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Types::TEMPORARY instead.
-	 */
-	const TEMPORARY = WPSEO_Redirect_Types::TEMPORARY;
-
-	/**
-	 * Content deleted HTTP status code.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Types::DELETED instead.
-	 */
-	const DELETED = WPSEO_Redirect_Types::DELETED;
-
-	/**
-	 * Content unavailable HTTP status code.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Types::UNAVAILABLE instead.
-	 */
-	const UNAVAILABLE = WPSEO_Redirect_Types::UNAVAILABLE;
-
-	/**
-	 * Plain redirect format.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Formats::PLAIN instead.
-	 */
-	const FORMAT_PLAIN = WPSEO_Redirect_Formats::PLAIN;
-
-	/**
-	 * Regex redirect format.
-	 *
-	 * @deprecated 9.4 - Use WPSEO_Redirect_Formats::REGEX instead.
-	 */
-	const FORMAT_REGEX = WPSEO_Redirect_Formats::REGEX;
-
-	/**
 	 * Redirect origin.
 	 *
 	 * @var string
@@ -159,7 +110,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	}
 
 	/**
-	 * (PHP 5 &gt;= 5.0.0) - Whether a offset exists
+	 * Whether a offset exists.
 	 *
 	 * @link http://php.net/manual/en/arrayaccess.offsetexists.php
 	 *
@@ -173,7 +124,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	}
 
 	/**
-	 * (PHP 5 &gt;= 5.0.0) - Offset to retrieve
+	 * Offset to retrieve.
 	 *
 	 * @link http://php.net/manual/en/arrayaccess.offsetget.php
 	 *
@@ -197,7 +148,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	}
 
 	/**
-	 * (PHP 5 &gt;= 5.0.0) - Offset to set
+	 * Offset to set.
 	 *
 	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
 	 *
@@ -218,7 +169,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	}
 
 	/**
-	 * (PHP 5 &gt;= 5.0.0) - Offset to unset
+	 * Offset to unset.
 	 *
 	 * @link http://php.net/manual/en/arrayaccess.offsetunset.php
 	 *

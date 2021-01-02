@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Generators\Schema
- */
 
 namespace Yoast\WP\SEO\Generators\Schema;
 
@@ -21,10 +16,6 @@ class Breadcrumb extends Abstract_Schema_Piece {
 	 */
 	public function is_needed() {
 		if ( $this->context->indexable->object_type === 'system-page' && $this->context->indexable->object_sub_type === '404' ) {
-			return false;
-		}
-
-		if ( $this->context->indexable->object_type === 'home-page' || $this->helpers->current_page->is_home_static_page() ) {
 			return false;
 		}
 
@@ -46,6 +37,16 @@ class Breadcrumb extends Abstract_Schema_Piece {
 		$breadcrumbs   = $this->context->presentation->breadcrumbs;
 		$list_elements = [];
 
+		// In case of pagination, replace the last breadcrumb, because it only contains "Page [number]" and has no URL.
+		if ( $this->helpers->current_page->is_paged() || ( $this->context->indexable->number_of_pages > 1 ) ) {
+			\array_pop( $breadcrumbs );
+
+			$breadcrumbs[] = [
+				'url'  => $this->context->canonical,
+				'text' => $this->context->title,
+			];
+		}
+
 		// Only output breadcrumbs that are not hidden.
 		$breadcrumbs = \array_filter( $breadcrumbs, [ $this, 'not_hidden' ] );
 
@@ -61,17 +62,23 @@ class Breadcrumb extends Abstract_Schema_Piece {
 			}
 		}
 
-
 		// Create the last breadcrumb.
 		$last_breadcrumb = \array_pop( $breadcrumbs );
 		$breadcrumbs[]   = $this->format_last_breadcrumb( $last_breadcrumb );
 
-		// Add a paginated state if the current page is paged.
-		if ( $this->helpers->current_page->is_paged() ) {
-			$breadcrumbs[] = [
-				'url'  => $this->context->canonical,
-				'text' => $this->context->title,
-			];
+		// If this is a static front page, prevent nested pages from creating a trail.
+		if ( $this->helpers->current_page->is_home_static_page() ) {
+
+			// Check if we're dealing with a nested page.
+			if ( \count( $breadcrumbs ) > 1 ) {
+
+				// Store the breadcrumbs home variable before dropping the parent page from the Schema.
+				$breadcrumbs_home = $breadcrumbs[0]['text'];
+				$breadcrumbs = [ \array_pop( $breadcrumbs ) ];
+
+				// Make the child page show the breadcrumbs home variable rather than its own title.
+				$breadcrumbs[0]['text'] = $breadcrumbs_home;
+			}
 		}
 
 		// Create intermediate breadcrumbs.

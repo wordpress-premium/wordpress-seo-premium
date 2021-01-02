@@ -302,21 +302,21 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/yoastseo/src/assessments/seo/SubHeadingsKeywordAssessment.js:165
 	// Reference: node_modules/yoastseo/src/assessments/seo/SubHeadingsKeywordAssessment.js:202
 	/* Translators: %1$s and %2$s expand to a link on yoast.com, %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in subheading%3$s: %2$sUse more keyphrases or synonyms in your higher-level subheadings%3$s!', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in subheading%3$s: %2$sUse more keyphrases or synonyms in your H2 and H3 subheadings%3$s!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/SubHeadingsKeywordAssessment.js:174
 	/* Translators: %1$s and %2$s expand to a link on yoast.com, %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in subheading%3$s: More than 75%% of your higher-level subheadings reflect the topic of your copy. That\'s too much. %2$sDon\'t over-optimize%3$s!', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in subheading%3$s: More than 75%% of your H2 and H3 subheadings reflect the topic of your copy. That\'s too much. %2$sDon\'t over-optimize%3$s!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/SubHeadingsKeywordAssessment.js:184
 	/* Translators: %1$s expands to a link on yoast.com, %2$s expands to the anchor end tag,
 	   %3$d expands to the number of subheadings containing the keyphrase. */
-	__( '%1$sKeyphrase in subheading%2$s: Your higher-level subheading reflects the topic of your copy. Good job!', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in subheading%2$s: Your H2 or H3 subheading reflects the topic of your copy. Good job!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/SubHeadingsKeywordAssessment.js:194
 	/* Translators: %1$s expands to a link on yoast.com, %2$s expands to the anchor end tag,
 	   %3$d expands to the number of subheadings containing the keyphrase. */
-	_n_noop( '%1$sKeyphrase in subheading%2$s: %3$s of your higher-level subheadings reflects the topic of your copy. Good job!', '%1$sKeyphrase in subheading%2$s: %3$s of your higher-level subheadings reflect the topic of your copy. Good job!', 'wordpress-seo' ),
+	_n_noop( '%1$sKeyphrase in subheading%2$s: %3$s of your H2 and H3 subheadings reflects the topic of your copy. Good job!', '%1$sKeyphrase in subheading%2$s: %3$s of your H2 and H3 subheadings reflect the topic of your copy. Good job!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/taxonomyTextLengthAssessment.js:34
 	// Reference: node_modules/yoastseo/src/assessments/seo/TextLengthAssessment.js:93
@@ -409,14 +409,10 @@ $generated_i18n_strings = array(
 	__( '%1$sKeyphrase in title%3$s: The exact match of the focus keyphrase appears in the SEO title, but not at the beginning. %2$sMove it to the beginning for the best results%3$s.', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:131
-	/* Translators: %1$s and %2$s expand to a link on yoast.com,
-	   %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put it at the beginning of the title%3$s.', 'wordpress-seo' ),
-
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:141
 	/* Translators: %1$s and %2$s expand to a link on yoast.com,
 	   %3$s expands to the anchor end tag. */
-	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put the keyphrase at the beginning of the title%3$s.', 'wordpress-seo' ),
+	__( '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put it at the beginning of the title%3$s.', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/assessments/seo/TitleKeywordAssessment.js:150
 	/* Translators: %1$s and %2$s expand to a link on yoast.com,

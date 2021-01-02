@@ -5,6 +5,8 @@
  * @package WPSEO\Premium\Classes
  */
 
+use Yoast\WP\SEO\Repositories\Indexable_Repository;
+
 /**
  * Represents the orphaned post query methods.
  */
@@ -52,16 +54,23 @@ class WPSEO_Premium_Orphaned_Post_Query {
 		static $query;
 
 		if ( $query === null ) {
-			$storage = new WPSEO_Meta_Storage();
-			$query   = sprintf(
-				'SELECT object_id FROM %1$s WHERE %1$s.incoming_link_count = 0',
-				$storage->get_table_name()
-			);
+			$repository = YoastSEO()->classes->get( Indexable_Repository::class );
+			$query      = $repository->query()
+				->select( 'object_id' )
+				->where( 'object_type', 'post' )
+				->where_any_is(
+					[
+						[ 'incoming_link_count' => 0 ],
+						[ 'incoming_link_count' => null ],
+					]
+				);
 
 			$frontpage_id = self::get_frontpage_id();
 			if ( $frontpage_id ) {
-				$query .= " AND object_id != '{ $frontpage_id }' ";
+				$query = $query->where_not_equal( 'object_id', $frontpage_id );
 			}
+
+			$query = sprintf( $query->get_sql(), '\'post\'', 0, $frontpage_id );
 		}
 
 		return $query;
@@ -73,13 +82,14 @@ class WPSEO_Premium_Orphaned_Post_Query {
 	 * @return array Array with the object ids.
 	 */
 	public static function get_orphaned_object_ids() {
-		global $wpdb;
+		$repository = YoastSEO()->classes->get( Indexable_Repository::class );
+		$results    = $repository->query()
+			->select( 'object_id' )
+			->where( 'object_type', 'post' )
+			->where( 'incoming_link_count', 0 )
+			->find_array();
 
-		$storage = new WPSEO_Meta_Storage();
-		$query   = 'SELECT object_id FROM ' . $storage->get_table_name() . ' WHERE incoming_link_count = 0';
-
-		// phpcs:ignore WordPress.DB.PreparedSQL -- See above, query is fine without preparing.
-		$object_ids = $wpdb->get_col( $query );
+		$object_ids = wp_list_pluck( $results, 'object_id' );
 		$object_ids = self::remove_frontpage_id( $object_ids );
 
 		return $object_ids;

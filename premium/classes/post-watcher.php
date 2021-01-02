@@ -602,26 +602,12 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 */
 	protected function set_undo_slug_notification( WPSEO_Redirect $redirect ) {
 
-		if ( ! $this->is_rest_request() ) {
+		if ( ! $this->is_rest_request() && ! \wp_doing_ajax() ) {
 			parent::set_undo_slug_notification( $redirect );
 
 			return;
 		}
 
 		header( 'X-Yoast-Redirect-Created: 1; origin=' . $redirect->get_origin() . '; target=' . $redirect->get_target() . '; type=' . $redirect->get_type() );
-	}
-
-	/**
-	 * Add an extra field to post edit screen so we know the old URL in the 'post_updated' hook.
-	 *
-	 * @deprecated 9.1
-	 * @codeCoverageIgnore
-	 *
-	 * @param WP_Post $post The post object to get the ID from.
-	 *
-	 * @return void
-	 */
-	public function old_url_field( $post ) {
-		_deprecated_function( 'WPSEO_Post_Watcher::old_url_field', '9.1' );
 	}
 }

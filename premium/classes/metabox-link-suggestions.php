@@ -20,35 +20,19 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	}
 
 	/**
-	 * Returns the data required for the JS to function.
-	 *
-	 * @return false|array Either an array of cached suggestions or false.
-	 */
-	public function get_js_data() {
-		global $post_ID;
-
-		$service         = new WPSEO_Premium_Link_Suggestions_Service();
-		$prominent_words = get_the_terms( $post_ID, WPSEO_Premium_Prominent_Words_Registration::TERM_NAME );
-		if ( $prominent_words === false || is_wp_error( $prominent_words ) ) {
-			return false;
-		}
-
-		$prominent_words = wp_list_pluck( $prominent_words, 'term_id' );
-
-		$suggestions = get_transient( $service->get_cache_key( $prominent_words ) );
-		if ( empty( $suggestions ) ) {
-			$suggestions = false;
-		}
-
-		return $service->add_is_cornerstone( $suggestions );
-	}
-
-	/**
 	 * Adds a meta for each public post type.
 	 *
 	 * @return void
 	 */
 	public function add_meta_boxes() {
+		/*
+		 * Since the link suggestions are already added in the Yoast sidebar.
+		 * Do not add them to the metabox when in the block editor.
+		 */
+		if ( WP_Screen::get()->is_block_editor() ) {
+			return;
+		}
+
 		$post_types = $this->get_post_types();
 
 		array_map( [ $this, 'add_meta_box' ], $post_types );
@@ -97,29 +81,12 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	}
 
 	/**
-	 * Returns whether or not we need to index more posts for correct link suggestion functionality
-	 *
-	 * @return bool Whether or not we need to index more posts.
-	 */
-	public function is_site_unindexed() {
-		$recalculation_notifier = new WPSEO_Premium_Prominent_Words_Recalculation_Notifier();
-
-		return $recalculation_notifier->has_notification();
-	}
-
-	/**
 	 * Adds a meta box for the given post type.
 	 *
 	 * @param string $post_type The post type to add a meta box for.
 	 */
 	protected function add_meta_box( $post_type ) {
 		if ( ! $this->is_available( $post_type ) || ! $this->is_enabled() ) {
-			return;
-		}
-
-		$language_support = new WPSEO_Premium_Prominent_Words_Language_Support();
-
-		if ( ! $language_support->is_language_supported( WPSEO_Language_Utils::get_language( get_locale() ) ) ) {
 			return;
 		}
 
@@ -142,5 +109,19 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 				'__block_editor_compatible_meta_box' => true,
 			]
 		);
+	}
+
+	/**
+	 * Returns whether or not we need to index more posts for correct link suggestion functionality
+	 *
+	 * @deprecated 14.7
+	 * @codeCoverageIgnore
+	 *
+	 * @return bool Whether or not we need to index more posts.
+	 */
+	public function is_site_unindexed() {
+		_deprecated_function( __METHOD__, 'WPSEO Premium 14.7' );
+
+		return false;
 	}
 }

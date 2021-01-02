@@ -5,6 +5,8 @@
  * @package WPSEO\Premium
  */
 
+use Yoast\WP\SEO\Config\Migration_Status;
+
 /**
  * Registers the filter for filtering posts by orphaned content.
  */
@@ -23,7 +25,7 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 	 * Registers the hooks when the link feature is enabled.
 	 */
 	public function register_hooks() {
-		if ( ! WPSEO_Link_Table_Accessible::is_accessible() || ! WPSEO_Meta_Table_Accessible::is_accessible() ) {
+		if ( ! YoastSEO()->classes->get( Migration_Status::class )->is_version( 'free', WPSEO_VERSION ) ) {
 			return;
 		}
 

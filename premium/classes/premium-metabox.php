@@ -5,6 +5,9 @@
  * @package WPSEO\Premium|Classes
  */
 
+use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Integrations\Admin\Prominent_Words\Indexing_Integration;
+
 /**
  * The metabox for premium.
  */
@@ -18,16 +21,28 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	protected $link_suggestions;
 
 	/**
+	 * The prominent words helper.
+	 *
+	 * @var Prominent_Words_Helper
+	 */
+	protected $prominent_words_helper;
+
+	/**
 	 * Creates the meta box class.
 	 *
-	 * @param WPSEO_Metabox_Link_Suggestions|null $link_suggestions The link suggestions meta box.
+	 * @param Prominent_Words_Helper              $prominent_words_helper The prominent words helper.
+	 * @param WPSEO_Metabox_Link_Suggestions|null $link_suggestions       The link suggestions meta box.
 	 */
-	public function __construct( WPSEO_Metabox_Link_Suggestions $link_suggestions = null ) {
+	public function __construct(
+		Prominent_Words_Helper $prominent_words_helper,
+		WPSEO_Metabox_Link_Suggestions $link_suggestions = null
+	) {
 		if ( $link_suggestions === null ) {
 			$link_suggestions = new WPSEO_Metabox_Link_Suggestions();
 		}
 
-		$this->link_suggestions = $link_suggestions;
+		$this->prominent_words_helper = $prominent_words_helper;
+		$this->link_suggestions       = $link_suggestions;
 	}
 
 	/**
@@ -90,19 +105,13 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 */
 	public function send_data_to_assets() {
 		$analysis_seo = new WPSEO_Metabox_Analysis_SEO();
-		$locale       = get_locale();
-		$current_user = wp_get_current_user();
 
 		$data = [
 			'restApi'            => $this->get_rest_api_config(),
 			'seoAnalysisEnabled' => $analysis_seo->is_enabled(),
 			'licensedURL'        => WPSEO_Utils::get_home_url(),
-			'languageBeacon'     => [
-				'show'           => in_array( $locale, [ 'fr_FR', 'fr_CA', 'fr_BE', 'ru_RU', 'it_IT', 'id_ID', 'pt_PT', 'pt_BR', 'pt_AO' ], true ),
-				'id'             => '1060600e-401f-4e6a-88b2-47429e942e74',
-				'name'           => trim( $current_user->user_firstname . ' ' . $current_user->user_lastname ),
-				'email'          => $current_user->user_email,
-			],
+			'settingsPageUrl'    => admin_url( 'admin.php?page=wpseo_dashboard#top#features' ),
+			'integrationsTabURL' => admin_url( 'admin.php?page=wpseo_dashboard#top#integrations' ),
 		];
 
 		if ( WPSEO_Metabox::is_post_edit( $this->get_current_page() ) ) {
@@ -125,27 +134,24 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		$insights_enabled         = WPSEO_Options::get( 'enable_metabox_insights', false );
 		$link_suggestions_enabled = WPSEO_Options::get( 'enable_link_suggestions', false );
 
-		$language_support = new WPSEO_Premium_Prominent_Words_Language_Support();
-
-		if ( ! $language_support->is_language_supported( WPSEO_Language_Utils::get_language( get_locale() ) ) ) {
-			$insights_enabled         = false;
-			$link_suggestions_enabled = false;
-		}
-
 		$post = $this->get_post();
 
-		$post_type_support = new WPSEO_Premium_Prominent_Words_Support();
-		if ( ! $post_type_support->is_post_type_supported( get_post_type( $post ) ) ) {
+		$prominent_words_support = new WPSEO_Premium_Prominent_Words_Support();
+		if ( ! $prominent_words_support->is_post_type_supported( $post->post_type ) ) {
 			$insights_enabled = false;
 		}
 
+		$site_locale = \get_locale();
+		$language    = WPSEO_Language_Utils::get_language( $site_locale );
+
 		return [
 			'insightsEnabled'          => ( $insights_enabled ) ? 'enabled' : 'disabled',
-			'postID'                   => $this->get_post_ID(),
+			'currentObjectId'          => $this->get_post_ID(),
+			'currentObjectType'        => 'post',
 			'linkSuggestionsEnabled'   => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
-			'linkSuggestionsAvailable' => $this->link_suggestions->is_available( $post->post_type ),
-			'linkSuggestionsUnindexed' => $this->link_suggestions->is_site_unindexed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
-			'linkSuggestions'          => $this->link_suggestions->get_js_data(),
+			'linkSuggestionsAvailable' => $prominent_words_support->is_post_type_supported( $post->post_type ),
+			'linkSuggestionsUnindexed' => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
+			'perIndexableLimit'        => $this->per_indexable_limit( $language ),
 		];
 	}
 
@@ -155,12 +161,39 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return array The config.
 	 */
 	protected function get_term_metabox_config() {
+		$term = null;
+		if ( isset( $GLOBALS['tag_ID'], $GLOBALS['taxonomy'] ) ) {
+			$term = get_term( $GLOBALS['tag_ID'], $GLOBALS['taxonomy'] );
+		}
+
+		if ( $term === null || is_wp_error( $term ) ) {
+			return [
+				'insightsEnabled'          => 'disabled',
+				'linkSuggestionsEnabled'   => 'disabled',
+				'linkSuggestionsAvailable' => false,
+				'linkSuggestionsUnindexed' => false,
+			];
+		}
+
+		$link_suggestions_enabled = WPSEO_Options::get( 'enable_link_suggestions', false );
+		$insights_enabled         = WPSEO_Options::get( 'enable_metabox_insights', false );
+
+		$prominent_words_support = new WPSEO_Premium_Prominent_Words_Support();
+		if ( ! $prominent_words_support->is_taxonomy_supported( $term->taxonomy ) ) {
+			$insights_enabled = false;
+		}
+
+		$site_locale = \get_locale();
+		$language    = WPSEO_Language_Utils::get_language( $site_locale );
+
 		return [
-			'insightsEnabled'          => 'disabled',
-			'linkSuggestionsEnabled'   => 'disabled',
-			'linkSuggestionsAvailable' => false,
-			'linkSuggestionsUnindexed' => false,
-			'linkSuggestions'          => false,
+			'insightsEnabled'          => ( $insights_enabled ) ? 'enabled' : 'disabled',
+			'currentObjectId'          => $term->term_id,
+			'currentObjectType'        => 'term',
+			'linkSuggestionsEnabled'   => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
+			'linkSuggestionsAvailable' => $prominent_words_support->is_taxonomy_supported( $term->taxonomy ),
+			'linkSuggestionsUnindexed' => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
+			'perIndexableLimit'        => $this->per_indexable_limit( $language ),
 		];
 	}
 
@@ -197,6 +230,10 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	 * @return int The post ID.
 	 */
 	protected function get_post_ID() {
+		if ( ! isset( $GLOBALS['post_ID'] ) ) {
+			return 0;
+		}
+
 		return $GLOBALS['post_ID'];
 	}
 
@@ -308,14 +345,34 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	}
 
 	/**
-	 * Registers assets to WordPress.
+	 * Returns whether or not we need to index more posts for correct link suggestion functionality.
 	 *
-	 * @deprecated 9.4
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
+	 * @return bool Whether or not we need to index more posts.
 	 */
-	public function register_assets() {
-		_deprecated_function( 'WPSEO_Premium_Metabox::register_assets', '9.4' );
+	protected function is_prominent_words_indexing_completed() {
+		$is_indexing_completed = $this->prominent_words_helper->is_indexing_completed();
+		if ( $is_indexing_completed === null ) {
+			$indexation_integration = YoastSEO()->classes->get( Indexing_Integration::class );
+			$is_indexing_completed  = $indexation_integration->get_unindexed_count( 0 ) === 0;
+
+			$this->prominent_words_helper->set_indexing_completed( $is_indexing_completed );
+		}
+
+		return $is_indexing_completed;
+	}
+
+	/**
+	 * Returns the number of prominent words to store for content written in the given language.
+	 *
+	 * @param string $language The current language.
+	 *
+	 * @return int The number of words to store.
+	 */
+	protected function per_indexable_limit( $language ) {
+		if ( YoastSEO()->helpers->language->has_function_word_support( $language ) ) {
+			return Indexing_Integration::PER_INDEXABLE_LIMIT;
+		}
+
+		return Indexing_Integration::PER_INDEXABLE_LIMIT_NO_FUNCTION_WORD_SUPPORT;
 	}
 }

@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast migrations adapter class.
- *
- * @package Yoast\WP\Lib\Migrations
- */
 
 namespace Yoast\WP\Lib\Migrations;
 
@@ -11,7 +6,7 @@ use Exception;
 use Yoast\WP\Lib\Model;
 
 /**
- * Adapter class.
+ * Yoast migrations adapter class.
  */
 class Adapter {
 
@@ -899,11 +894,8 @@ class Adapter {
 	 * @return string[] The version numbers that have been migrated.
 	 */
 	public function get_migrated_versions() {
-		return \array_map(
-			function ( $row ) {
-				return $row['version'];
-			}, $this->select_all( \sprintf( 'SELECT version FROM %s', $this->get_schema_version_table_name() ) )
-		);
+		$result = $this->select_all( \sprintf( 'SELECT version FROM %s', $this->get_schema_version_table_name() ) );
+		return \array_column( $result, 'version' );
 	}
 
 	/**

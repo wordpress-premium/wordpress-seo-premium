@@ -1,9 +1,4 @@
 <?php
-/**
- * Model for the Indexable table.
- *
- * @package Yoast\YoastSEO\Models
- */
 
 namespace Yoast\WP\SEO\Models;
 
@@ -86,7 +81,7 @@ class Indexable extends Model {
 	 *
 	 * @var Indexable[]
 	 */
-	public $ancestors;
+	public $ancestors = [];
 
 	/**
 	 * Whether nor this model uses timestamps.
@@ -192,6 +187,9 @@ class Indexable extends Model {
 		}
 		if ( isset( $permalink_parts['host'] ) ) {
 			$permalink .= $permalink_parts['host'];
+		}
+		if ( isset( $permalink_parts['port'] ) ) {
+			$permalink .= ':' . $permalink_parts['port'];
 		}
 		if ( isset( $permalink_parts['path'] ) ) {
 			$permalink .= $permalink_parts['path'];

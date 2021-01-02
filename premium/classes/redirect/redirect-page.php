@@ -19,7 +19,7 @@ class WPSEO_Redirect_Page {
 		}
 
 		// Only initialize the ajax for all tabs except settings.
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( wp_doing_ajax() ) {
 			$this->initialize_ajax();
 		}
 	}

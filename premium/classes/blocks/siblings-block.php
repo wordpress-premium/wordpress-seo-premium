@@ -1,10 +1,6 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Integrations\Blocks
- */
-// phpcs:ignore
+
+// phpcs:ignore Yoast.NamingConventions.NamespaceName.Invalid
 namespace Yoast\WP\SEO\Integrations\Blocks;
 
 use Yoast\WP\SEO\Models\Indexable;
@@ -64,7 +60,7 @@ class Siblings_Block extends Dynamic_Block {
 		);
 
 		$links = array_map(
-			function( Indexable $indexable ) {
+			static function( Indexable $indexable ) {
 				return [
 					'title'     => $indexable->breadcrumb_title,
 					'permalink' => $indexable->permalink,

@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO plugin file.
- *
- * @package Yoast\YoastSEO\Conditionals
- */
 
 namespace Yoast\WP\SEO\Conditionals;
 
@@ -13,7 +8,9 @@ namespace Yoast\WP\SEO\Conditionals;
 class Yoast_Admin_And_Dashboard_Conditional implements Conditional {
 
 	/**
-	 * @inheritDoc
+	 * Returns `true` when on the admin dashboard, update or Yoast SEO pages.
+	 *
+	 * @returns bool `true` when on the admin dashboard, update or Yoast SEO pages.
 	 */
 	public function is_met() {
 		global $pagenow;
@@ -31,6 +28,7 @@ class Yoast_Admin_And_Dashboard_Conditional implements Conditional {
 			'index.php',
 			'plugins.php',
 			'update-core.php',
+			'options-permalink.php',
 		];
 
 		return \in_array( $pagenow, $target_pages, true );

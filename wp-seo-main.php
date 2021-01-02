@@ -15,7 +15,7 @@ if ( ! function_exists( 'add_filter' ) ) {
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_VERSION', '14.6.1' );
+define( 'WPSEO_VERSION', '15.5' );
 
 
 if ( ! defined( 'WPSEO_PATH' ) ) {
@@ -33,6 +33,10 @@ if ( ! defined( 'WPSEO_BASENAME' ) ) {
 define( 'YOAST_VENDOR_NS_PREFIX', 'YoastSEO_Vendor' );
 define( 'YOAST_VENDOR_DEFINE_PREFIX', 'YOASTSEO_VENDOR__' );
 define( 'YOAST_VENDOR_PREFIX_DIRECTORY', 'vendor_prefixed' );
+
+define( 'YOAST_SEO_PHP_REQUIRED', '5.6' );
+define( 'YOAST_SEO_WP_TESTED', '5.6' );
+define( 'YOAST_SEO_WP_REQUIRED', '5.4' );
 
 if ( ! defined( 'WPSEO_NAMESPACES' ) ) {
 	define( 'WPSEO_NAMESPACES', true );
@@ -79,6 +83,7 @@ elseif ( ! class_exists( 'WPSEO_Options' ) ) { // Still checking since might be 
 if ( function_exists( 'spl_autoload_register' ) ) {
 	spl_autoload_register( 'wpseo_auto_load' );
 }
+require_once WPSEO_PATH . 'src/functions.php';
 
 /* ********************* DEFINES DEPENDING ON AUTOLOADED CODE ********************* */
 
@@ -182,6 +187,13 @@ function _wpseo_activate() {
 		$wpseo_rewrite->schedule_flush();
 	}
 
+	// Reset tracking to be disabled by default.
+	if ( ! WPSEO_Utils::is_yoast_seo_premium() ) {
+		WPSEO_Options::set( 'tracking', false );
+	}
+
+	WPSEO_Options::set( 'indexing_reason', 'first_install' );
+
 	do_action( 'wpseo_register_roles' );
 	WPSEO_Role_Manager_Factory::get()->add();
 
@@ -190,14 +202,6 @@ function _wpseo_activate() {
 
 	// Clear cache so the changes are obvious.
 	WPSEO_Utils::clear_cache();
-
-	// Create the text link storage table.
-	$link_installer = new WPSEO_Link_Installer();
-	$link_installer->install();
-
-	// Trigger reindex notification.
-	$notifier = new WPSEO_Link_Notifier();
-	$notifier->manage_notification();
 
 	// Schedule cronjob when it doesn't exists on activation.
 	$wpseo_ryte = new WPSEO_Ryte();
@@ -292,6 +296,7 @@ function wpseo_init() {
 
 	if ( version_compare( WPSEO_Options::get( 'version', 1 ), WPSEO_VERSION, '<' ) ) {
 		if ( function_exists( 'opcache_reset' ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Prevent notices when opcache.restrict_api is set.
 			@opcache_reset();
 		}
 
@@ -314,13 +319,6 @@ function wpseo_init() {
 	// Init it here because the filter must be present on the frontend as well or it won't work in the customizer.
 	new WPSEO_Customizer();
 
-	/*
-	 * Initializes the link watcher for both the frontend and backend.
-	 * Required to process scheduled items properly.
-	 */
-	$link_watcher = new WPSEO_Link_Watcher_Loader();
-	$link_watcher->load();
-
 	$integrations   = [];
 	$integrations[] = new WPSEO_Slug_Change_Watcher();
 
@@ -332,15 +330,8 @@ function wpseo_init() {
 	$wpseo_ryte = new WPSEO_Ryte();
 	$wpseo_ryte->register_hooks();
 
-	// When namespaces are not available, stop further execution.
-	if ( version_compare( PHP_VERSION, '5.6.0', '>=' ) ) {
-		require_once WPSEO_PATH . 'src/functions.php';
-
-		// Initializes the Yoast indexables for the first time.
-		YoastSEO();
-
-		// require_once WPSEO_PATH . 'src/loaders/oauth.php'; Temporarily disabled.
-	}
+	// Initializes the Yoast indexables for the first time.
+	YoastSEO();
 }
 
 /**
@@ -359,11 +350,8 @@ function wpseo_init_rest_api() {
 	$statistics_service = new WPSEO_Statistics_Service( new WPSEO_Statistics() );
 
 	$endpoints   = [];
-	$endpoints[] = new WPSEO_Link_Reindex_Post_Endpoint( new WPSEO_Link_Reindex_Post_Service() );
-	$endpoints[] = new WPSEO_Endpoint_Indexable( new WPSEO_Indexable_Service() );
 	$endpoints[] = new WPSEO_Endpoint_File_Size( new WPSEO_File_Size_Service() );
 	$endpoints[] = new WPSEO_Endpoint_Statistics( $statistics_service );
-	$endpoints[] = new WPSEO_Endpoint_MyYoast_Connect();
 
 	foreach ( $endpoints as $endpoint ) {
 		$endpoint->register();
@@ -422,19 +410,6 @@ function wpseo_cli_init() {
 			[ 'before_invoke' => 'WPSEO_CLI_Premium_Requirement::enforce' ]
 		);
 	}
-
-	// Only add the namespace if the required base class exists (WP-CLI 1.5.0+).
-	// This is optional and only adds the description of the root `yoast`
-	// command.
-	if ( class_exists( 'WP_CLI\Dispatcher\CommandNamespace' ) ) {
-		WP_CLI::add_command( 'yoast', 'WPSEO_CLI_Yoast_Command_Namespace' );
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
-			WP_CLI::add_command( 'yoast redirect', 'WPSEO_CLI_Redirect_Command_Namespace' );
-		}
-		else {
-			WP_CLI::add_command( 'yoast redirect', 'WPSEO_CLI_Redirect_Upsell_Command_Namespace' );
-		}
-	}
 }
 
 /* ***************************** BOOTSTRAP / HOOK INTO WP *************************** */
@@ -480,8 +455,6 @@ if ( ! wp_installing() && ( $spl_autoload_exists && $filter_exists ) ) {
 	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		add_action( 'plugins_loaded', 'wpseo_cli_init', 20 );
 	}
-
-	add_filter( 'phpcompat_whitelist', 'yoast_free_phpcompat_whitelist' );
 
 	add_action( 'init', [ 'WPSEO_Replace_Vars', 'setup_statics_once' ] );
 }
@@ -593,6 +566,7 @@ function yoast_wpseo_missing_filter_notice() {
  * @param string $message Message string.
  */
 function yoast_wpseo_activation_failed_notice( $message ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This function is only called in 3 places that are safe.
 	echo '<div class="error"><p>' . esc_html__( 'Activation failed:', 'wordpress-seo' ) . ' ' . strip_tags( $message, '<a>' ) . '</p></div>';
 }
 
@@ -609,32 +583,6 @@ function yoast_wpseo_self_deactivate() {
 			unset( $_GET['activate'] );
 		}
 	}
-}
-
-/**
- * Excludes specific files from php-compatibility-checker.
- *
- * @since 9.4
- *
- * @param array $ignored Array of ignored directories/files.
- *
- * @return array Array of ignored directories/files.
- */
-function yoast_free_phpcompat_whitelist( $ignored ) {
-	$path = '*/' . basename( WPSEO_PATH ) . '/';
-
-	// To prevent: (warning) File has mixed line endings; this may cause incorrect results.
-	$ignored[] = $path . 'vendor/ruckusing/lib/Ruckusing/FrameworkRunner.php';
-	$ignored[] = $path . 'vendor_prefixed/ruckusing/lib/Ruckusing/FrameworkRunner.php';
-
-	/*
-	 * To prevent: (error) Extension 'sqlite' is removed since PHP 5.4.
-	 * Ignoring because we are not using the sqlite functionality.
-	 */
-	$ignored[] = $path . 'vendor/ruckusing/lib/Ruckusing/Adapter/Sqlite3/Base.php';
-	$ignored[] = $path . 'vendor_prefixed/ruckusing/lib/Ruckusing/Adapter/Sqlite3/Base.php';
-
-	return $ignored;
 }
 
 /* ********************* DEPRECATED METHODS ********************* */

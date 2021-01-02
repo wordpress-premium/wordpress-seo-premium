@@ -74,7 +74,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 
 		$replacements = [
 			WPSEO_Premium_Prominent_Words_Versioning::POST_META_NAME,
-			WPSEO_Premium_Prominent_Words_Versioning::determine_version_number(),
+			WPSEO_Premium_Prominent_Words_Versioning::get_version_number(),
 		];
 		$replacements = array_merge( $replacements, $post_types );
 
@@ -154,7 +154,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 
 		$replacements   = [
 			WPSEO_Premium_Prominent_Words_Versioning::POST_META_NAME,
-			WPSEO_Premium_Prominent_Words_Versioning::determine_version_number(),
+			WPSEO_Premium_Prominent_Words_Versioning::get_version_number(),
 		];
 		$replacements   = array_merge( $replacements, $post_types );
 		$replacements[] = $limit;

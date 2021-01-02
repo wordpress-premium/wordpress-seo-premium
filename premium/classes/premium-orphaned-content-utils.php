@@ -5,6 +5,9 @@
  * @package WPSEO\Premium
  */
 
+use Yoast\WP\SEO\Actions\Indexing\Post_Link_Indexing_Action;
+use Yoast\WP\SEO\Config\Migration_Status;
+
 /**
  * Represents some util helpers for the orphaned posts.
  */
@@ -16,7 +19,7 @@ class WPSEO_Premium_Orphaned_Content_Utils {
 	 * @return bool True when the text link counter is enabled.
 	 */
 	public static function is_feature_enabled() {
-		if ( ! WPSEO_Link_Table_Accessible::is_accessible() || ! WPSEO_Meta_Table_Accessible::is_accessible() ) {
+		if ( ! YoastSEO()->classes->get( Migration_Status::class )->is_version( 'free', WPSEO_VERSION ) ) {
 			return false;
 		}
 
@@ -32,7 +35,8 @@ class WPSEO_Premium_Orphaned_Content_Utils {
 		static $has_unprocessed_posts;
 
 		if ( $has_unprocessed_posts === null ) {
-			$has_unprocessed_posts = WPSEO_Link_Query::has_unprocessed_posts( WPSEO_Post_Type::get_accessible_post_types() );
+			$post_link_action      = YoastSEO()->classes->get( Post_Link_Indexing_Action::class );
+			$has_unprocessed_posts = $post_link_action->get_total_unindexed();
 		}
 
 		return $has_unprocessed_posts;

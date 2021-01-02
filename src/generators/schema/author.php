@@ -1,16 +1,11 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Generators\Schema
- */
 
 namespace Yoast\WP\SEO\Generators\Schema;
 
 use Yoast\WP\SEO\Config\Schema_IDs;
 
 /**
- * Returns schema Person data.
+ * Returns schema Author data.
  */
 class Author extends Person {
 
@@ -26,7 +21,8 @@ class Author extends Person {
 
 		if (
 			$this->context->indexable->object_type === 'post'
-			&& $this->helpers->schema->article->is_article_post_type( $this->context->indexable->object_sub_type )
+			&& $this->helpers->schema->article->is_author_supported( $this->context->indexable->object_sub_type )
+			&& $this->context->schema_article_type !== 'None'
 		) {
 			return true;
 		}

@@ -197,19 +197,4 @@ class WPSEO_Redirect_Ajax {
 	private function sanitize_url( $url ) {
 		return trim( htmlspecialchars_decode( rawurldecode( $url ) ) );
 	}
-
-	/**
-	 * Function that handles the AJAX 'wpseo_delete_redirect' action.
-	 *
-	 * @deprecated 9.2
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function ajax_delete_redirect() {
-		_deprecated_function( __FUNCTION__, 'WPSEO 9.2.0', 'Replaced by the REST API.' );
-
-		// Response.
-		wp_die( 'Replaced by the REST API.' );
-	}
 }

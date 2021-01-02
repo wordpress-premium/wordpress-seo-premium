@@ -58,16 +58,6 @@ class WPSEO_Premium_Orphaned_Post_Notifier implements WPSEO_WordPress_Integratio
 		// Disabling this until we've found a better way to display this data that doesn't become annoying when you have a lot of post types.
 		return;
 
-		// Force re-check if it is not accessible.
-		if ( ! WPSEO_Link_Table_Accessible::is_accessible() ) {
-			WPSEO_Link_Table_Accessible::cleanup();
-		}
-
-		// Force re-check if it is not accessible.
-		if ( ! WPSEO_Meta_Table_Accessible::is_accessible() ) {
-			WPSEO_Meta_Table_Accessible::cleanup();
-		}
-
 		$post_types = $this->get_post_types();
 		$post_types = $this->format_post_types( $post_types );
 

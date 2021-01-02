@@ -133,7 +133,7 @@ class ServerRequest extends \YoastSEO_Vendor\GuzzleHttp\Psr7\Request implements 
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $headers = \getallheaders();
         $uri = self::getUriFromGlobals();
-        $body = new \YoastSEO_Vendor\GuzzleHttp\Psr7\CachingStream(new \YoastSEO_Vendor\GuzzleHttp\Psr7\LazyOpenStream('php://input', 'r+'));
+        $body = new \YoastSEO_Vendor\GuzzleHttp\Psr7\LazyOpenStream('php://input', 'r+');
         $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? \str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
         $serverRequest = new \YoastSEO_Vendor\GuzzleHttp\Psr7\ServerRequest($method, $uri, $headers, $body, $protocol, $_SERVER);
         return $serverRequest->withCookieParams($_COOKIE)->withQueryParams($_GET)->withParsedBody($_POST)->withUploadedFiles(self::normalizeFiles($_FILES));

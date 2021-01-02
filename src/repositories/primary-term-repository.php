@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast extension of the Model class.
- *
- * @package Yoast\WP\SEO\Repositories
- */
 
 namespace Yoast\WP\SEO\Repositories;
 
@@ -12,7 +7,7 @@ use Yoast\WP\Lib\ORM;
 use Yoast\WP\SEO\Models\Primary_Term;
 
 /**
- * Class Primary_Term_Repository
+ * Class Primary_Term_Repository.
  */
 class Primary_Term_Repository {
 
@@ -35,7 +30,11 @@ class Primary_Term_Repository {
 	 * @return Primary_Term|null Instance of a primary term.
 	 */
 	public function find_by_post_id_and_taxonomy( $post_id, $taxonomy, $auto_create = true ) {
-		/** @var Primary_Term $primary_term */
+		/**
+		 * Instance of the primary term.
+		 *
+		 * @var Primary_Term $primary_term
+		 */
 		$primary_term = $this->query()
 			->where( 'post_id', $post_id )
 			->where( 'taxonomy', $taxonomy )
