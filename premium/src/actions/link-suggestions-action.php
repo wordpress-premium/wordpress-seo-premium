@@ -97,6 +97,16 @@ class Link_Suggestions_Action {
 		// Retrieve indexables for suggestions.
 		$suggestions_indexables = $this->indexable_repository->query()->where_id_in( $indexable_ids )->find_many();
 
+		/**
+		 * Filter 'wpseo_link_suggestions_indexables' - Allow filtering link suggestions indexable objects.
+		 *
+		 * @api array An array of suggestion indexables that can be filtered.
+		 *
+		 * @param int    $object_id   The object id for the current indexable.
+		 * @param string $object_type The object type for the current indexable.
+		 */
+		$suggestions_indexables = \apply_filters( 'wpseo_link_suggestions_indexables', $suggestions_indexables, $object_id, $object_type );
+
 		// Create suggestions objects.
 		return $this->create_suggestions( $suggestions_indexables, $suggestions_scores );
 	}

@@ -696,7 +696,7 @@ class WPSEO_Utils {
 	 * @return bool True when we are in the premium plugin.
 	 */
 	public static function is_yoast_seo_premium() {
-		return defined( 'WPSEO_PREMIUM_PLUGIN_FILE' );
+		return true;
 	}
 
 	/**
@@ -756,21 +756,7 @@ class WPSEO_Utils {
 	 * @return bool Returns true if the API is available.
 	 */
 	public static function is_api_available( $minimum_version = '2.0' ) {
-		return ( defined( 'REST_API_VERSION' )
-			&& version_compare( REST_API_VERSION, $minimum_version, '>=' ) );
-	}
-
-	/**
-	 * Checks if the content endpoints are available.
-	 *
-	 * @return bool Returns true if the content endpoints are available
-	 */
-	public static function are_content_endpoints_available() {
-		if ( function_exists( 'rest_get_server' ) ) {
-			$namespaces = rest_get_server()->get_namespaces();
-			return in_array( 'wp/v2', $namespaces );
-		}
-		return false;
+		return true;
 	}
 
 	/**

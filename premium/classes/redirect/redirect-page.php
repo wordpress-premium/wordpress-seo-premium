@@ -130,7 +130,7 @@ class WPSEO_Redirect_Page {
 			WPSEO_VERSION
 		);
 		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoPremiumStrings', WPSEO_Premium_Javascript_Strings::strings() );
-		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoUserLocale', substr( WPSEO_Language_Utils::get_user_locale(), 0, 2 ) );
+		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoUserLocale', substr( \get_user_locale(), 0, 2 ) );
 
 		wp_enqueue_style( 'wpseo-premium-redirects', plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/css/dist/premium-redirects-' . $version . '.css', [], WPSEO_VERSION );
 

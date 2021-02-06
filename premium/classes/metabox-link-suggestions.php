@@ -90,7 +90,7 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 			return;
 		}
 
-		if ( ! WPSEO_Utils::are_content_endpoints_available() ) {
+		if ( ! WPSEO_Premium_Metabox::are_content_endpoints_available() ) {
 			return;
 		}
 

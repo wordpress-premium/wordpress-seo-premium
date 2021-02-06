@@ -17,7 +17,7 @@ use WPSEO_Premium_Assets;
 use WPSEO_Premium_Prominent_Words_Support;
 use WPSEO_Social_Previews;
 use WPSEO_Utils;
-use Yoast\WP\SEO\Conditionals\Admin\Elementor_Edit_Conditional;
+use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
 use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Integrations\Admin\Prominent_Words\Indexing_Integration;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
@@ -186,6 +186,19 @@ class Elementor_Premium implements Integration_Interface {
 	}
 
 	/**
+	 * Checks if the content endpoints are available.
+	 *
+	 * @return bool Returns true if the content endpoints are available
+	 */
+	public static function are_content_endpoints_available() {
+		if ( function_exists( 'rest_get_server' ) ) {
+			$namespaces = rest_get_server()->get_namespaces();
+			return in_array( 'wp/v2', $namespaces );
+		}
+		return false;
+	}
+
+	/**
 	 * Retrieves the REST API configuration.
 	 *
 	 * @return array The configuration.
@@ -193,7 +206,7 @@ class Elementor_Premium implements Integration_Interface {
 	protected function get_rest_api_config() {
 		return [
 			'available'                 => WPSEO_Utils::is_api_available(),
-			'contentEndpointsAvailable' => WPSEO_Utils::are_content_endpoints_available(),
+			'contentEndpointsAvailable' => self::are_content_endpoints_available(),
 			'root'                      => \esc_url_raw( rest_url() ),
 			'nonce'                     => \wp_create_nonce( 'wp_rest' ),
 		];
@@ -291,7 +304,7 @@ class Elementor_Premium implements Integration_Interface {
 	protected function is_prominent_words_indexing_completed() {
 		$is_indexing_completed = $this->prominent_words_helper->is_indexing_completed();
 		if ( $is_indexing_completed === null ) {
-			$indexation_integration = YoastSEO()->classes->get( Indexing_Integration::class );
+			$indexation_integration = YoastSEOPremium()->classes->get( Indexing_Integration::class );
 			$is_indexing_completed  = $indexation_integration->get_unindexed_count( 0 ) === 0;
 
 			$this->prominent_words_helper->set_indexing_completed( $is_indexing_completed );

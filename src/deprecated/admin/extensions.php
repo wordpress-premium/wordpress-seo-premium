@@ -56,7 +56,7 @@ class WPSEO_Extensions {
 	public function is_valid( $extension ) {
 		_deprecated_function( __METHOD__, 'WPSEO 15.4' );
 
-		return true;
+		return false;
 	}
 
 	/**

@@ -456,30 +456,36 @@ $generated_i18n_strings = array(
 	__( 'Return to your %s', 'wordpress-seo' ),
 
 	// Reference: js/src/components/modals/editorModals/FacebookPreviewModal.js:15
+	// Reference: js/src/elementor/components/modals/editorModals/FacebookPreviewModal.js:15
 	__( 'Facebook preview', 'wordpress-seo' ),
 
 	// Reference: js/src/components/modals/editorModals/TwitterPreviewModal.js:16
+	// Reference: js/src/elementor/components/modals/editorModals/TwitterPreviewModal.js:16
 	__( 'Twitter preview', 'wordpress-seo' ),
 
 	// Reference: js/src/components/social/SocialMetadata.js:31
 	/* translators: %s expands to Twitter. */
 	__( '%s preview', 'wordpress-seo' ),
 
-	// Reference: js/src/components/social/SocialUpsell.js:19
-	/* translators: %s expands to Yoast SEO Premium */
-	__( 'Find out why you should upgrade to %s', 'wordpress-seo' ),
-
-	// Reference: js/src/components/social/SocialUpsell.js:34
+	// Reference: js/src/components/social/SocialUpsell.js:27
 	/* translators: %s expands to the social medium name, which is either Twitter or Facebook. %s expands to Yoast SEO Premium */
 	__( 'Do you want to preview what it will look like if people share this post on %s? You can, with %s.', 'wordpress-seo' ),
 
-	// Reference: js/src/containers/FacebookEditor.js:17
-	// Reference: js/src/containers/TwitterEditor.js:17
+	// Reference: js/src/components/social/SocialUpsell.js:33
+	/* translators: %s expands to Yoast SEO Premium */
+	__( 'Find out why you should upgrade to %s', 'wordpress-seo' ),
+
+	// Reference: js/src/containers/FacebookEditor.js:76
+	// Reference: js/src/containers/TwitterEditor.js:81
+	// Reference: js/src/elementor/containers/FacebookEditor.js:76
+	// Reference: js/src/elementor/containers/TwitterEditor.js:81
 	/* translators: %s expands to the social medium name, i.e. Faceboook. */
 	__( 'Modify your %s title by editing it right here...', 'wordpress-seo' ),
 
-	// Reference: js/src/containers/FacebookEditor.js:24
-	// Reference: js/src/containers/TwitterEditor.js:24
+	// Reference: js/src/containers/FacebookEditor.js:83
+	// Reference: js/src/containers/TwitterEditor.js:88
+	// Reference: js/src/elementor/containers/FacebookEditor.js:83
+	// Reference: js/src/elementor/containers/TwitterEditor.js:88
 	/* translators: %s expands to the social medium name, i.e. Faceboook. */
 	__( 'Modify your %s description by editing it right here...', 'wordpress-seo' ),
 
@@ -495,6 +501,24 @@ $generated_i18n_strings = array(
 	// Reference: js/src/containers/SnippetEditor.js:64
 	// Reference: js/src/elementor/containers/SnippetEditor.js:90
 	__( 'Please provide a meta description by editing the snippet below.', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:14
+	__( 'Yoast Breadcrumbs', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:17
+	__( 'Adds the Yoast SEO breadcrumbs to your template or content.', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:19
+	__( 'seo', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:20
+	__( 'breadcrumbs', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:21
+	__( 'internal linking', 'wordpress-seo' ),
+
+	// Reference: js/src/dynamic-blocks.js:22
+	__( 'site structure', 'wordpress-seo' ),
 
 	// Reference: js/src/elementor/initializers/introduction.js:19
 	__( 'New: Yoast SEO for Elementor', 'wordpress-seo' ),

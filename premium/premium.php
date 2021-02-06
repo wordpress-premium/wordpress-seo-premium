@@ -40,7 +40,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '15.5';
+	const PLUGIN_VERSION_NAME = '15.7';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -82,8 +82,13 @@ class WPSEO_Premium {
 	 * WPSEO_Premium Constructor
 	 */
 	public function __construct() {
+		require_once __DIR__ . '/src/functions.php';
+		YoastSEOPremium();
+
 		$this->integrations = [
-			'premium-metabox'                        => new WPSEO_Premium_Metabox( YoastSEO()->classes->get( Prominent_Words_Helper::class ) ),
+			'premium-metabox'                        => new WPSEO_Premium_Metabox(
+				YoastSEOPremium()->classes->get( Prominent_Words_Helper::class )
+			),
 			'premium-assets'                         => new WPSEO_Premium_Assets(),
 			'link-suggestions'                       => new WPSEO_Metabox_Link_Suggestions(),
 			'redirects-endpoint'                     => new WPSEO_Premium_Redirect_EndPoint( new WPSEO_Premium_Redirect_Service() ),
@@ -189,9 +194,6 @@ class WPSEO_Premium {
 
 			// Add Premium imports.
 			$this->integrations[] = new WPSEO_Premium_Import_Manager();
-
-			// Filter the content of the update notice.
-			add_filter( 'wpseo_update_notice_content', [ $this, 'filter_update_notice_content' ] );
 		}
 
 		// Only activate post and term watcher if permalink structure is enabled.
@@ -460,28 +462,5 @@ class WPSEO_Premium {
 		$helpscout_settings['ask_consent'] = false;
 
 		return $helpscout_settings;
-	}
-
-	/**
-	 * Filters the content of the update notice with data for premium.
-	 *
-	 * @param object $free_release_data The object with content for free version of the plugin.
-	 *
-	 * @return mixed The filtered object with premium data, or null if file non existent or malformed
-	 */
-	public function filter_update_notice_content( $free_release_data ) {
-		$release_data = $free_release_data;
-		$file         = plugin_dir_path( WPSEO_FILE ) . '/premium/release-info.json';
-
-		if ( file_exists( $file ) ) {
-			$premium_release_json = file_get_contents( $file );
-			$premium_release_data = json_decode( $premium_release_json );
-
-			// If file existing and not malformed, filter and use premium data instead of free.
-			if ( ! is_null( $premium_release_data ) ) {
-				$release_data = $premium_release_data;
-			}
-		}
-		return $release_data;
 	}
 }

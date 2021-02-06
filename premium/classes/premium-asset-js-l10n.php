@@ -32,7 +32,7 @@ final class WPSEO_Premium_Asset_JS_L10n {
 	 *                     if the translation file could not be found.
 	 */
 	protected function get_translations( $component ) {
-		$locale = WPSEO_Language_Utils::get_user_locale();
+		$locale = \get_user_locale();
 
 		$file = plugin_dir_path( WPSEO_FILE ) . 'premium/languages/' . $component . '-' . $locale . '.json';
 		if ( file_exists( $file ) ) {
