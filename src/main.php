@@ -1,44 +1,27 @@
 <?php
 
-namespace Yoast\WP\SEO;
+// phpcs:ignore Yoast.NamingConventions.NamespaceName.Invalid -- This should be the new namespace for premium.
+namespace Yoast\WP\SEO\Premium;
 
 use Yoast\WP\Lib\Abstract_Main;
 use Yoast\WP\SEO\Dependency_Injection\Container_Compiler;
-use Yoast\WP\SEO\Generated\Cached_Container;
+use Yoast\WP\SEO\Premium\Generated\Cached_Container;
 use Yoast\WP\SEO\Surfaces\Classes_Surface;
 use Yoast\WP\SEO\Surfaces\Helpers_Surface;
-use Yoast\WP\SEO\Surfaces\Meta_Surface;
-
-if ( ! \defined( 'WPSEO_VERSION' ) ) {
-	\header( 'Status: 403 Forbidden' );
-	\header( 'HTTP/1.1 403 Forbidden' );
-	exit();
-}
 
 /**
- * Class Main.
- *
- * @property Classes_Surface $classes      The classes surface.
- * @property Meta_Surface    $meta         The meta surface.
- * @property Helpers_Surface $helpers      The helpers surface.
+ * Main plugin class for premium.
  */
 class Main extends Abstract_Main {
 
-	/**
-	 * The API namespace constant.
-	 *
-	 * @var string
-	 */
-	const API_V1_NAMESPACE = 'yoast/v1';
+	// @phpcs:disable Generic.Commenting.DocComment.MissingShort -- Short description is in the inherited comments.
 
 	/**
-	 * The WP CLI namespace constant.
-	 *
-	 * @var string
+	 * @inheritDoc
 	 */
-	const WP_CLI_NAMESPACE = 'yoast';
-
-	// @phpcs:disable Generic.Commenting.DocComment.MissingShort -- Description is included in the inherited comment.
+	protected function get_name() {
+		return 'yoast-seo-premium';
+	}
 
 	/**
 	 * @inheritDoc
@@ -51,7 +34,7 @@ class Main extends Abstract_Main {
 				__DIR__ . '/generated/container.php',
 				__DIR__ . '/../config/dependency-injection/services.php',
 				__DIR__ . '/../vendor/composer/autoload_classmap.php',
-				'Yoast\WP\SEO\Generated'
+				'Yoast\WP\SEO\Premium\Generated'
 			);
 		}
 
@@ -67,17 +50,9 @@ class Main extends Abstract_Main {
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_name() {
-		return 'yoast-seo';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	protected function get_surfaces() {
 		return [
 			'classes' => Classes_Surface::class,
-			'meta'    => Meta_Surface::class,
 			'helpers' => Helpers_Surface::class,
 		];
 	}

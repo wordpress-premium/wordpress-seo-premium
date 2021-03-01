@@ -2,7 +2,7 @@
 /**
  * WPSEO plugin file.
  *
- * @package WPSEO\Internals
+ * @package Yoast\WP\SEO\Premium
  */
 
 if ( ! defined( 'WPSEO_VERSION' ) ) {
@@ -11,13 +11,7 @@ if ( ! defined( 'WPSEO_VERSION' ) ) {
 	exit();
 }
 
-use Yoast\WP\SEO\Main;
-
-if ( is_dir( WPSEO_PATH . YOAST_VENDOR_PREFIX_DIRECTORY ) ) {
-	require_once WPSEO_PATH . YOAST_VENDOR_PREFIX_DIRECTORY . '/guzzlehttp/guzzle/src/functions.php';
-	require_once WPSEO_PATH . YOAST_VENDOR_PREFIX_DIRECTORY . '/guzzlehttp/psr7/src/functions_include.php';
-	require_once WPSEO_PATH . YOAST_VENDOR_PREFIX_DIRECTORY . '/guzzlehttp/promises/src/functions_include.php';
-}
+use Yoast\WP\SEO\Premium\Main;
 
 /**
  * Retrieves the main instance.
@@ -26,12 +20,14 @@ if ( is_dir( WPSEO_PATH . YOAST_VENDOR_PREFIX_DIRECTORY ) ) {
  *
  * @return Main The main instance.
  */
-function YoastSEO() {
+function YoastSEOPremium() {
 	// phpcs:enable
 
 	static $main;
 
 	if ( $main === null ) {
+		// Ensure free is loaded as loading premium will fail without it.
+		YoastSEO();
 		$main = new Main();
 		$main->load();
 	}

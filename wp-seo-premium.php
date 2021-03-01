@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     15.7
+ * Version:     15.9
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
@@ -22,7 +22,7 @@
  * Requires PHP: 5.6.20
  *
  * WC requires at least: 3.0
- * WC tested up to: 4.8
+ * WC tested up to: 5.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,14 +39,18 @@
  */
 
 if ( ! defined( 'WPSEO_FILE' ) ) {
-	define( 'WPSEO_FILE', __FILE__ );
+	define( 'WPSEO_FILE', __DIR__ . '/vendor/yoast/wordpress-seo/wp-seo.php' );
 }
 
 if ( ! defined( 'WPSEO_PREMIUM_PLUGIN_FILE' ) ) {
 	define( 'WPSEO_PREMIUM_PLUGIN_FILE', __FILE__ );
 }
 
-$wpseo_premium_dir = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'premium/';
+if ( ! defined( 'WPSEO_BASENAME' ) ) {
+	define( 'WPSEO_BASENAME', plugin_basename( WPSEO_PREMIUM_PLUGIN_FILE ) );
+}
+
+$wpseo_premium_dir = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE );
 
 // Run the redirects when frontend is being opened.
 if ( ! is_admin() ) {
@@ -77,7 +81,7 @@ add_filter( 'wpseo_option_wpseo_defaults', 'wpseo_premium_add_general_option_def
 // Load the WordPress SEO plugin.
 require_once dirname( WPSEO_FILE ) . '/wp-seo-main.php';
 
-$yoast_seo_premium_autoload_file = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE ) . 'vendor/autoload.php';
+$yoast_seo_premium_autoload_file = $wpseo_premium_dir . 'vendor/autoload.php';
 
 if ( is_readable( $yoast_seo_premium_autoload_file ) ) {
 	require $yoast_seo_premium_autoload_file;
@@ -117,6 +121,10 @@ function wpseo_premium_init() {
 if ( ! wp_installing() ) {
 	add_action( 'plugins_loaded', 'wpseo_premium_init', 15 );
 }
+
+// Activation and deactivation hook for free.
+register_activation_hook( __FILE__, 'wpseo_activate' );
+register_deactivation_hook( __FILE__, 'wpseo_deactivate' );
 
 // Activation hook.
 if ( is_admin() ) {
