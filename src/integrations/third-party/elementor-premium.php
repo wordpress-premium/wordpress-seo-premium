@@ -191,9 +191,9 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return bool Returns true if the content endpoints are available
 	 */
 	public static function are_content_endpoints_available() {
-		if ( function_exists( 'rest_get_server' ) ) {
-			$namespaces = rest_get_server()->get_namespaces();
-			return in_array( 'wp/v2', $namespaces );
+		if ( \function_exists( 'rest_get_server' ) ) {
+			$namespaces = \rest_get_server()->get_namespaces();
+			return \in_array( 'wp/v2', $namespaces, true );
 		}
 		return false;
 	}
@@ -207,7 +207,7 @@ class Elementor_Premium implements Integration_Interface {
 		return [
 			'available'                 => WPSEO_Utils::is_api_available(),
 			'contentEndpointsAvailable' => self::are_content_endpoints_available(),
-			'root'                      => \esc_url_raw( rest_url() ),
+			'root'                      => \esc_url_raw( \rest_url() ),
 			'nonce'                     => \wp_create_nonce( 'wp_rest' ),
 		];
 	}
@@ -224,7 +224,7 @@ class Elementor_Premium implements Integration_Interface {
 			return $this->post;
 		}
 
-		$post = \filter_input( INPUT_GET, 'post' );
+		$post = \filter_input( \INPUT_GET, 'post' );
 		if ( ! empty( $post ) ) {
 			$post_id = (int) WPSEO_Utils::validate_int( $post );
 
@@ -265,16 +265,16 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return string The post type.
 	 */
 	protected function get_current_post_type() {
-		$post = \filter_input( INPUT_GET, 'post', FILTER_SANITIZE_STRING );
+		$post = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_STRING );
 
 		if ( $post ) {
-			return \get_post_type( get_post( $post ) );
+			return \get_post_type( \get_post( $post ) );
 		}
 
 		return \filter_input(
-			INPUT_GET,
+			\INPUT_GET,
 			'post_type',
-			FILTER_SANITIZE_STRING,
+			\FILTER_SANITIZE_STRING,
 			[
 				'options' => [
 					'default' => 'post',
@@ -304,7 +304,7 @@ class Elementor_Premium implements Integration_Interface {
 	protected function is_prominent_words_indexing_completed() {
 		$is_indexing_completed = $this->prominent_words_helper->is_indexing_completed();
 		if ( $is_indexing_completed === null ) {
-			$indexation_integration = YoastSEOPremium()->classes->get( Indexing_Integration::class );
+			$indexation_integration = \YoastSEOPremium()->classes->get( Indexing_Integration::class );
 			$is_indexing_completed  = $indexation_integration->get_unindexed_count( 0 ) === 0;
 
 			$this->prominent_words_helper->set_indexing_completed( $is_indexing_completed );
@@ -321,7 +321,7 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return int The number of words to store.
 	 */
 	protected function per_indexable_limit( $language ) {
-		if ( YoastSEO()->helpers->language->has_function_word_support( $language ) ) {
+		if ( \YoastSEO()->helpers->language->has_function_word_support( $language ) ) {
 			return Indexing_Integration::PER_INDEXABLE_LIMIT;
 		}
 

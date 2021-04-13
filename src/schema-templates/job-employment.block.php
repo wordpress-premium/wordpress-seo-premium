@@ -33,3 +33,4 @@ $wpseo_employment_type_options = [
 	{{sidebar-checkbox name="isInternship" label="<?php esc_attr_e( 'This is an internship', 'wordpress-seo-premium' ); ?>" output=", <?php esc_attr_e( 'this is an internship', 'wordpress-seo-premium' ); ?>" }}
 	{{sidebar-checkbox name="isVolunteer" label="<?php esc_attr_e( 'This is a volunteer role', 'wordpress-seo-premium' ); ?>" output=", <?php esc_attr_e( 'this is a volunteer role', 'wordpress-seo-premium' ); ?>" }}
 </div>
+{{inherit-sidebar parents=[ "yoast/job-posting" ] }}

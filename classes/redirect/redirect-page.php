@@ -110,7 +110,7 @@ class WPSEO_Redirect_Page {
 	 */
 	public function enqueue_assets() {
 		$asset_manager = new WPSEO_Admin_Asset_Manager();
-		$version       = $asset_manager->flatten_version( WPSEO_VERSION );
+		$version       = $asset_manager->flatten_version( WPSEO_PREMIUM_VERSION );
 
 		$dependencies = [
 			'jquery',
@@ -127,12 +127,12 @@ class WPSEO_Redirect_Page {
 			plugin_dir_url( WPSEO_PREMIUM_FILE )
 			. 'assets/js/dist/wp-seo-premium-admin-redirects-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
 			$dependencies,
-			WPSEO_VERSION
+			WPSEO_PREMIUM_VERSION
 		);
 		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoPremiumStrings', WPSEO_Premium_Javascript_Strings::strings() );
-		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoUserLocale', substr( \get_user_locale(), 0, 2 ) );
+		wp_localize_script( 'wp-seo-premium-admin-redirects', 'wpseoUserLocale', [ 'code' => substr( \get_user_locale(), 0, 2 ) ] );
 
-		wp_enqueue_style( 'wpseo-premium-redirects', plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/css/dist/premium-redirects-' . $version . '.css', [], WPSEO_VERSION );
+		wp_enqueue_style( 'wpseo-premium-redirects', plugin_dir_url( WPSEO_PREMIUM_FILE ) . 'assets/css/dist/premium-redirects-' . $version . '.css', [], WPSEO_PREMIUM_VERSION );
 
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 

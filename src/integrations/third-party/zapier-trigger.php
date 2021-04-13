@@ -2,8 +2,6 @@
 
 namespace Yoast\WP\SEO\Integrations\Third_Party;
 
-use DateInterval;
-use DateTime;
 use WP_Error;
 use Yoast\WP\SEO\Conditionals\Zapier_Enabled_Conditional;
 use Yoast\WP\SEO\Helpers\Meta_Helper;
@@ -36,10 +34,7 @@ class Zapier_Trigger implements Integration_Interface {
 	 * @param Meta_Helper   $meta_helper   The meta helper.
 	 * @param Zapier_Helper $zapier_helper The Zapier helper.
 	 */
-	public function __construct(
-		Meta_Helper $meta_helper,
-		Zapier_Helper $zapier_helper
-	) {
+	public function __construct( Meta_Helper $meta_helper, Zapier_Helper $zapier_helper ) {
 		$this->meta_helper   = $meta_helper;
 		$this->zapier_helper = $zapier_helper;
 	}
@@ -88,12 +83,12 @@ class Zapier_Trigger implements Integration_Interface {
 			return;
 		}
 
-		$post                      = \get_post( $indexable->object_id );
-		$published_datetime        = new DateTime( $post->post_date );
-		$now_datetime              = new DateTime();
-		$half_an_hour_ago_datetime = $now_datetime->sub( new DateInterval( 'PT30M' ) );
+		// All dates are GMT to prevent failing checks due to timezone differences.
+		$post                          = \get_post( $indexable->object_id );
+		$published_datetime_gmt        = strtotime( $post->post_date_gmt . ' +0000' );
+		$half_an_hour_ago_datetime_gmt = ( time() - ( MINUTE_IN_SECONDS * 30 ) );
 		if ( ! $this->zapier_helper->is_post_type_supported( $post->post_type )
-			|| $published_datetime < $half_an_hour_ago_datetime ) {
+			|| $published_datetime_gmt < $half_an_hour_ago_datetime_gmt ) {
 			return;
 		}
 

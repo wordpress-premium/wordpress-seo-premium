@@ -6,3 +6,4 @@
 	{{inner-blocks appender=false}}
 	{{variation-picker}}
 </div>
+{{inherit-sidebar parents=[ "yoast/job-posting" ] }}

@@ -21,9 +21,7 @@ class Prominent_Words_Helper {
 	 *
 	 * @param Options_Helper $options_helper The options helper.
 	 */
-	public function __construct(
-		Options_Helper $options_helper
-	) {
+	public function __construct( Options_Helper $options_helper ) {
 		$this->options_helper = $options_helper;
 	}
 

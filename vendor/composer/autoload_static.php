@@ -4,8 +4,22 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9
+class ComposerStaticInit0b98bc0ae235673e64ed4c176f4ef6ec
 {
+    public static $prefixLengthsPsr4 = array (
+        'C' => 
+        array (
+            'Composer\\Installers\\' => 20,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Composer\\Installers\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'WPSEO_CLI_Premium_Requirement' => __DIR__ . '/../..' . '/cli/cli-premium-requirement.php',
@@ -78,7 +92,7 @@ class ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9
         'WPSEO_Redirect_Formats' => __DIR__ . '/../..' . '/classes/redirect/redirect-formats.php',
         'WPSEO_Redirect_Formatter' => __DIR__ . '/../..' . '/classes/redirect/redirect-formatter.php',
         'WPSEO_Redirect_HTAccess_Loader' => __DIR__ . '/../..' . '/classes/redirect/loaders/redirect-htaccess-loader.php',
-        'WPSEO_Redirect_Handler' => __DIR__ . '/../..' . '/classes/redirect/redirect-handler.php',
+        'WPSEO_Redirect_Handler' => __DIR__ . '/../..' . '/src/deprecated/redirect-handler.php',
         'WPSEO_Redirect_Htaccess_Exporter' => __DIR__ . '/../..' . '/classes/redirect/exporters/redirect-htaccess-exporter.php',
         'WPSEO_Redirect_Htaccess_Util' => __DIR__ . '/../..' . '/classes/redirect/redirect-htaccess-util.php',
         'WPSEO_Redirect_Import_Exception' => __DIR__ . '/../..' . '/classes/redirect/redirect-import-exception.php',
@@ -128,6 +142,7 @@ class ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9
         'Yoast\\WP\\SEO\\Database\\Migration_Runner_Premium' => __DIR__ . '/../..' . '/src/database/migration-runner-premium.php',
         'Yoast\\WP\\SEO\\Helpers\\Prominent_Words_Helper' => __DIR__ . '/../..' . '/src/helpers/prominent-words-helper.php',
         'Yoast\\WP\\SEO\\Helpers\\Zapier_Helper' => __DIR__ . '/../..' . '/src/helpers/zapier-helper.php',
+        'Yoast\\WP\\SEO\\Initializers\\Redirect_Handler' => __DIR__ . '/../..' . '/src/initializers/redirect-handler.php',
         'Yoast\\WP\\SEO\\Integrations\\Admin\\Prominent_Words\\Indexation_Integration' => __DIR__ . '/../..' . '/src/deprecated/integrations/admin/prominent-words/indexation-integration.php',
         'Yoast\\WP\\SEO\\Integrations\\Admin\\Prominent_Words\\Indexing_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/prominent-words/indexing-integration.php',
         'Yoast\\WP\\SEO\\Integrations\\Admin\\Prominent_Words\\Metabox_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/prominent-words/metabox-integration.php',
@@ -145,8 +160,12 @@ class ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9
         'Yoast\\WP\\SEO\\Integrations\\Watchers\\Premium_Option_Wpseo_Watcher' => __DIR__ . '/../..' . '/src/integrations/watchers/premium-option-wpseo-watcher.php',
         'Yoast\\WP\\SEO\\Integrations\\Watchers\\Zapier_APIKey_Reset_Watcher' => __DIR__ . '/../..' . '/src/integrations/watchers/zapier-apikey-reset-watcher.php',
         'Yoast\\WP\\SEO\\Models\\Prominent_Words' => __DIR__ . '/../..' . '/src/models/prominent-words.php',
+        'Yoast\\WP\\SEO\\Premium\\Addon_Installer' => __DIR__ . '/../..' . '/src/addon-installer.php',
         'Yoast\\WP\\SEO\\Premium\\Generated\\Cached_Container' => __DIR__ . '/../..' . '/src/generated/container.php',
+        'Yoast\\WP\\SEO\\Premium\\Initializers\\Plugin' => __DIR__ . '/../..' . '/src/initializers/plugin.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Upgrade_Integration' => __DIR__ . '/../..' . '/src/integrations/upgrade-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Main' => __DIR__ . '/../..' . '/src/main.php',
+        'Yoast\\WP\\SEO\\Premium\\WordPress\\Wrapper' => __DIR__ . '/../..' . '/src/wordpress/wrapper.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Prominent_Words\\Indexation_List_Item_Presenter' => __DIR__ . '/../..' . '/src/deprecated/presenters/indexation-list-item-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Prominent_Words\\Indexation_Modal_Presenter' => __DIR__ . '/../..' . '/src/deprecated/presenters/indexation-modal-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Prominent_Words_Notification' => __DIR__ . '/../..' . '/src/deprecated/presenters/prominent-words-notification.php',
@@ -154,13 +173,15 @@ class ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9
         'Yoast\\WP\\SEO\\Routes\\Link_Suggestions_Route' => __DIR__ . '/../..' . '/src/routes/link-suggestions-route.php',
         'Yoast\\WP\\SEO\\Routes\\Prominent_Words_Route' => __DIR__ . '/../..' . '/src/routes/prominent-words-route.php',
         'Yoast\\WP\\SEO\\Routes\\Zapier_Route' => __DIR__ . '/../..' . '/src/routes/zapier-route.php',
-        'Yoast\\WP\\SEO\\WordPress\\Premium_Wrapper' => __DIR__ . '/../..' . '/src/wordpress/premium-wrapper.php',
+        'Yoast\\WP\\SEO\\WordPress\\Premium_Wrapper' => __DIR__ . '/../..' . '/src/deprecated/wordpress/renamed-classes.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit4756568e51648c6f5e2a61a7587e0fb9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0b98bc0ae235673e64ed4c176f4ef6ec::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0b98bc0ae235673e64ed4c176f4ef6ec::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit0b98bc0ae235673e64ed4c176f4ef6ec::$classMap;
 
         }, null, ClassLoader::class);
     }

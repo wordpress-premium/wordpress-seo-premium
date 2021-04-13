@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '904542bb5d4b8da657b77b46bd608cb833c4362d',
+    'reference' => '795b416a5f1b2c70825f4d5b383462d6a6704c4e',
     'name' => 'yoast/wordpress-seo-premium',
   ),
   'versions' => 
@@ -101,33 +101,6 @@ private static $installed = array (
         0 => '*',
       ),
     ),
-    'guzzlehttp/guzzle' => 
-    array (
-      'pretty_version' => '6.5.5',
-      'version' => '6.5.5.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '9d4290de1cfd701f38099ef7e183b64b4b7b0c5e',
-    ),
-    'guzzlehttp/promises' => 
-    array (
-      'pretty_version' => '1.4.0',
-      'version' => '1.4.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '60d379c243457e073cff02bc323a2a86cb355631',
-    ),
-    'guzzlehttp/psr7' => 
-    array (
-      'pretty_version' => '1.7.0',
-      'version' => '1.7.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '53330f47520498c0ae1f61f7e2c90f55690c06a3',
-    ),
     'hamcrest/hamcrest-php' => 
     array (
       'pretty_version' => 'v2.0.1',
@@ -165,15 +138,6 @@ private static $installed = array (
         0 => '*',
       ),
     ),
-    'league/oauth2-client' => 
-    array (
-      'pretty_version' => '2.4.1',
-      'version' => '2.4.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'cc114abc622a53af969e8664722e84ca36257530',
-    ),
     'mockery/mockery' => 
     array (
       'pretty_version' => '1.3.3',
@@ -195,15 +159,6 @@ private static $installed = array (
       array (
         0 => '1.10.2',
       ),
-    ),
-    'paragonie/random_compat' => 
-    array (
-      'pretty_version' => 'v9.99.100',
-      'version' => '9.99.100.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
     ),
     'php-parallel-lint/php-console-color' => 
     array (
@@ -367,47 +322,6 @@ private static $installed = array (
       ),
       'reference' => 'a23b761686d50a560cc56233b9ecf49597cc9118',
     ),
-    'pimple/pimple' => 
-    array (
-      'pretty_version' => 'v3.3.1',
-      'version' => '3.3.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '21e45061c3429b1e06233475cc0e1f6fc774d5b0',
-    ),
-    'psr/container' => 
-    array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b7ce3b176482dbbc1245ebf52b181af44c2cf55f',
-    ),
-    'psr/container-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'psr/http-message' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
-    ),
-    'psr/http-message-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
     'psr/log' => 
     array (
       'pretty_version' => '1.1.3',
@@ -423,15 +337,6 @@ private static $installed = array (
       array (
         0 => '1.0',
       ),
-    ),
-    'ralouphie/getallheaders' => 
-    array (
-      'pretty_version' => '3.0.3',
-      'version' => '3.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '120b605dfeb996808c31b6477290a714d356e822',
     ),
     'roundcube/plugin-installer' => 
     array (
@@ -573,15 +478,6 @@ private static $installed = array (
       ),
       'reference' => '5dfc7825f3bfe9bb74b23d8b8ce0e0894e32b544',
     ),
-    'symfony/dependency-injection' => 
-    array (
-      'pretty_version' => 'v3.4.47',
-      'version' => '3.4.47.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '51d2a2708c6ceadad84393f8581df1dcf9e5e84b',
-    ),
     'symfony/finder' => 
     array (
       'pretty_version' => 'v5.2.1',
@@ -600,24 +496,6 @@ private static $installed = array (
       ),
       'reference' => 'c6c942b1ac76c82448322025e084cadc56048b4e',
     ),
-    'symfony/polyfill-intl-idn' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2d63434d922daf7da8dd863e7907e67ee3031483',
-    ),
-    'symfony/polyfill-intl-normalizer' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '43a0283138253ed1d48d352ab6d0bdb3f809f248',
-    ),
     'symfony/polyfill-mbstring' => 
     array (
       'pretty_version' => 'v1.22.1',
@@ -626,15 +504,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '5232de97ee3b75b0360528dae24e73db49566ab1',
-    ),
-    'symfony/polyfill-php72' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'cc6e6f9b39fe8075b3dabfbaf5b5f645ae1340c9',
     ),
     'symfony/polyfill-php80' => 
     array (
@@ -701,12 +570,12 @@ private static $installed = array (
     ),
     'yoast/wordpress-seo' => 
     array (
-      'pretty_version' => '15.9',
-      'version' => '15.9.0.0',
+      'pretty_version' => '16.0.2',
+      'version' => '16.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '08d841eacd81f796881b74f1ff2cf3e3dffe0ea9',
+      'reference' => 'b128703ab87ddbccfcf6fd0720cfa0826d27efc6',
     ),
     'yoast/wordpress-seo-premium' => 
     array (
@@ -715,7 +584,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '904542bb5d4b8da657b77b46bd608cb833c4362d',
+      'reference' => '795b416a5f1b2c70825f4d5b383462d6a6704c4e',
     ),
     'yoast/wp-test-utils' => 
     array (
@@ -958,7 +827,6 @@ self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegist
 $installed = array();
 
 if (self::$canGetVendors) {
-
 foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
 if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];

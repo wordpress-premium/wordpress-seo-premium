@@ -44,7 +44,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 	 */
 	protected function get_version() {
 		$asset_manager = new WPSEO_Admin_Asset_Manager();
-		return $asset_manager->flatten_version( WPSEO_VERSION );
+		return $asset_manager->flatten_version( WPSEO_PREMIUM_VERSION );
 	}
 
 	/**
@@ -296,7 +296,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 			$script['name'],
 			$url,
 			$script['dependencies'],
-			WPSEO_VERSION,
+			WPSEO_PREMIUM_VERSION,
 			$in_footer
 		);
 	}
@@ -315,7 +315,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 			$style['name'],
 			plugin_dir_url( WPSEO_PREMIUM_FILE ) . $style['source'],
 			$style['dependencies'],
-			WPSEO_VERSION
+			WPSEO_PREMIUM_VERSION
 		);
 	}
 }

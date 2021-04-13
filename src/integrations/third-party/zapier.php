@@ -50,10 +50,7 @@ class Zapier implements Integration_Interface {
 	 * @param WPSEO_Admin_Asset_Manager $asset_manager The admin asset manager.
 	 * @param Zapier_Helper             $zapier_helper The Zapier helper.
 	 */
-	public function __construct(
-		WPSEO_Admin_Asset_Manager $asset_manager,
-		Zapier_Helper $zapier_helper
-	) {
+	public function __construct( WPSEO_Admin_Asset_Manager $asset_manager, Zapier_Helper $zapier_helper ) {
 		$this->asset_manager = $asset_manager;
 		$this->zapier_helper = $zapier_helper;
 	}

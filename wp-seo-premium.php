@@ -10,19 +10,19 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     15.9
+ * Version:     16.0.3
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
  * Author URI:  https://yoa.st/2jc
- * Text Domain: wordpress-seo
+ * Text Domain: wordpress-seo-premium
  * Domain Path: /languages/
  * License:     GPL v3
- * Requires at least: 5.5
+ * Requires at least: 5.6
  * Requires PHP: 5.6.20
  *
  * WC requires at least: 3.0
- * WC tested up to: 5.0
+ * WC tested up to: 5.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,95 +38,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ( ! defined( 'WPSEO_FILE' ) ) {
-	define( 'WPSEO_FILE', __DIR__ . '/vendor/yoast/wordpress-seo/wp-seo.php' );
+use Yoast\WP\SEO\Premium\Addon_Installer;
+
+if ( ! defined( 'WPSEO_PREMIUM_FILE' ) ) {
+	define( 'WPSEO_PREMIUM_FILE', __FILE__ );
 }
 
-if ( ! defined( 'WPSEO_PREMIUM_PLUGIN_FILE' ) ) {
-	define( 'WPSEO_PREMIUM_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'WPSEO_PREMIUM_PATH' ) ) {
+	define( 'WPSEO_PREMIUM_PATH', plugin_dir_path( WPSEO_PREMIUM_FILE ) );
 }
 
-if ( ! defined( 'WPSEO_BASENAME' ) ) {
-	define( 'WPSEO_BASENAME', plugin_basename( WPSEO_PREMIUM_PLUGIN_FILE ) );
-}
-
-$wpseo_premium_dir = plugin_dir_path( WPSEO_PREMIUM_PLUGIN_FILE );
-
-// Run the redirects when frontend is being opened.
-if ( ! is_admin() ) {
-	require_once $wpseo_premium_dir . 'classes/redirect/redirect-util.php';
-	require_once $wpseo_premium_dir . 'classes/redirect/redirect-handler.php';
-
-	$wpseo_redirect_handler = new WPSEO_Redirect_Handler();
-	$wpseo_redirect_handler->load();
+if ( ! defined( 'WPSEO_PREMIUM_BASENAME' ) ) {
+	define( 'WPSEO_PREMIUM_BASENAME', plugin_basename( WPSEO_PREMIUM_FILE ) );
 }
 
 /**
- * Filters the defaults for the `wpseo` option.
- *
- * @param array $wpseo_defaults The defaults for the `wpseo` option.
- *
- * @return array
+ * {@internal Nobody should be able to overrule the real version number as this can cause
+ *            serious issues with the options, so no if ( ! defined() ).}}
  */
-function wpseo_premium_add_general_option_defaults( array $wpseo_defaults ) {
-	$premium_defaults = [
-		'enable_metabox_insights' => true,
-		'enable_link_suggestions' => true,
-	];
+define( 'WPSEO_PREMIUM_VERSION', '16.0.2' );
 
-	return array_merge( $wpseo_defaults, $premium_defaults );
-}
-add_filter( 'wpseo_option_wpseo_defaults', 'wpseo_premium_add_general_option_defaults' );
-
-// Load the WordPress SEO plugin.
-require_once dirname( WPSEO_FILE ) . '/wp-seo-main.php';
-
+// Initialize Premium autoloader.
+$wpseo_premium_dir               = WPSEO_PREMIUM_PATH;
 $yoast_seo_premium_autoload_file = $wpseo_premium_dir . 'vendor/autoload.php';
 
 if ( is_readable( $yoast_seo_premium_autoload_file ) ) {
 	require $yoast_seo_premium_autoload_file;
 }
-elseif ( ! class_exists( 'WPSEO_Options' ) ) { // Still checking since might be site-level autoload R.
-	add_action( 'admin_init', 'yoast_wpseo_missing_autoload', 1 );
 
-	return;
-}
+// This class has to exist outside of the container as the container requires Yoast SEO to exist.
+$wpseo_addon_installer = new Addon_Installer( __DIR__ );
+$wpseo_addon_installer->install_or_load_yoast_seo_from_vendor_directory();
 
-$wpseo_premium_capabilities = new WPSEO_Premium_Register_Capabilities();
-$wpseo_premium_capabilities->register_hooks();
-
-/**
- * Run the upgrade for Yoast SEO Premium.
- */
-function wpseo_premium_run_upgrade() {
-	$upgrade_manager = new WPSEO_Upgrade_Manager();
-	$upgrade_manager->run_upgrade( WPSEO_VERSION );
-}
-
-/*
- * If the user is admin, check for the upgrade manager.
- * Considered to use 'admin_init' but that is called too late in the process.
- */
-if ( is_admin() ) {
-	add_action( 'init', 'wpseo_premium_run_upgrade' );
-}
-
-/**
- * The premium setup
- */
-function wpseo_premium_init() {
-	new WPSEO_Premium();
-}
-
+// Load the container.
 if ( ! wp_installing() ) {
-	add_action( 'plugins_loaded', 'wpseo_premium_init', 15 );
+	require_once __DIR__ . '/src/functions.php';
+	YoastSEOPremium();
 }
 
-// Activation and deactivation hook for free.
-register_activation_hook( __FILE__, 'wpseo_activate' );
-register_deactivation_hook( __FILE__, 'wpseo_deactivate' );
-
-// Activation hook.
-if ( is_admin() ) {
-	register_activation_hook( __FILE__, [ 'WPSEO_Premium', 'install' ] );
-}
+\register_activation_hook( \WPSEO_PREMIUM_FILE, [ 'WPSEO_Premium', 'install' ] );

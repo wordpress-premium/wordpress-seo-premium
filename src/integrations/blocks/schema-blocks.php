@@ -58,7 +58,7 @@ class Schema_Blocks implements Integration_Interface {
 	 * @return array All the templates that should be loaded.
 	 */
 	public function add_premium_templates( $templates ) {
-		$premium_schema_templates_path = WPSEO_PREMIUM_PATH . 'src/schema-templates/';
+		$premium_schema_templates_path = \WPSEO_PREMIUM_PATH . 'src/schema-templates/';
 
 		$premium_templates = \glob( $premium_schema_templates_path . '*.php' );
 

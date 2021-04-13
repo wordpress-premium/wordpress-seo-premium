@@ -35,10 +35,7 @@ class Zapier_Helper {
 	 * @param Options_Helper $options      The options helper.
 	 * @param Meta_Surface   $meta_surface The Meta surface.
 	 */
-	public function __construct(
-		Options_Helper $options,
-		Meta_Surface $meta_surface
-	) {
+	public function __construct( Options_Helper $options, Meta_Surface $meta_surface ) {
 		$this->options      = $options;
 		$this->meta_surface = $meta_surface;
 	}
@@ -67,7 +64,7 @@ class Zapier_Helper {
 	 * @return bool Whether the integration is enabled.
 	 */
 	public function is_enabled() {
-		return ( $this->options->get( 'zapier_integration_active', false ) ) ? true : false;
+		return (bool) $this->options->get( 'zapier_integration_active', false );
 	}
 
 	/**

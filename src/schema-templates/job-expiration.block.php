@@ -4,3 +4,4 @@
 	{{rich-text name="title" tag="strong" default="<?php esc_attr_e( 'Closes on', 'wordpress-seo-premium' ); ?>"}}
 	{{date name="expirationDate" }}
 </div>
+{{inherit-sidebar parents=[ "yoast/job-posting" ] }}

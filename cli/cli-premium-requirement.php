@@ -17,7 +17,7 @@ final class WPSEO_CLI_Premium_Requirement {
 	 * @return void
 	 */
 	public static function enforce() {
-		if ( WPSEO_Utils::is_yoast_seo_premium() ) {
+		if ( YoastSEO()->helpers->product->is_premium() ) {
 			return;
 		}
 

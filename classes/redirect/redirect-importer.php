@@ -30,8 +30,6 @@ class WPSEO_Redirect_Importer {
 	 * @codeCoverageIgnore
 	 *
 	 * @param WPSEO_Redirect_Option|null $redirect_option The redirect option.
-	 *
-	 * @return void
 	 */
 	public function __construct( $redirect_option = null ) {
 		if ( ! $redirect_option ) {

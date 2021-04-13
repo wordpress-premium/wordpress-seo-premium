@@ -8,19 +8,12 @@
 use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Integrations\Blocks\Siblings_Block;
 use Yoast\WP\SEO\Integrations\Blocks\Subpages_Block;
+use Yoast\WP\SEO\Premium\Addon_Installer;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
-if ( ! defined( 'WPSEO_VERSION' ) ) {
+if ( ! defined( 'WPSEO_PREMIUM_VERSION' ) ) {
 	header( 'HTTP/1.0 403 Forbidden' );
 	die;
-}
-
-if ( ! defined( 'WPSEO_PREMIUM_PATH' ) ) {
-	define( 'WPSEO_PREMIUM_PATH', plugin_dir_path( __FILE__ ) );
-}
-
-if ( ! defined( 'WPSEO_PREMIUM_FILE' ) ) {
-	define( 'WPSEO_PREMIUM_FILE', __FILE__ );
 }
 
 /**
@@ -40,7 +33,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '15.9';
+	const PLUGIN_VERSION_NAME = '16.0.2';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -67,6 +60,14 @@ class WPSEO_Premium {
 	 * Function that will be executed when plugin is activated.
 	 */
 	public static function install() {
+		if (
+			! defined( 'WPSEO_VERSION' ) ||
+			version_compare( WPSEO_VERSION, Addon_Installer::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' )
+		) {
+			delete_option( Addon_Installer::OPTION_KEY );
+		}
+		$wpseo_addon_installer = new Addon_Installer( __DIR__ );
+		$wpseo_addon_installer->install_or_load_yoast_seo_from_vendor_directory();
 
 		// Load the Redirect File Manager.
 		require_once WPSEO_PREMIUM_PATH . 'classes/redirect/redirect-file-util.php';
@@ -75,16 +76,15 @@ class WPSEO_Premium {
 		WPSEO_Redirect_File_Util::create_upload_dir();
 
 		// Enable tracking.
-		WPSEO_Options::set( 'tracking', true );
+		if ( class_exists( WPSEO_Options::class ) ) {
+			WPSEO_Options::set( 'tracking', true );
+		}
 	}
 
 	/**
 	 * WPSEO_Premium Constructor
 	 */
 	public function __construct() {
-		require_once __DIR__ . '/src/functions.php';
-		YoastSEOPremium();
-
 		$this->integrations = [
 			'premium-metabox'                        => new WPSEO_Premium_Metabox(
 				YoastSEOPremium()->classes->get( Prominent_Words_Helper::class )
@@ -164,9 +164,6 @@ class WPSEO_Premium {
 			}
 
 			add_filter( 'wpseo_enable_tracking', '__return_true', 1 );
-
-			// Disable Yoast SEO.
-			add_action( 'admin_init', [ $this, 'disable_wordpress_seo' ], 1 );
 
 			// Add Sub Menu page and add redirect page to admin page array.
 			// This should be possible in one method in the future, see #535.
@@ -305,15 +302,6 @@ class WPSEO_Premium {
 	}
 
 	/**
-	 * Disable Yoast SEO
-	 */
-	public function disable_wordpress_seo() {
-		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
-			deactivate_plugins( 'wordpress-seo/wp-seo.php' );
-		}
-	}
-
-	/**
 	 * Add 'Create Redirect' option to admin bar menu on 404 pages
 	 */
 	public function admin_bar_menu() {
@@ -447,7 +435,7 @@ class WPSEO_Premium {
 	 * Load textdomain
 	 */
 	private function load_textdomain() {
-		load_plugin_textdomain( 'wordpress-seo-premium', false, dirname( plugin_basename( WPSEO_PREMIUM_FILE ) ) . '/languages/' );
+		load_plugin_textdomain( 'wordpress-seo-premium', false, dirname( WPSEO_PREMIUM_BASENAME ) . '/languages/' );
 	}
 
 	/**

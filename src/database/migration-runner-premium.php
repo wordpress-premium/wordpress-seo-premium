@@ -30,6 +30,6 @@ class Migration_Runner_Premium extends Migration_Runner {
 	 * @throws Exception When a migration errored.
 	 */
 	public function run_premium_migrations() {
-		$this->run_migrations( 'premium' );
+		$this->run_migrations( 'premium', \WPSEO_PREMIUM_VERSION );
 	}
 }

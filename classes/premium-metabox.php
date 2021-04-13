@@ -30,8 +30,8 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	/**
 	 * Creates the meta box class.
 	 *
-	 * @param Prominent_Words_Helper              $prominent_words_helper             The prominent words helper.
-	 * @param WPSEO_Metabox_Link_Suggestions|null $link_suggestions                   The link suggestions meta box.
+	 * @param Prominent_Words_Helper              $prominent_words_helper The prominent words helper.
+	 * @param WPSEO_Metabox_Link_Suggestions|null $link_suggestions       The link suggestions meta box.
 	 */
 	public function __construct(
 		Prominent_Words_Helper $prominent_words_helper,
@@ -67,7 +67,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	public static function are_content_endpoints_available() {
 		if ( function_exists( 'rest_get_server' ) ) {
 			$namespaces = rest_get_server()->get_namespaces();
-			return in_array( 'wp/v2', $namespaces );
+			return in_array( 'wp/v2', $namespaces, true );
 		}
 		return false;
 	}

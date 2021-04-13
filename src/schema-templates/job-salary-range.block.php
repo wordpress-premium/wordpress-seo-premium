@@ -42,3 +42,4 @@ $wpseo_time_unit_options = [
 		{{select name="unit" label="<?php esc_attr_e( 'Unit', 'wordpress-seo-premium' ); ?>" hideLabelFromVision=true className="yoast-schema-select" options=<?php echo \wp_json_encode( $wpseo_time_unit_options ); ?> defaultValue="MONTH"}}
 	</div>
 </div>
+{{inherit-sidebar parents=[ "yoast/job-posting" ] }}

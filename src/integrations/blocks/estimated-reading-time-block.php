@@ -50,7 +50,7 @@ class Estimated_Reading_Time_Block extends Dynamic_Block {
 					],
 					'descriptiveText'      => [
 						'type'    => 'string',
-						'default' => __( 'Estimated reading time:', 'wordpress-seo-premium' ) . ' ',
+						'default' => \__( 'Estimated reading time:', 'wordpress-seo-premium' ) . ' ',
 					],
 					'showDescriptiveText'  => [
 						'type'    => 'boolean',
