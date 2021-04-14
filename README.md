@@ -28,10 +28,6 @@
 3. Upload the folder to `/wp-comtemt/plugins`
 4. Activate the plugin on the *Plugins* page in the administrator area
 
-## Actvates
-
-This plugin has been 
-
 ## More Information
 
 For more and detailed information, pleased refer to the `readme.txt`.
