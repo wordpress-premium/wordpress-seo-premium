@@ -3,7 +3,7 @@
 namespace Yoast\WP\SEO\Premium\Integrations;
 
 use WPSEO_Upgrade_Manager;
-use Yoast\WP\SEO\Conditionals\Admin_Conditional;
+use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
@@ -11,14 +11,7 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
  */
 class Upgrade_Integration implements Integration_Interface {
 
-	/**
-	 * Returns the conditionals based on which this loadable should be active.
-	 *
-	 * @return array The conditionals.
-	 */
-	public static function get_conditionals() {
-		return [ Admin_Conditional::class ];
-	}
+	use No_Conditionals;
 
 	/**
 	 * Initializes the integration.

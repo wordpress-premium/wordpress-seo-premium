@@ -38,8 +38,6 @@ class Plugin implements Initializer_Interface {
 	 */
 	public function initialize() {
 		\add_action( 'plugins_loaded', [ $this, 'load' ], 15 );
-		// This should happen in initializer as long as options are initialized on plugins loaded in Yoast SEO.
-		\add_filter( 'wpseo_defaults', [ $this, 'add_option_defaults' ], 10, 2 );
 
 		$wpseo_premium_capabilities = new WPSEO_Premium_Register_Capabilities();
 		$wpseo_premium_capabilities->register_hooks();
@@ -52,27 +50,6 @@ class Plugin implements Initializer_Interface {
 	 */
 	public function load() {
 		new WPSEO_Premium();
-	}
-
-	/**
-	 * Filters the defaults for the `wpseo` option.
-	 *
-	 * @param array  $wpseo_defaults The defaults for the option.
-	 * @param string $option_name    The name of the option.
-	 *
-	 * @return array
-	 */
-	public function add_option_defaults( $wpseo_defaults, $option_name ) {
-		if ( $option_name !== 'wpseo' || ! \is_array( $wpseo_defaults ) ) {
-			return $wpseo_defaults;
-		}
-
-		$premium_defaults = [
-			'enable_metabox_insights' => true,
-			'enable_link_suggestions' => true,
-		];
-
-		return \array_merge( $wpseo_defaults, $premium_defaults );
 	}
 
 	/**

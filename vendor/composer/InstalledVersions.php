@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '795b416a5f1b2c70825f4d5b383462d6a6704c4e',
+    'reference' => 'd86642b439579d54a1653c790d5c9586c736cfdc',
     'name' => 'yoast/wordpress-seo-premium',
   ),
   'versions' => 
@@ -570,12 +570,12 @@ private static $installed = array (
     ),
     'yoast/wordpress-seo' => 
     array (
-      'pretty_version' => '16.0.2',
-      'version' => '16.0.2.0',
+      'pretty_version' => '16.1',
+      'version' => '16.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b128703ab87ddbccfcf6fd0720cfa0826d27efc6',
+      'reference' => 'fbcacafe5509b5d99faaf60cf1e6b7db03b7fcba',
     ),
     'yoast/wordpress-seo-premium' => 
     array (
@@ -584,7 +584,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '795b416a5f1b2c70825f4d5b383462d6a6704c4e',
+      'reference' => 'd86642b439579d54a1653c790d5c9586c736cfdc',
     ),
     'yoast/wp-test-utils' => 
     array (

@@ -31,6 +31,8 @@ class WPSEO_Upgrade_Manager {
 			$this->check_update( $saved_version );
 
 			update_option( self::VERSION_OPTION_KEY, $current_version );
+
+			add_action( 'shutdown', 'flush_rewrite_rules' );
 		}
 	}
 

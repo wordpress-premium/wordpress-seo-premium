@@ -26,7 +26,7 @@ $wpseo_employment_type_options = [
 
 // phpcs:disable Yoast.Yoast.AlternativeFunctions.json_encode_wp_json_encode -- We do not want any pretty printing, since it would break the schema blocks.
 ?>
-{{block name="yoast/job-employment-type" title="<?php esc_attr_e( 'Employment', 'wordpress-seo-premium' ); ?>" category="common" parent=[ "yoast/job-posting" ] supports={"multiple": false} }}
+{{block name="yoast/job-employment-type" title="<?php esc_attr_e( 'Employment', 'wordpress-seo-premium' ); ?>" category="yoast-recommended-job-blocks" parent=[ "yoast/job-posting" ] supports={"multiple": false} }}
 <div class={{class-name}}>
 	{{variable-tag-rich-text name="title" tags=[ "h3", "h2", "h4", "h5", "h6", "strong" ] default="<?php esc_attr_e( 'Employment', 'wordpress-seo-premium' ); ?>" }}
 	{{select name="employmentType" label="<?php esc_attr_e( 'Employment', 'wordpress-seo-premium' ); ?>" options=<?php echo \wp_json_encode( $wpseo_employment_type_options ); ?> hideLabelFromVision=true }}

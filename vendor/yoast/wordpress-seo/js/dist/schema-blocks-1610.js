@@ -1,0 +1,1 @@
+(window.yoastWebpackJsonp=window.yoastWebpackJsonp||[]).push([[5],{398:function(o,e,n){"use strict";var s=n(399);(0,function(o){return o&&o.__esModule?o:{default:o}}(s).default)(s.LogLevel.ERROR)},399:function(o,e){o.exports=window.yoast.schemaBlocks}},[[398,0]]]);

@@ -205,7 +205,7 @@ class Addon_Installer {
 	 * @return void
 	 */
 	public function validate_installation_status() {
-		if ( ! defined( 'WPSEO_VERSION' ) || \version_compare( $this->yoast_seo_version, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' ) ) {
+		if ( ! defined( 'WPSEO_VERSION' ) || \version_compare( WPSEO_VERSION, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' ) ) {
 			\delete_option( self::OPTION_KEY );
 			if ( ! defined( 'WPSEO_VERSION' ) ) {
 				$this->load_yoast_seo_from_vendor_directory();
