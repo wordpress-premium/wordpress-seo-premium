@@ -1,6 +1,6 @@
 {
   "name": "wordpress-premium/wpseo-premium",
-  "description": "Yo Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.",
+  "description": "Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.",
   "type": "wordpress-plugin",
   "version": "16.1",
   "time": "2021-02-28",
