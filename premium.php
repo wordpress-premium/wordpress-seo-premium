@@ -5,10 +5,11 @@
  * @package WPSEO\Premium
  */
 
-use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Integrations\Blocks\Siblings_Block;
 use Yoast\WP\SEO\Integrations\Blocks\Subpages_Block;
 use Yoast\WP\SEO\Premium\Addon_Installer;
+use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 if ( ! defined( 'WPSEO_PREMIUM_VERSION' ) ) {
@@ -33,7 +34,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '16.1';
+	const PLUGIN_VERSION_NAME = '16.5';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -60,9 +61,8 @@ class WPSEO_Premium {
 	 * Function that will be executed when plugin is activated.
 	 */
 	public static function install() {
-		if (
-			! defined( 'WPSEO_VERSION' ) ||
-			version_compare( WPSEO_VERSION, Addon_Installer::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' )
+		if ( ! defined( 'WPSEO_VERSION' )
+			|| version_compare( WPSEO_VERSION, Addon_Installer::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' )
 		) {
 			delete_option( Addon_Installer::OPTION_KEY );
 		}
@@ -79,6 +79,9 @@ class WPSEO_Premium {
 		if ( class_exists( WPSEO_Options::class ) ) {
 			WPSEO_Options::set( 'tracking', true );
 		}
+
+		\do_action( 'wpseo_register_capabilities_premium' );
+		\WPSEO_Capability_Manager_Factory::get( 'premium' )->add();
 	}
 
 	/**
@@ -86,23 +89,24 @@ class WPSEO_Premium {
 	 */
 	public function __construct() {
 		$this->integrations = [
-			'premium-metabox'                        => new WPSEO_Premium_Metabox(
+			'premium-metabox'              => new WPSEO_Premium_Metabox(
 				YoastSEOPremium()->classes->get( Prominent_Words_Helper::class )
 			),
-			'premium-assets'                         => new WPSEO_Premium_Assets(),
-			'link-suggestions'                       => new WPSEO_Metabox_Link_Suggestions(),
-			'redirects-endpoint'                     => new WPSEO_Premium_Redirect_EndPoint( new WPSEO_Premium_Redirect_Service() ),
-			'redirect-export-manager'                => new WPSEO_Premium_Redirect_Export_Manager(),
-			'keyword-export-manager'                 => new WPSEO_Premium_Keyword_Export_Manager(),
-			'orphaned-post-filter'                   => new WPSEO_Premium_Orphaned_Post_Filter(),
+			'premium-assets'               => new WPSEO_Premium_Assets(),
+			'link-suggestions'             => new WPSEO_Metabox_Link_Suggestions(),
+			'redirects-endpoint'           => new WPSEO_Premium_Redirect_EndPoint( new WPSEO_Premium_Redirect_Service() ),
+			'redirects-undo-endpoint'      => new WPSEO_Premium_Redirect_Undo_EndPoint( new WPSEO_Redirect_Manager() ),
+			'redirect-export-manager'      => new WPSEO_Premium_Redirect_Export_Manager(),
+			'keyword-export-manager'       => new WPSEO_Premium_Keyword_Export_Manager(),
+			'orphaned-post-filter'         => new WPSEO_Premium_Orphaned_Post_Filter(),
 			// Joost de Valk, April 6th 2019.
 			// Disabling this until we've found a better way to display this data that doesn't become annoying when you have a lot of post types.
-			// 'orphaned-post-notifier'              => new WPSEO_Premium_Orphaned_Post_Notifier( array( 'post', 'page' ), Yoast_Notification_Center::get() ), // Commented out.
-			'request-free-translations'              => new WPSEO_Premium_Free_Translations(),
-			'expose-javascript-shortlinks'           => new WPSEO_Premium_Expose_Shortlinks(),
-			'multi-keyword'                          => new WPSEO_Multi_Keyword(),
-			'siblings-block'                         => new Siblings_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
-			'subpages-block'                         => new Subpages_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
+			// 'orphaned-post-notifier'    => new WPSEO_Premium_Orphaned_Post_Notifier( array( 'post', 'page' ), Yoast_Notification_Center::get() ), // Commented out.
+			'request-free-translations'    => new WPSEO_Premium_Free_Translations(),
+			'expose-javascript-shortlinks' => new WPSEO_Premium_Expose_Shortlinks(),
+			'multi-keyword'                => new WPSEO_Multi_Keyword(),
+			'siblings-block'               => new Siblings_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
+			'subpages-block'               => new Subpages_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
 		];
 
 		if ( WPSEO_Options::get( 'enable_cornerstone_content' ) ) {
@@ -171,7 +175,7 @@ class WPSEO_Premium {
 
 			// Add input fields to page meta post types.
 			add_action(
-				'wpseo_admin_page_meta_post_types',
+				'Yoast\WP\SEO\admin_post_types_beforearchive',
 				[
 					$this,
 					'admin_page_meta_post_types_checkboxes',
@@ -243,10 +247,10 @@ class WPSEO_Premium {
 				'project_slug'   => 'wordpress-seo-premium',
 				'plugin_name'    => 'Yoast SEO premium',
 				'hook'           => 'wpseo_admin_promo_footer',
-				'glotpress_url'  => 'http://translate.yoast.com/gp/',
+				'api_url'        => 'https://translationspress.com/app/api/yoast/wordpress-seo-premium/',
 				'glotpress_name' => 'Yoast Translate',
-				'glotpress_logo' => 'https://translate.yoast.com/gp-templates/images/Yoast_Translate.svg',
-				'register_url'   => 'https://yoa.st/translate',
+				'glotpress_logo' => 'https://yoast.com/app/uploads/yoast/Yoast_Translate.svg',
+				'register_url'   => 'https://yoa.st/translationspress',
 			]
 		);
 	}
@@ -355,11 +359,25 @@ class WPSEO_Premium {
 	 * The values will be comma-separated and will target the belonging field in the post_meta. Page analysis will
 	 * use the content of it by sticking it to the post_content.
 	 *
-	 * @param array  $wpseo_admin_pages Unused. Array with admin pages.
-	 * @param string $name              The name for the text input field.
+	 * @param Yoast_Form $yform The Yoast_Form object.
+	 * @param string     $name  The post type name.
 	 */
-	public function admin_page_meta_post_types_checkboxes( $wpseo_admin_pages, $name ) {
-		Yoast_Form::get_instance()->textinput( 'page-analyse-extra-' . $name, __( 'Add custom fields to page analysis', 'wordpress-seo-premium' ) );
+	public function admin_page_meta_post_types_checkboxes( $yform, $name ) {
+		$custom_fields_help_link = new Help_Link_Presenter(
+			WPSEO_Shortlinker::get( 'https://yoa.st/4cr' ),
+			__( 'Learn more about including custom fields in the page analysis', 'wordpress-seo-premium' )
+		);
+
+		echo '<div class="yoast-settings-section yoast-settings-section--last">';
+
+		$yform->textinput_extra_content(
+			'page-analyse-extra-' . $name,
+			esc_html__( 'Custom fields to include in page analysis', 'wordpress-seo-premium' ),
+			[
+				'extra_content' => $custom_fields_help_link,
+			]
+		);
+		echo '</div>';
 	}
 
 	/**

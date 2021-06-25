@@ -14,7 +14,7 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 	const ENDPOINT_QUERY = 'redirects';
 	const ENDPOINT_UNDO  = 'redirects/delete';
 
-	const CAPABILITY_RETRIEVE = 'edit_posts';
+	const CAPABILITY_STORE = 'wpseo_manage_redirects';
 
 	/**
 	 * Instance of the WPSEO_Premium_Redirect_Service class.
@@ -73,7 +73,7 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 				],
 				'permission_callback' => [
 					$this,
-					'can_retrieve_data',
+					'can_save_data',
 				],
 			]
 		);
@@ -99,7 +99,7 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 				],
 				'permission_callback' => [
 					$this,
-					'can_retrieve_data',
+					'can_save_data',
 				],
 			]
 		);
@@ -110,7 +110,7 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 	 *
 	 * @return bool True user is allowed to use this endpoint.
 	 */
-	public function can_retrieve_data() {
-		return current_user_can( self::CAPABILITY_RETRIEVE );
+	public function can_save_data() {
+		return current_user_can( self::CAPABILITY_STORE );
 	}
 }

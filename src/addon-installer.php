@@ -1,6 +1,5 @@
 <?php
 
-// phpcs:ignore Yoast.NamingConventions.NamespaceName.Invalid -- This should be the new namespace for premium.
 namespace Yoast\WP\SEO\Premium;
 
 use Exception;
@@ -18,7 +17,7 @@ class Addon_Installer {
 	/**
 	 * The minimum Yoast SEO version required.
 	 */
-	const MINIMUM_YOAST_SEO_VERSION = '16.0';
+	const MINIMUM_YOAST_SEO_VERSION = '16.5';
 
 	/**
 	 * The base directory for the installer.
@@ -77,7 +76,7 @@ class Addon_Installer {
 			}
 		}
 		elseif ( $this->get_status() === 'started' ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			require_once \ABSPATH . 'wp-admin/includes/plugin.php';
 			$this->detect_yoast_seo();
 			if ( \is_plugin_active( $this->yoast_seo_file ) ) {
 				// Yoast SEO is active so mark installation as successful.
@@ -108,21 +107,21 @@ class Addon_Installer {
 		}
 
 		echo (
-			'<div class="error">' .
-				'<p>' .
-					\sprintf(
-						// translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required, %3$s: Yoast SEO Premium.
+			'<div class="error">'
+				. '<p>'
+					. \sprintf(
+						/* translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required, %3$s: Yoast SEO Premium. */
 						\esc_html__( '%1$s %2$s must be installed and activated in order to use %3$s.', 'wordpress-seo-premium' ),
 						'Yoast SEO',
 						\esc_html( self::MINIMUM_YOAST_SEO_VERSION ),
 						'Yoast SEO Premium'
-					) .
-				'</p>' .
-				'<p>' .
+					)
+				. '</p>'
+				. '<p>'
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped above.
-					$action .
-				'</p>' .
-			'</div>'
+					. $action
+				. '</p>'
+			. '</div>'
 		);
 	}
 
@@ -133,7 +132,7 @@ class Addon_Installer {
 	 */
 	protected function get_notification_action() {
 		$minimum_version_met = \version_compare( $this->yoast_seo_version, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '>=' );
-		$network_active      = \is_plugin_active_for_network( WPSEO_PREMIUM_BASENAME );
+		$network_active      = \is_plugin_active_for_network( \WPSEO_PREMIUM_BASENAME );
 		$yoast_seo_active    = ( $network_active ) ? \is_plugin_active_for_network( $this->yoast_seo_file ) : \is_plugin_active( $this->yoast_seo_file );
 
 		if ( $minimum_version_met && $yoast_seo_active ) {
@@ -155,25 +154,25 @@ class Addon_Installer {
 				case 'activate_plugins':
 					if ( $network_active ) {
 						$base_url = \network_admin_url( 'plugins.php?action=activate&plugin=' . $this->yoast_seo_file );
-						// translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag.
-						$button_content = __( '%2$sNetwork Activate %1$s now%3$s', 'wordpress-seo-premium' );
+						/* translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag. */
+						$button_content = \__( '%2$sNetwork Activate %1$s now%3$s', 'wordpress-seo-premium' );
 					}
 					else {
 						$base_url = \self_admin_url( 'plugins.php?action=activate&plugin=' . $this->yoast_seo_file );
-						// translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag.
-						$button_content = __( '%2$sActivate %1$s now%3$s', 'wordpress-seo-premium' );
+						/* translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag. */
+						$button_content = \__( '%2$sActivate %1$s now%3$s', 'wordpress-seo-premium' );
 					}
 					$url = \wp_nonce_url( $base_url, 'activate-plugin_' . $this->yoast_seo_file );
 					break;
 				case 'update_plugins':
 					$url = \wp_nonce_url( \self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . $this->yoast_seo_file ), 'upgrade-plugin_' . $this->yoast_seo_file );
-					// translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag.
-					$button_content = __( '%2$sUpgrade %1$s now%3$s', 'wordpress-seo-premium' );
+					/* translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag. */
+					$button_content = \__( '%2$sUpgrade %1$s now%3$s', 'wordpress-seo-premium' );
 					break;
 				case 'install_plugins':
 					$url = \wp_nonce_url( \self_admin_url( 'update.php?action=install-plugin&plugin=wordpress-seo' ), 'install-plugin_wordpress-seo' );
-					// translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag.
-					$button_content = __( '%2$sInstall %1$s now%3$s', 'wordpress-seo-premium' );
+					/* translators: %1$s: Yoast SEO, %2$s: Link start tag, %3$s: Link end tag. */
+					$button_content = \__( '%2$sInstall %1$s now%3$s', 'wordpress-seo-premium' );
 					break;
 			}
 			return \sprintf(
@@ -185,12 +184,12 @@ class Addon_Installer {
 		}
 
 		if ( \is_multisite() ) {
-			// translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required.
-			$message = __( 'Please contact a network administrator to install %1$s %2$s.', 'wordpress-seo-premium' );
+			/* translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required. */
+			$message = \__( 'Please contact a network administrator to install %1$s %2$s.', 'wordpress-seo-premium' );
 		}
 		else {
-			// translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required.
-			$message = __( 'Please contact an administrator to install %1$s %2$s.', 'wordpress-seo-premium' );
+			/* translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required. */
+			$message = \__( 'Please contact an administrator to install %1$s %2$s.', 'wordpress-seo-premium' );
 		}
 		return \sprintf(
 			\esc_html( $message ),
@@ -205,9 +204,9 @@ class Addon_Installer {
 	 * @return void
 	 */
 	public function validate_installation_status() {
-		if ( ! defined( 'WPSEO_VERSION' ) || \version_compare( WPSEO_VERSION, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' ) ) {
+		if ( ! \defined( 'WPSEO_VERSION' ) || \version_compare( \WPSEO_VERSION, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' ) ) {
 			\delete_option( self::OPTION_KEY );
-			if ( ! defined( 'WPSEO_VERSION' ) ) {
+			if ( ! \defined( 'WPSEO_VERSION' ) ) {
 				$this->load_yoast_seo_from_vendor_directory();
 			}
 		}
@@ -376,9 +375,9 @@ class Addon_Installer {
 	 */
 	protected function ensure_yoast_seo_is_activated() {
 		if ( ! \is_plugin_active( $this->yoast_seo_file ) ) {
-			$network_active = \is_plugin_active_for_network( WPSEO_PREMIUM_BASENAME );
+			$network_active = \is_plugin_active_for_network( \WPSEO_PREMIUM_BASENAME );
 			// If we're not active at all it means we're being activated.
-			if ( ! $network_active && ! \is_plugin_active( WPSEO_PREMIUM_BASENAME ) ) {
+			if ( ! $network_active && ! \is_plugin_active( \WPSEO_PREMIUM_BASENAME ) ) {
 				// So set network active to whether or not we're in the network admin.
 				$network_active = \is_network_admin();
 			}
@@ -398,9 +397,9 @@ class Addon_Installer {
 	protected function transfer_auto_update_settings() {
 		$auto_updates = (array) \get_site_option( 'auto_update_plugins', [] );
 
-		if ( \in_array( WPSEO_PREMIUM_BASENAME, $auto_updates, true ) ) {
+		if ( \in_array( \WPSEO_PREMIUM_BASENAME, $auto_updates, true ) ) {
 			$auto_updates[] = $this->yoast_seo_file;
-			$auto_updates   = array_unique( $auto_updates );
+			$auto_updates   = \array_unique( $auto_updates );
 			\update_site_option( 'auto_update_plugins', $auto_updates );
 		}
 	}
@@ -410,7 +409,7 @@ class Addon_Installer {
 	 *
 	 * This is copied from the Yoast_Admin_And_Dashboard_Conditional which we can't use as Yoast SEO may not be installed.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function should_show_notification() {
 		global $pagenow;

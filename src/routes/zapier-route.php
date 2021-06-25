@@ -4,9 +4,9 @@ namespace Yoast\WP\SEO\Routes;
 
 use WP_REST_Request;
 use WP_REST_Response;
-use Yoast\WP\SEO\Actions\Zapier_Action;
-use Yoast\WP\SEO\Conditionals\Zapier_Enabled_Conditional;
 use Yoast\WP\SEO\Main;
+use Yoast\WP\SEO\Premium\Actions\Zapier_Action;
+use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
 
 /**
  * Registers the route for the Zapier integration.

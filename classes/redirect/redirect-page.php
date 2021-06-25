@@ -320,20 +320,4 @@ class WPSEO_Redirect_Page {
 			}
 		}
 	}
-
-	/* ********************* DEPRECATED METHODS ********************* */
-
-	/**
-	 * Get the Yoast SEO options.
-	 *
-	 * @deprecated 12.9
-	 * @codeCoverageIgnore
-	 *
-	 * @return array
-	 */
-	public static function get_options() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.9' );
-
-		return [];
-	}
 }

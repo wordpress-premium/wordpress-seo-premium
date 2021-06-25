@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Database;
+namespace Yoast\WP\SEO\Premium\Database;
 
 use Exception;
 use Yoast\WP\SEO\Initializers\Migration_Runner;

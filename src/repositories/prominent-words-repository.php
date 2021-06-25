@@ -82,8 +82,8 @@ class Prominent_Words_Repository {
 			->find_many();
 
 		return \array_map(
-			static function( $object ) {
-				return $object->indexable_id;
+			static function( $obj ) {
+				return $obj->indexable_id;
 			},
 			$indexable_ids_in_prominent_words
 		);

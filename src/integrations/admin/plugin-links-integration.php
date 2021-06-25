@@ -41,7 +41,7 @@ class Plugin_Links_Integration implements Integration_Interface {
 		$link_to_remove = $this->get_upgrade_link();
 		return \array_filter(
 			$links,
-			function ( $link ) use ( $link_to_remove ) {
+			static function ( $link ) use ( $link_to_remove ) {
 				return $link !== $link_to_remove;
 			}
 		);
@@ -71,6 +71,6 @@ class Plugin_Links_Integration implements Integration_Interface {
 	 */
 	protected function get_upgrade_link() {
         // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reason: text is originally from Yoast SEO.
-		return '<a style="font-weight: bold;" href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/activate-my-yoast' ) ) . '" target="_blank">' . __( 'Activate your subscription', 'wordpress-seo' ) . '</a>';
+		return '<a style="font-weight: bold;" href="' . \esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/activate-my-yoast' ) ) . '" target="_blank">' . \__( 'Activate your subscription', 'wordpress-seo' ) . '</a>';
 	}
 }

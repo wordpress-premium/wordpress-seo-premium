@@ -1,12 +1,12 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Third_Party;
+namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WP_Post;
 use WPSEO_Admin_Utils;
-use Yoast\WP\SEO\Conditionals\Zapier_Enabled_Conditional;
-use Yoast\WP\SEO\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
+use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 
 /**
  * Class to manage the Zapier integration in the Classic editor.

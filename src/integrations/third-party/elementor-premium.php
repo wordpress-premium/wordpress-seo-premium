@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Third_Party;
+namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WP_Post;
 use WPSEO_Admin_Asset_Yoast_Components_L10n;
@@ -18,9 +18,9 @@ use WPSEO_Premium_Prominent_Words_Support;
 use WPSEO_Social_Previews;
 use WPSEO_Utils;
 use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
-use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
-use Yoast\WP\SEO\Integrations\Admin\Prominent_Words\Indexing_Integration;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
 
 /**
  * Elementor integration class for Yoast SEO Premium.

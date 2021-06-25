@@ -1,8 +1,9 @@
 <?php
 
-namespace Yoast\WP\SEO\Helpers;
+namespace Yoast\WP\SEO\Premium\Helpers;
 
 use WPSEO_Utils;
+use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Surfaces\Meta_Surface;
 

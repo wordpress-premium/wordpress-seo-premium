@@ -1,16 +1,32 @@
-<?php // phpcs:ignore Internal.NoCodeFound ?>
-{{block name="yoast/office-location" title="<?php esc_attr_e( 'Office location', 'wordpress-seo-premium' ); ?>" category="common" parent=[ "yoast/job-location" ] supports={"multiple": false} }}
-<div class={{class-name}}>
-	{{variable-tag-rich-text name="<?php esc_attr_e( 'Location', 'wordpress-seo-premium' ); ?>" value="<?php esc_attr_e( 'Location', 'wordpress-seo-premium' ); ?>" tags=[ "h3", "h2", "h4", "h5", "h6", "strong" ]}}
-	{{variable-tag-rich-text name="address-title" tags=[ "h4", "h2", "h3", "h5", "h6", "strong" ] }}
-	{{rich-text name="address" tag="p" keepPlaceholderOnFocus=true placeholder="<?php esc_attr_e( 'Enter street address', 'wordpress-seo-premium' ); ?>"}}
-	{{variable-tag-rich-text name="postal-code-title" tags=[ "h4", "h2", "h3", "h5", "h6", "strong" ] }}
-	{{rich-text name="postal-code" tag="p" keepPlaceholderOnFocus=true placeholder="<?php esc_attr_e( 'Enter postal code', 'wordpress-seo-premium' ); ?>"}}
-	{{variable-tag-rich-text name="city-title" tags=[ "h4", "h2", "h3", "h5", "h6", "strong" ] }}
-	{{rich-text name="city" tag="p" keepPlaceholderOnFocus=true placeholder="<?php esc_attr_e( 'Enter city', 'wordpress-seo-premium' ); ?>"}}
-	{{variable-tag-rich-text name="region-title" tags=[ "h4", "h2", "h3", "h5", "h6", "strong" ] }}
-	{{rich-text name="region" tag="p" keepPlaceholderOnFocus=true placeholder="<?php esc_attr_e( 'Enter region', 'wordpress-seo-premium' ); ?>"}}
-	{{variable-tag-rich-text name="country-title" tags=[ "h4", "h2", "h3", "h5", "h6", "strong" ] }}
-	{{rich-text name="country" tag="p" keepPlaceholderOnFocus=true placeholder="<?php esc_attr_e( 'Enter country', 'wordpress-seo-premium' ); ?>"}}
+<?php
+/**
+ * Job office location block schema template.
+ *
+ * @package Yoast\WP\SEO\Schema_Templates
+ */
+
+use Yoast\WP\SEO\Schema_Templates\Assets\Icons;
+
+$yoast_seo_block_template = [
+	[ 'yoast/job-location-address' ],
+	[ 'yoast/job-location-postal-code' ],
+	[ 'yoast/job-location-city' ],
+	[ 'yoast/job-location-region' ],
+	[ 'yoast/job-location-country' ],
+];
+
+$yoast_seo_required_blocks = [
+	[ 'name' => 'yoast/job-location-address' ],
+	[ 'name' => 'yoast/job-location-postal-code' ],
+	[ 'name' => 'yoast/job-location-city' ],
+	[ 'name' => 'yoast/job-location-region' ],
+	[ 'name' => 'yoast/job-location-country' ],
+];
+
+// phpcs:disable WordPress.Security.EscapeOutput -- Reason: The Icons contains safe svg.
+?>
+{{block name="yoast/office-location" title="<?php esc_attr_e( 'Office location', 'wordpress-seo-premium' ); ?>" category="common" description="<?php esc_attr_e( 'The address where the office is located.', 'wordpress-seo-premium' ); ?>" icon="<?php echo Icons::heroicons_office_building(); ?>" parent=[ "yoast/job-location" ] supports={"multiple": false} }}
+<div class="yoast-job-block__location {{class-name}}">
+	{{heading name="<?php esc_attr_e( 'Location', 'wordpress-seo-premium' ); ?>" value="<?php esc_attr_e( 'Location', 'wordpress-seo-premium' ); ?>" defaultHeadingLevel=3 }}
+	{{inner-blocks template=<?php echo WPSEO_Utils::format_json_encode( $yoast_seo_block_template ); ?> appender="button" appenderLabel="<?php esc_attr_e( 'Add additional information to your location details...', 'wordpress-seo-premium' ); ?>" }}
 </div>
-{{inherit-sidebar parents=[ "yoast/job-posting" ] }}

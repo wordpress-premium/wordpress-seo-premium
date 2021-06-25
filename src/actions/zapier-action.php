@@ -1,15 +1,13 @@
 <?php
 
-namespace Yoast\WP\SEO\Actions;
+namespace Yoast\WP\SEO\Premium\Actions;
 
 use Yoast\WP\SEO\Helpers\Options_Helper;
-use Yoast\WP\SEO\Helpers\Zapier_Helper;
+use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
  * Handles the actual requests to the Zapier endpoints.
- *
- * @package Yoast\WP\SEO\Actions
  */
 class Zapier_Action {
 

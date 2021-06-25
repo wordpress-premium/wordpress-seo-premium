@@ -1,8 +1,9 @@
 <?php
 
-namespace Yoast\WP\SEO\Conditionals;
+namespace Yoast\WP\SEO\Premium\Conditionals;
 
-use Yoast\WP\SEO\Helpers\Zapier_Helper;
+use Yoast\WP\SEO\Conditionals\Conditional;
+use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 
 /**
  * Conditional that is only met when the Zapier integration is enabled.

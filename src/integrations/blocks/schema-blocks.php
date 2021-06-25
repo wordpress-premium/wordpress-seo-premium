@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Blocks;
+namespace Yoast\WP\SEO\Premium\Integrations\Blocks;
 
 use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Conditionals\Schema_Blocks_Conditional;
@@ -69,6 +69,7 @@ class Schema_Blocks implements Integration_Interface {
 	 * Enqueues the schema blocks css file.
 	 */
 	public function enqueue_assets() {
+		\wp_enqueue_script( 'wp-seo-premium-schema-blocks' );
 		$this->asset_manager->enqueue_style( 'premium-schema-blocks' );
 	}
 }

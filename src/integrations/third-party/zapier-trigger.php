@@ -1,13 +1,13 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Third_Party;
+namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WP_Error;
-use Yoast\WP\SEO\Conditionals\Zapier_Enabled_Conditional;
 use Yoast\WP\SEO\Helpers\Meta_Helper;
-use Yoast\WP\SEO\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Models\Indexable;
+use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
+use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 
 /**
  * Class to manage the triggering of the Zapier integration.
@@ -85,8 +85,8 @@ class Zapier_Trigger implements Integration_Interface {
 
 		// All dates are GMT to prevent failing checks due to timezone differences.
 		$post                          = \get_post( $indexable->object_id );
-		$published_datetime_gmt        = strtotime( $post->post_date_gmt . ' +0000' );
-		$half_an_hour_ago_datetime_gmt = ( time() - ( MINUTE_IN_SECONDS * 30 ) );
+		$published_datetime_gmt        = \strtotime( $post->post_date_gmt . ' +0000' );
+		$half_an_hour_ago_datetime_gmt = ( \time() - ( \MINUTE_IN_SECONDS * 30 ) );
 		if ( ! $this->zapier_helper->is_post_type_supported( $post->post_type )
 			|| $published_datetime_gmt < $half_an_hour_ago_datetime_gmt ) {
 			return;

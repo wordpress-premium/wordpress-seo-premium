@@ -37,6 +37,5 @@ class Premium_Wrapper extends Wrapper {
 	 */
 	public function __construct() {
 		\_deprecated_function( __METHOD__, 'Yoast SEO Premium 16.1', '\Yoast\WP\SEO\Premium\WordPress\Wrapper' );
-		parent::__construct();
 	}
 }

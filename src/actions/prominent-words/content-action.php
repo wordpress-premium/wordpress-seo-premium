@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Actions\Prominent_Words;
+namespace Yoast\WP\SEO\Premium\Actions\Prominent_Words;
 
 use WPSEO_Premium_Prominent_Words_Support;
 use WPSEO_Premium_Prominent_Words_Versioning;
@@ -15,8 +15,6 @@ use Yoast\WP\SEO\Repositories\Indexable_Repository;
 /**
  * Retrieves the indexable data and Yoast SEO metadata (meta-description, SEO title, keywords and synonyms)
  * from the database.
- *
- * @package Yoast\WP\SEO\Actions\Prominent_Words
  */
 class Content_Action implements Indexation_Action_Interface {
 

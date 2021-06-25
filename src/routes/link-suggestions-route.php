@@ -4,9 +4,9 @@ namespace Yoast\WP\SEO\Routes;
 
 use WP_REST_Request;
 use WP_REST_Response;
-use Yoast\WP\SEO\Actions\Link_Suggestions_Action;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Main;
+use Yoast\WP\SEO\Premium\Actions\Link_Suggestions_Action;
 
 /**
  * Registers the route for the link suggestions retrieval.

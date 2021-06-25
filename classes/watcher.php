@@ -78,32 +78,36 @@ abstract class WPSEO_Watcher {
 		$show_notification = true;
 
 		/**
-		 * Filter: "wpseo_enable_notification_{$watch_type}_{$notification_type}" - Filter whether or not the
+		 * Filter: "Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}" - Filter whether or not the
 		 * notification for a given watch type and notification type should be shown.
 		 *
-		 * @deprecated 12.9.0. Use the {@see "Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}"} filter instead.
+		 * @deprecated 16.5. Use the 'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}' filter instead.
+		 *
+		 * @see https://developer.yoast.com/customization/yoast-seo-premium/disabling-automatic-redirects-notifications
 		 *
 		 * @api bool $show_notification Defaults to true.
 		 */
 		$show_notification = apply_filters_deprecated(
-			'wpseo_enable_notification_' . $this->watch_type . '_' . $notification_type,
+			"Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}",
 			[ $show_notification ],
-			'YoastSEO Premium 12.9.0',
+			'YoastSEO Premium 16.5',
 			'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}'
 		);
 
 		/**
-		 * Filter: "Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}" - Filter whether or
+		 * Filter: 'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}' - Filter whether or
 		 * not the notification for a given watch type and notification type should be shown.
 		 *
 		 * Note: This is a Premium plugin-only hook.
 		 *
-		 * @since 12.9.0
+		 * @since 16.5
+		 *
+		 * @see https://developer.yoast.com/customization/yoast-seo-premium/disabling-automatic-redirects-notifications
 		 *
 		 * @api bool $show_notification Defaults to true.
 		 */
 		$show_notification = apply_filters(
-			"Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}",
+			'Yoast\WP\SEO\enable_notification_' . $this->watch_type . '_' . $notification_type,
 			$show_notification
 		);
 
@@ -142,18 +146,16 @@ abstract class WPSEO_Watcher {
 	/**
 	 * Returns the string to the javascript method from where the added redirect can be undone
 	 *
-	 * @param WPSEO_Redirect $redirect The redirect that will be deleted.
-	 * @param string         $id       ID of the notice that is displayed.
+	 * @param int    $object_id   The post or term ID.
+	 * @param string $object_type The object type: post or term.
 	 *
 	 * @return string
 	 */
-	protected function javascript_undo_redirect( WPSEO_Redirect $redirect, $id ) {
+	protected function javascript_undo_redirect( $object_id, $object_type ) {
 		return sprintf(
-			'wpseoUndoRedirect( "%1$s", "%2$s", "%3$s", "%4$s", this );',
-			esc_js( $redirect->get_origin() ),
-			esc_js( $redirect->get_target() ),
-			esc_js( $redirect->get_type() ),
-			wp_create_nonce( 'wpseo-redirects-ajax-security' )
+			'wpseoUndoRedirectByObjectId( "%1$s", "%2$s", this );return false;',
+			esc_js( $object_id ),
+			esc_js( $object_type )
 		);
 	}
 
@@ -208,25 +210,32 @@ abstract class WPSEO_Watcher {
 	/**
 	 * There might be the possibility to undo the redirect, if it is so, we have to notify the user.
 	 *
-	 * @param string $old_url The origin URL.
-	 * @param string $new_url The target URL.
+	 * @param string $old_url     The origin URL.
+	 * @param string $new_url     The target URL.
+	 * @param int    $object_id   The post or term ID.
+	 * @param string $object_type The object type: post or term.
+	 *
+	 * @return WPSEO_Redirect|null The created redirect.
 	 */
-	protected function notify_undo_slug_redirect( $old_url, $new_url ) {
+	protected function notify_undo_slug_redirect( $old_url, $new_url, $object_id, $object_type ) {
 		// Check if we should create a redirect.
 		if ( $this->should_create_redirect( $old_url, $new_url ) ) {
 			$redirect = $this->create_redirect( $old_url, $new_url );
 
-			$this->set_undo_slug_notification( $redirect );
+			$this->set_undo_slug_notification( $redirect, $object_id, $object_type );
+
+			return $redirect;
 		}
 	}
 
 	/**
 	 * Display the undo notification
 	 *
-	 * @param WPSEO_Redirect $redirect The old URL to the post.
+	 * @param WPSEO_Redirect $redirect    The old URL to the post.
+	 * @param int            $object_id   The post or term ID.
+	 * @param string         $object_type The object type: post or term.
 	 */
-	protected function set_undo_slug_notification( WPSEO_Redirect $redirect ) {
-		$id      = 'wpseo_undo_redirect_' . md5( $redirect->get_origin() );
+	protected function set_undo_slug_notification( WPSEO_Redirect $redirect, $object_id, $object_type ) {
 		$old_url = $this->format_redirect_url( $redirect->get_origin() );
 		$new_url = $this->format_redirect_url( $redirect->get_target() );
 
@@ -251,7 +260,7 @@ abstract class WPSEO_Watcher {
 
 		$message .= sprintf(
 			'<span id="delete-link"><a class="delete" href="" onclick=\'%1$s\'>%2$s</a></span>',
-			$this->javascript_undo_redirect( $redirect, $id ),
+			$this->javascript_undo_redirect( $object_id, $object_type ),
 			esc_html__( 'Undo', 'wordpress-seo-premium' )
 		);
 

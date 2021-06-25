@@ -54,21 +54,6 @@ class WPSEO_Redirect_Nginx_Exporter extends WPSEO_Redirect_File_Exporter {
 	 */
 	private function add_x_redirect_header() {
 		/**
-		 * Filter: 'wpseo_add_x_redirect' - can be used to remove the X-Redirect-By header
-		 * Yoast SEO Premium creates (defaults to true, which is adding it)
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\add_x_redirect'} filter instead.
-		 *
-		 * @api bool
-		 */
-		$add_x_redirect = apply_filters_deprecated(
-			'wpseo_add_x_redirect',
-			[ true ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\add_x_redirect'
-		);
-
-		/**
 		 * Filter: 'Yoast\WP\SEO\add_x_redirect' - can be used to remove the X-Redirect-By header
 		 * Yoast SEO Premium creates (defaults to true, which is adding it)
 		 *
@@ -78,7 +63,7 @@ class WPSEO_Redirect_Nginx_Exporter extends WPSEO_Redirect_File_Exporter {
 		 *
 		 * @api bool
 		 */
-		if ( apply_filters( 'Yoast\WP\SEO\add_x_redirect', $add_x_redirect ) === true ) {
+		if ( apply_filters( 'Yoast\WP\SEO\add_x_redirect', true ) === true ) {
 			return 'add_header X-Redirect-By "Yoast SEO Premium";';
 		}
 

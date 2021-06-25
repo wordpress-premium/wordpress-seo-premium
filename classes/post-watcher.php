@@ -104,24 +104,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$this->remove_colliding_redirect( $post, $post_before );
 
 		/**
-		 * Filter: 'wpseo_premium_post_redirect_slug_change' - Check if a redirect should be created
-		 * on post slug change.
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\post_redirect_slug_change'} filter instead.
-		 *
-		 * @api bool    Determines if a redirect should be created for this post slug change.
-		 * @api int     The ID of the post.
-		 * @api WP_Post The current post object.
-		 * @api WP_Post The previous post object.
-		 */
-		$create_redirect = apply_filters_deprecated(
-			'wpseo_premium_post_redirect_slug_change',
-			[ false, $post_id, $post, $post_before ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\post_redirect_slug_change'
-		);
-
-		/**
 		 * Filter: 'Yoast\WP\SEO\post_redirect_slug_change' - Check if a redirect should be created
 		 * on post slug change.
 		 *
@@ -134,7 +116,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 * @api WP_Post The current post object.
 		 * @api WP_Post The previous post object.
 		 */
-		$create_redirect = apply_filters( 'Yoast\WP\SEO\post_redirect_slug_change', $create_redirect, $post_id, $post, $post_before );
+		$create_redirect = apply_filters( 'Yoast\WP\SEO\post_redirect_slug_change', false, $post_id, $post, $post_before );
 
 		if ( $create_redirect === true ) {
 			return true;
@@ -154,7 +136,17 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$new_url = $this->get_target_url( $post_id );
 
 		// Maybe we can undo the created redirect.
-		$this->notify_undo_slug_redirect( $old_url, $new_url );
+		$created_redirect = $this->notify_undo_slug_redirect( $old_url, $new_url, $post_id, 'post' );
+
+		if ( $created_redirect ) {
+			$redirect_info = [
+				'origin' => $created_redirect->get_origin(),
+				'target' => $created_redirect->get_target(),
+				'type'   => $created_redirect->get_type(),
+				'format' => $created_redirect->get_format(),
+			];
+			update_post_meta( $post_id, '_yoast_post_redirect_info', $redirect_info );
+		}
 	}
 
 	/**
@@ -191,22 +183,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$post_type = get_post_type( $post );
 
 		/**
-		 * Filter: 'wpseo_premium_redirect_post_type' - Check if a redirect should be created
-		 * on post slug change for specified post type.
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\redirect_post_type'} filter instead.
-		 *
-		 * @api bool   Determines if a redirect should be created for this post type.
-		 * @api string The post type that is being checked for.
-		 */
-		$post_type_accessible = apply_filters_deprecated(
-			'wpseo_premium_redirect_post_type',
-			[ WPSEO_Post_Type::is_post_type_accessible( $post_type ), $post_type ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\redirect_post_type'
-		);
-
-		/**
 		 * Filter: 'Yoast\WP\SEO\redirect_post_type' - Check if a redirect should be created
 		 * on post slug change for specified post type.
 		 *
@@ -217,7 +193,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 * @api bool   Determines if a redirect should be created for this post type.
 		 * @api string The post type that is being checked for.
 		 */
-		$post_type_accessible = apply_filters( 'Yoast\WP\SEO\redirect_post_type', $post_type_accessible, $post_type );
+		$post_type_accessible = apply_filters( 'Yoast\WP\SEO\redirect_post_type', WPSEO_Post_Type::is_post_type_accessible( $post_type ), $post_type );
 
 		if ( ! $post_type_accessible ) {
 			return false;
@@ -249,22 +225,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 			'static',
 			'private',
 		];
-
-		/**
-		 * Filter: 'wpseo_public_post_statuses' - Allow changing the statuses that are expected
-		 * to have caused a URL to be public.
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\public_post_statuses'} filter instead.
-		 *
-		 * @api array $published_post_statuses The statuses that'll be treated as published.
-		 * @param object $post The post object we're doing the published check for.
-		 */
-		$public_post_statuses = apply_filters_deprecated(
-			'wpseo_public_post_statuses',
-			[ $public_post_statuses, $post_id ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\public_post_statuses'
-		);
 
 		/**
 		 * Filter: 'Yoast\WP\SEO\public_post_statuses' - Allow changing the statuses that are expected
@@ -424,21 +384,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		$post_types = WPSEO_Post_Type::get_accessible_post_types();
 
 		/**
-		 * Filter: 'wpseo_premium_include_automatic_redirection_post_types' - Post types to create
-		 * automatic redirects for.
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\automatic_redirection_post_types'} filter instead.
-		 *
-		 * @api array $included_post_types Array with the post type names to include to automatic redirection.
-		 */
-		$included_post_types = apply_filters_deprecated(
-			'wpseo_premium_include_automatic_redirection_post_types',
-			[ $post_types ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\automatic_redirection_post_types'
-		);
-
-		/**
 		 * Filter: 'Yoast\WP\SEO\automatic_redirection_post_types' - Post types to create
 		 * automatic redirects for.
 		 *
@@ -448,7 +393,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 *
 		 * @api array $included_post_types Array with the post type names to include to automatic redirection.
 		 */
-		$included_post_types = apply_filters( 'Yoast\WP\SEO\automatic_redirection_post_types', $included_post_types );
+		$included_post_types = apply_filters( 'Yoast\WP\SEO\automatic_redirection_post_types', $post_types );
 
 		if ( ! is_array( $included_post_types ) ) {
 			$included_post_types = [];
@@ -598,16 +543,18 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Display the undo redirect notification
 	 *
-	 * @param WPSEO_Redirect $redirect The old URL to the post.
+	 * @param WPSEO_Redirect $redirect    The old URL to the post.
+	 * @param int            $object_id   The post or term ID.
+	 * @param string         $object_type The object type: post or term.
 	 */
-	protected function set_undo_slug_notification( WPSEO_Redirect $redirect ) {
+	protected function set_undo_slug_notification( WPSEO_Redirect $redirect, $object_id, $object_type ) {
 
 		if ( ! $this->is_rest_request() && ! \wp_doing_ajax() ) {
-			parent::set_undo_slug_notification( $redirect );
+			parent::set_undo_slug_notification( $redirect, $object_id, $object_type );
 
 			return;
 		}
 
-		header( 'X-Yoast-Redirect-Created: 1; origin=' . $redirect->get_origin() . '; target=' . $redirect->get_target() . '; type=' . $redirect->get_type() );
+		header( 'X-Yoast-Redirect-Created: 1; origin=' . $redirect->get_origin() . '; target=' . $redirect->get_target() . '; type=' . $redirect->get_type() . '; objectId=' . $object_id . '; objectType=' . $object_type );
 	}
 }

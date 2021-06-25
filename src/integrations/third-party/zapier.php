@@ -1,12 +1,12 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Third_Party;
+namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WPSEO_Admin_Asset_Manager;
 use WPSEO_Admin_Utils;
 use Yoast\WP\SEO\Conditionals\Yoast_Admin_And_Dashboard_Conditional;
-use Yoast\WP\SEO\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
 
 /**

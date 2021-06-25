@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Blocks;
+namespace Yoast\WP\SEO\Premium\Integrations\Blocks;
 
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Integrations\Integration_Interface;

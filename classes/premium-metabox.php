@@ -5,8 +5,8 @@
  * @package WPSEO\Premium|Classes
  */
 
-use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
-use Yoast\WP\SEO\Integrations\Admin\Prominent_Words\Indexing_Integration;
+use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
 
 /**
  * The metabox for premium.

@@ -1,11 +1,11 @@
 <?php
 
-namespace Yoast\WP\SEO\Helpers;
+namespace Yoast\WP\SEO\Premium\Helpers;
+
+use Yoast\WP\SEO\Helpers\Options_Helper;
 
 /**
  * Class Prominent_Words_Helper.
- *
- * @package Yoast\WP\SEO\Helpers
  */
 class Prominent_Words_Helper {
 

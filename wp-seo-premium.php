@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     16.1
+ * Version:     16.5
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
@@ -56,7 +56,7 @@ if ( ! defined( 'WPSEO_PREMIUM_BASENAME' ) ) {
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_PREMIUM_VERSION', '16.1' );
+define( 'WPSEO_PREMIUM_VERSION', '16.5' );
 
 // Initialize Premium autoloader.
 $wpseo_premium_dir               = WPSEO_PREMIUM_PATH;

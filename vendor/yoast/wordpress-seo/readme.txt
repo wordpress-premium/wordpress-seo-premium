@@ -5,7 +5,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
 Tested up to: 5.7
-Stable tag: 16.1
+Stable tag: 16.5
 Requires PHP: 5.6.20
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -42,11 +42,11 @@ We know content is king, that's why Yoast SEO is famous for its **state-of-the-a
 
 * **SEO analysis**: an invaluable tool while writing SEO-friendly content with the right (focus) keyphrases in mind.
 * **Readability analysis**: ensures that humans and search engines can read and understand your content.
-* **Full language support** for: English, German, French, Dutch, Spanish, Italian, Russian, Indonesian, Polish, Portuguese, Arabic, Swedish, Hebrew, Hungarian and Turkish.
+* **Full language support** for: English, German, French, Dutch, Spanish, Italian, Russian, Indonesian, Polish, Portuguese, Arabic, Swedish, Hebrew, Hungarian, Turkish and Czech.
 * **A Google preview**, which shows what your listings will look like in the search results. Even on mobile devices!
 * **Innovative Schema blocks** for the WordPress block editor, so that your FAQ and HowTo content can be shown directly in the search results. Plus a breadcrumbs block to guide your users.
 * **[Premium] Internal linking blocks** to easily improve the structure of your content. Easily add a **table of contents block**, a **related links block**, a **subpages** block, or **siblings block**! Plus, we’ll keep adding these easy-to-add blocks to improve your site structure.
-* **[Premium]** Social previews to show you how your content will be shown on Twitter and Facebook.
+* **[Premium]** Social previews to show you how your content will be shown on Twitter and Facebook. Plus: Social Appearance Templates to guarantee a consistent look.
 * **[Premium]** The Insights tool that shows you what your text focuses on. This way you can keep your article in line with your keyphrases.
 * **[Premium]** Optimize your content for synonyms and related keyphrases.
 * **[Premium]** Optimize your article for different word forms of your keyphrases, as the singular and plural. But also different verb forms, synonyms, and related keyphrases. This makes for more natural content!
@@ -234,59 +234,58 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 16.1 =
-Release Date: April 6th, 2021
+= 16.5 =
+Release Date: June 15th, 2021
 
-Yoast SEO 16.1 is out today! It features several enhancements and fixes that make the plugin chug along nicely. Happy updating! Read more about what’s new in Yoast SEO 16.1 in [our release post](https://yoa.st/release-16-1)!
-
-Enhancements:
-
-* Improves the performance of the SEO data indexing process by optimizing the queries used for fetching unindexed objects.
-* Adds your OpenGraph or Twitter image as the main image in Schema when they're set.
-* Adds `contentUrl` to the schema image output.
-* Improves the performance of the post indexing. Props to [Ovidiu Liuta](https://github.com/ovidiul).
-* Improves the URL in the Google preview when in the desktop mode.
-* Improves the performance of loading the person & organization logo in Schema.
-* Improves the performance by optimizing several calls to WP path and basename functions by using already defined and calculated constants.
-* Removes the keyphrase highlighting in the mobile meta description to reflect new Google behavior.
-
-Bugfixes:
-
-* Fixes a bug where the analysis highlight button would be visible in our Elementor integration even though we don't support it.
-* Fixes a bug where a warning was shown on the Features settings page when running the plugin on PHP 8.0.
-* Fixes a bug where a warning was shown on the Integrations settings page when running the plugin on PHP 8.0.
-* Fixes a bug where, on a multisite installation, enabling/disabling auto-updates for Yoast SEO would not automatically enable/disable auto-updates for Yoast SEO Premium and the other Yoast add-ons.
-* Fixes a bug where the breadcrumbs aren't updated properly when editing a post via the quick edit.
-* Fixes a bug where the rewrite rules would not always be flushed on plugin activation.
-
-= 16.0.2 =
-Release Date: March 18th, 2021
+Yoast SEO 16.5 is out today! This release comes with a number of fixes and enhancements. For instance, easier social media settings, better understanding of the Turkish and Czech languages and improvements to the breadcrumbs schema output. Read all about it in [our release post](https://yoa.st/release-16-5)!
 
 Enhancements:
 
-* Changes the deactivation prevention text on the Plugins page from ‘Deactivate Yoast SEO Premium first’ to ‘Required by Yoast SEO Premium’ to avoid confusion.
-
-= 16.0.1 =
-Release Date: March 16th, 2021
+* Improves passive voice recognition for Turkish.
+* Improves accuracy of the Czech passive voice assessment by separating clauses based on punctuation marks, and by expanding the list of stopwords.
+* Changes the breadcrumbs schema output so Google can understand it better.
+* Moves the social settings for the homepage from the Social > Facebook tab, to Search Appearance > General.
+* Improves the organization of the Search Appearance > General tab, with distinct collapsibles for the Title Separator, the Homepage settings and the Schema.org settings.
+* Introduces a notice to be displayed in Search Appearance > General in place of the Social settings for the Homepage when Open Graph is disabled.
+* Introduces an image validation warning for the Homepage social image and the Default social image to warn about unsupported file extensions.
+* Improves spacing, headings and toggle labels in the Search Appearance settings, and makes the forms more consistent.
+* Less is more: removes a whole bunch of ads from the Yoast SEO admin screens.
+* Optimizes subscription validations made by Premium add-ons.
+* Improves the truncation of the `primary_focus_keyword` field in the database to handle multibyte characters. Props to [rickhurst](https://github.com/rickhurst).
+* Introduces a partial integration of the Yoast SEO meta box in the Web Stories WordPress editor. Props to [swissspidy](https://github.com/swissspidy).
 
 Bugfixes:
 
-* Fixes a bug where in rare cases incorrect usage of `WP_Query` could lead to incorrect SEO data.
-
-= 16.0 =
-Release Date: March 16th, 2021
-
-Yoast SEO 16.0: The Sweet Sixteen release is out! It comes with several fixes and improvements. Happy updating and thank you for using Yoast SEO! Read more about what’s new in Yoast SEO 16.0 in [our release post](https://yoa.st/release-16-0)!
-
-Bugfixes:
-
-* Fixes a bug where invalid breadcrumbs would show PHP warnings.
-* Fixes a bug where a fatal error would be thrown when a post ancestor was not an indexable.
-* Fixes a bug where a fatal error would be thrown when both Yoast SEO and Polylang for WooCommerce were installed, and the site contained WooCommerce variable products. Props to [manooweb](https://github.com/manooweb).
+* Fixes a bug where `max-image-preview:large` would be output in the robots meta tag in combination with `noimage`.
 
 Other:
 
-* Sets the WordPress tested up to version to 5.7 and minimum supported WordPress version to 5.6.
+* Moves the 'Force rewrite titles' toggle into a separate paper in the General Search Appearance settings.
+
+= 16.4 =
+Release Date: June 1st, 2021
+
+Meet Yoast SEO 16.4: This brand-new version of Yoast SEO comes with a rewritten language analysis, plus a newly supported language: Czech. People who write in this language can now fully use our tools to improve their content. We hope you enjoy this update! Read more about what’s new in Yoast SEO 16.4 in [our release post](https://yoa.st/release-16-4)!
+
+Enhancements:
+
+* Completes the readability analysis for Czech by adding the transition words, sentence beginnings and passive voice assessments.
+* Improves keyphrase recognition in Czech by filtering out function words such as `dvou`, `tvému`, `nějaký`.
+* Improves the accuracy of passive voice detection in Portuguese.
+* Adds the missing Polish transition word `jak wiemy` (props to @jarekherisz).
+* Makes all twitter meta tags self-closing, for the sake of consistency and to allow pages to pass validation in some tools.
+* Improves the UX consistency between the notification counter in the admin bar and in the sidebar.
+* Makes the notification counter in the admin bar a closer match to the counter the sidebar.
+
+Bugfixes:
+
+* Fixes a bug where new feature notification couldn't be dismissed.
+* Fixes a bug where the primary term for custom post types was not always properly set for posts edited in the Gutenberg editor.
+* Fixes a bug where the schema output could be incorrect on terms with the same ID as the static posts page.
+
+Other:
+
+* Adds a missing space to the feedback text in the keyphrase in introduction assessment.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).

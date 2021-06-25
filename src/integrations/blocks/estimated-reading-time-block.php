@@ -1,6 +1,8 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Blocks;
+namespace Yoast\WP\SEO\Premium\Integrations\Blocks;
+
+use Yoast\WP\SEO\Integrations\Blocks\Dynamic_Block;
 
 /**
  * Estimated_Reading_Time_Block class.

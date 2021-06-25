@@ -2,9 +2,9 @@
 
 namespace Yoast\WP\SEO\Integrations\Watchers;
 
-use Yoast\WP\SEO\Conditionals\Zapier_Enabled_Conditional;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
 
 /**
  * Watcher for resetting the Zapier API key.

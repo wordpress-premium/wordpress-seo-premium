@@ -1,16 +1,18 @@
 <?php
 
-// phpcs:ignore Yoast.NamingConventions.NamespaceName.Invalid -- This should be the new namespace for premium.
 namespace Yoast\WP\SEO\Premium;
 
 use Yoast\WP\Lib\Abstract_Main;
 use Yoast\WP\SEO\Dependency_Injection\Container_Compiler;
 use Yoast\WP\SEO\Premium\Generated\Cached_Container;
+use Yoast\WP\SEO\Premium\Surfaces\Helpers_Surface;
 use Yoast\WP\SEO\Surfaces\Classes_Surface;
-use Yoast\WP\SEO\Surfaces\Helpers_Surface;
 
 /**
  * Main plugin class for premium.
+ *
+ * @property Classes_Surface $classes
+ * @property Helpers_Surface $helpers
  */
 class Main extends Abstract_Main {
 

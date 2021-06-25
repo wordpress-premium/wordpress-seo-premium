@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Yoast.NamingConventions.NamespaceName.MaxExceeded
+// phpcs:disable Yoast.NamingConventions.NamespaceName.Invalid
 namespace Yoast\WP\SEO\Integrations\Blocks;
 
 use Yoast\WP\SEO\Conditionals\Schema_Blocks_Conditional;
@@ -18,12 +20,14 @@ class Job_Posting_Block implements Integration_Interface {
 	}
 
 	/**
-	 * Retrieves the array with conditionals.
+	 * Returns the list of conditionals.
 	 *
 	 * @return array The conditionals.
 	 */
 	public static function get_conditionals() {
-		return [ Schema_Blocks_Conditional::class ];
+		return [
+			Schema_Blocks_Conditional::class,
+		];
 	}
 
 	/**

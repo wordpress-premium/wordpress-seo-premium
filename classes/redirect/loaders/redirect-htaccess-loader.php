@@ -51,7 +51,7 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	 *
 	 * @param string $pattern The regular expression to match redirects.
 	 *
-	 * @return array[];
+	 * @return array[]
 	 */
 	protected function match_redirects( $pattern ) {
 		preg_match_all( $pattern, $this->htaccess, $matches, PREG_SET_ORDER );
@@ -88,18 +88,18 @@ class WPSEO_Redirect_HTAccess_Loader extends WPSEO_Redirect_Abstract_Loader {
 	/**
 	 * Parses the target from a match.
 	 *
-	 * @param string   $type  The status code of the redirect.
-	 * @param string[] $match The match.
+	 * @param string   $type    The status code of the redirect.
+	 * @param string[] $matched The match.
 	 *
 	 * @return bool|string The status code, false if no status code could be parsed.
 	 */
-	protected function parse_target( $type, $match ) {
+	protected function parse_target( $type, $matched ) {
 		// If it's a gone status code that doesn't need a target.
 		if ( $type === '410' ) {
 			return '';
 		}
 
-		$target = trim( $match[3] );
+		$target = trim( $matched[3] );
 
 		// There is no target, skip it.
 		if ( $target === '' ) {

@@ -31,20 +31,6 @@ class WPSEO_Redirect_Types {
 		];
 
 		/**
-		 * Filter: 'wpseo_premium_redirect_types' - can be used to filter the redirect types.
-		 *
-		 * @deprecated 12.9.0. Use the {@see 'Yoast\WP\SEO\redirect_types'} filter instead.
-		 *
-		 * @api array $redirect_types
-		 */
-		$redirect_types = apply_filters_deprecated(
-			'wpseo_premium_redirect_types',
-			[ $redirect_types ],
-			'YoastSEO Premium 12.9.0',
-			'Yoast\WP\SEO\redirect_types'
-		);
-
-		/**
 		 * Filter: 'Yoast\WP\SEO\redirect_types' - can be used to filter the redirect types.
 		 *
 		 * Note: This is a Premium plugin-only hook.

@@ -1,13 +1,11 @@
 <?php
 
-namespace Yoast\WP\SEO\Actions\Prominent_Words;
+namespace Yoast\WP\SEO\Premium\Actions\Prominent_Words;
 
-use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 
 /**
  * Action for completing the prominent words indexing.
- *
- * @package Yoast\WP\SEO\Actions\Prominent_Words
  */
 class Complete_Action {
 

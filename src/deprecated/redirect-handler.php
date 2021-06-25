@@ -5,7 +5,7 @@
  * @package WPSEO\Premium\Classes
  */
 
-use Yoast\WP\SEO\Initializers\Redirect_Handler;
+use Yoast\WP\SEO\Premium\Initializers\Redirect_Handler;
 
 /**
  * WPSEO_Redirect_Handler class

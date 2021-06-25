@@ -1,18 +1,16 @@
 <?php
 
-namespace Yoast\WP\SEO\Actions;
+namespace Yoast\WP\SEO\Premium\Actions;
 
 use WP_Query;
 use WPSEO_Premium_Prominent_Words_Support;
-use Yoast\WP\SEO\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Models\Indexable;
+use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 use Yoast\WP\SEO\Repositories\Prominent_Words_Repository;
 
 /**
  * Handles the actual requests to the prominent words endpoints.
- *
- * @package Yoast\WP\SEO\Actions
  */
 class Link_Suggestions_Action {
 

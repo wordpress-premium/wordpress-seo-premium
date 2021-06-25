@@ -1,16 +1,14 @@
 <?php
 
-namespace Yoast\WP\SEO\Integrations\Admin\Prominent_Words;
+namespace Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words;
 
-use Yoast\WP\SEO\Actions\Prominent_Words\Save_Action;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Save_Action;
 
 /**
  * Adds a hidden field to the metabox for storing the calculated words and also
  * handles the value of it after posting.
- *
- * @package Yoast\WP\SEO\Integrations\Admin\Prominent_Words
  */
 class Metabox_Integration implements Integration_Interface {
 

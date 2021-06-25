@@ -7,13 +7,13 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use Yoast\WP\SEO\Actions\Indexing\Indexation_Action_Interface;
-use Yoast\WP\SEO\Actions\Prominent_Words\Complete_Action;
-use Yoast\WP\SEO\Actions\Prominent_Words\Content_Action;
-use Yoast\WP\SEO\Actions\Prominent_Words\Save_Action;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Config\Indexing_Reasons;
 use Yoast\WP\SEO\Helpers\Indexing_Helper;
 use Yoast\WP\SEO\Main;
+use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Complete_Action;
+use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Content_Action;
+use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Save_Action;
 
 /**
  * Class Prominent_Words_Route

@@ -1,11 +1,12 @@
 <?php
 
-namespace Yoast\WP\SEO\Initializers;
+namespace Yoast\WP\SEO\Premium\Initializers;
 
 use WP_Query;
 use WPSEO_Premium_Redirect_Option;
 use WPSEO_Redirect_Util;
 use Yoast\WP\SEO\Conditionals\Front_End_Conditional;
+use Yoast\WP\SEO\Initializers\Initializer_Interface;
 
 /**
  * Class Redirect_Handler.
