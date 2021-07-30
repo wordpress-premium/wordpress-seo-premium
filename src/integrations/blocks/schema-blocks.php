@@ -47,7 +47,7 @@ class Schema_Blocks implements Integration_Interface {
 	 */
 	public function register_hooks() {
 		\add_filter( 'wpseo_load_schema_templates', [ $this, 'add_premium_templates' ] );
-		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_assets' ] );
 	}
 
 	/**

@@ -92,16 +92,16 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/paragraphTooLongAssessment.js:80
 	_n_noop( '%1$sParagraph length%2$s: %3$d of the paragraphs contains more than the recommended maximum of %4$d words. %5$sShorten your paragraphs%2$s!', '%1$sParagraph length%2$s: %3$d of the paragraphs contain more than the recommended maximum of %4$d words. %5$sShorten your paragraphs%2$s!', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/passiveVoiceAssessment.js:57
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/passiveVoiceAssessment.js:56
 	__( '%1$sPassive voice%2$s: You\'re using enough active voice. That\'s great!', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/passiveVoiceAssessment.js:71
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/passiveVoiceAssessment.js:70
 	__( '%1$sPassive voice%2$s: %3$s of the sentences contain passive voice, which is more than the recommended maximum of %4$s. %5$sTry to use their active counterparts%2$s.', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/sentenceBeginningsAssessment.js:57
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/sentenceBeginningsAssessment.js:56
 	_n_noop( '%1$sConsecutive sentences%2$s: The text contains %3$d consecutive sentences starting with the same word. %5$sTry to mix things up%2$s!', '%1$sConsecutive sentences%2$s: The text contains %4$d instances where %3$d or more consecutive sentences start with the same word. %5$sTry to mix things up%2$s!', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/sentenceBeginningsAssessment.js:76
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/sentenceBeginningsAssessment.js:75
 	__( '%1$sConsecutive sentences%2$s: There is enough variety in your sentences. That\'s great!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/sentenceLengthInTextAssessment.js:145
@@ -124,16 +124,16 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/subheadingDistributionTooLongAssessment.js:226
 	__( '%1$sSubheading distribution%2$s: You are not using any subheadings, but your text is short enough and probably doesn\'t need them.', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/textPresenceAssessment.js:26
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/textPresenceAssessment.js:27
 	__( '%1$sNot enough content%2$s: %3$sPlease add some content to enable a good analysis%2$s.', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:73
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:72
 	__( '%1$sTransition words%2$s: None of the sentences contain transition words. %3$sUse some%2$s.', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:89
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:88
 	__( '%1$sTransition words%2$s: Only %3$s of the sentences contain transition words, which is not enough. %4$sUse more of them%2$s.', 'wordpress-seo' ),
 
-	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:104
+	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/transitionWordsAssessment.js:103
 	__( '%1$sTransition words%2$s: Well done!', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoastseo/src/scoring/assessments/readability/wordComplexityAssessment.js:64

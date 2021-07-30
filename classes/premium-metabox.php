@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore Yoast.Files.FileName.InvalidClassFileName
 /**
  * WPSEO Premium plugin file.
  *
@@ -132,6 +132,10 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		}
 		elseif ( WPSEO_Taxonomy::is_term_edit( $this->get_current_page() ) ) {
 			$data = array_merge( $data, $this->get_term_metabox_config() );
+		}
+
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			$data['workoutsUrl'] = admin_url( 'admin.php?page=wpseo_workouts' );
 		}
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.

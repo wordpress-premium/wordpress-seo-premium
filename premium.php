@@ -12,11 +12,6 @@ use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
-if ( ! defined( 'WPSEO_PREMIUM_VERSION' ) ) {
-	header( 'HTTP/1.0 403 Forbidden' );
-	die;
-}
-
 /**
  * Class WPSEO_Premium
  */
@@ -34,7 +29,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '16.5';
+	const PLUGIN_VERSION_NAME = '16.8';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -77,7 +72,9 @@ class WPSEO_Premium {
 
 		// Enable tracking.
 		if ( class_exists( WPSEO_Options::class ) ) {
+			WPSEO_Premium_Option::register_option();
 			WPSEO_Options::set( 'tracking', true );
+			WPSEO_Options::set( 'should_redirect_after_install', true );
 		}
 
 		\do_action( 'wpseo_register_capabilities_premium' );
@@ -117,34 +114,6 @@ class WPSEO_Premium {
 	}
 
 	/**
-	 * Adds a feature toggle to the given feature_toggles.
-	 *
-	 * @param array $feature_toggles The feature toggles to extend.
-	 *
-	 * @return array
-	 */
-	public function add_feature_toggles( array $feature_toggles ) {
-		$feature_toggles[] = (object) [
-			'name'            => __( 'Insights', 'wordpress-seo-premium' ),
-			'setting'         => 'enable_metabox_insights',
-			'label'           => __( 'The Insights section in our metabox shows you useful data about your content, like what words you use most often.', 'wordpress-seo-premium' ),
-			'read_more_label' => __( 'Read more about how the insights can help you improve your content.', 'wordpress-seo-premium' ),
-			'read_more_url'   => 'https://yoa.st/2ai',
-			'order'           => 41,
-		];
-		$feature_toggles[] = (object) [
-			'name'            => __( 'Link suggestions', 'wordpress-seo-premium' ),
-			'setting'         => 'enable_link_suggestions',
-			'label'           => __( 'The link suggestions metabox contains a list of posts on your blog with similar content that might be interesting to link to.', 'wordpress-seo-premium' ),
-			'read_more_label' => __( 'Read more about how internal linking can improve your site structure.', 'wordpress-seo-premium' ),
-			'read_more_url'   => 'https://yoa.st/17g',
-			'order'           => 42,
-		];
-
-		return $feature_toggles;
-	}
-
-	/**
 	 * Sets up the Yoast SEO premium plugin.
 	 *
 	 * @return void
@@ -160,7 +129,6 @@ class WPSEO_Premium {
 		if ( is_admin() ) {
 			// Make sure priority is below registration of other implementations of the beacon in News, Video, etc.
 			add_filter( 'wpseo_helpscout_beacon_settings', [ $this, 'filter_helpscout_beacon' ], 1 );
-			add_filter( 'wpseo_feature_toggles', [ $this, 'add_feature_toggles' ] );
 
 			// Only register the yoast i18n when the page is a Yoast SEO page.
 			if ( $this->is_yoast_seo_premium_page( filter_input( INPUT_GET, 'page' ) ) ) {
@@ -396,7 +364,7 @@ class WPSEO_Premium {
 		$submenu_pages[] = [
 			'wpseo_dashboard',
 			'',
-			__( 'Redirects', 'wordpress-seo-premium' ),
+			__( 'Redirects', 'wordpress-seo-premium' ) . ' <span class="yoast-badge yoast-premium-badge"></span>',
 			'wpseo_manage_redirects',
 			'wpseo_redirects',
 			[ $this->redirects, 'display' ],

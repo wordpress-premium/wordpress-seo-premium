@@ -45,17 +45,26 @@ class Prominent_Words_Repository {
 			return [];
 		}
 
-		// Get the name of the prominent words table (can be different for example in case of a multisite setup).
-		$table = Model::get_table_name( 'prominent_words' );
+		$prominent_words = $this->query()->where_in( 'indexable_id', $ids )->find_many();
+		$prominent_stems = \wp_list_pluck( $prominent_words, 'stem' );
+		$document_freqs  = $this->query()
+			->select( 'stem' )
+			->select_expr( 'COUNT(id)', 'count' )
+			->where_in( 'stem', $prominent_stems )
+			->group_by( 'stem' )
+			->find_array();
 
-		$query = '( SELECT COUNT(*) FROM ' . $table . ' WHERE ' . $table . '.stem = prominent_words_table.stem )';
-
-		return $this->query()
-				->table_alias( 'prominent_words_table' )
-				->select( '*' )
-				->select_expr( $query, 'df' )
-				->where_in( 'indexable_id', $ids )
-				->find_many();
+		$stem_counts = [];
+		foreach ( $document_freqs as $document_freq ) {
+			$stem_counts[ $document_freq['stem'] ] = $document_freq['count'];
+		}
+		foreach ( $prominent_words as $prominent_word ) {
+			if ( ! \array_key_exists( $prominent_word->stem, $stem_counts ) ) {
+				continue;
+			}
+			$prominent_word->df = (int) $stem_counts[ $prominent_word->stem ];
+		}
+		return $prominent_words;
 	}
 
 	/**
@@ -75,8 +84,11 @@ class Prominent_Words_Repository {
 		$offset                           = ( ( $page - 1 ) * $limit );
 		$indexable_ids_in_prominent_words = $this->query()
 			->distinct()
-			->select( 'indexable_id' )
-			->where_in( 'stem', $stems )
+			->select( 'pw.indexable_id' )
+			->table_alias( 'pw' )
+			->join( Model::get_table_name( 'indexable' ), [ 'pw.indexable_id', '=', 'i.id' ], 'i' )
+			->where_in( 'pw.stem', $stems )
+			->where_raw( 'i.post_status NOT IN ( \'draft\', \'auto-draft\', \'trash\' ) OR post_status IS NULL' )
 			->limit( $limit )
 			->offset( $offset )
 			->find_many();

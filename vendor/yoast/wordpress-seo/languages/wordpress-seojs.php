@@ -106,37 +106,43 @@ $generated_i18n_strings = array(
 	// Reference: packages/js/src/components/AreaChartTable.js:25
 	__( 'The number of headers and header labels don\'t match.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/CollapsibleCornerstone.js:22
+	// Reference: packages/js/src/components/CollapsibleCornerstone.js:23
 	__( 'Cornerstone content', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/CollapsibleCornerstone.js:25
+	// Reference: packages/js/src/components/CollapsibleCornerstone.js:26
 	__( 'Cornerstone content should be the most important and extensive articles on your site.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/CollapsibleCornerstone.js:27
+	// Reference: packages/js/src/components/CollapsibleCornerstone.js:28
 	__( 'Learn more about Cornerstone Content.', 'wordpress-seo' ),
 
 	// Reference: packages/js/src/components/CornerstoneToggle.js:26
 	__( 'Mark as cornerstone content', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:234
+	// Reference: packages/js/src/components/Indexation.js:236
 	__( 'This feature includes and replaces the Text Link Counter and Internal Linking Analysis', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:263
+	// Reference: packages/js/src/components/Indexation.js:265
 	__( 'Stop SEO data optimization', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:279
+	// Reference: packages/js/src/components/Indexation.js:281
 	__( 'Start SEO data optimization', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:283
+	// Reference: packages/js/src/components/Indexation.js:285
 	__( 'SEO data optimization is disabled for non-production environments.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:302
+	// Reference: packages/js/src/components/Indexation.js:304
 	__( 'Optimizing SEO data... This may take a while.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:314
+	// Reference: packages/js/src/components/Indexation.js:330
 	__( 'Oops, something has gone wrong and we couldn\'t complete the optimization of your SEO data. Please click the button again to re-start the process.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/Indexation.js:349
+	// Reference: packages/js/src/components/Indexation.js:338
+	__( ' If the problem persists, please contact support.', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/Indexation.js:341
+	__( 'Oops, something has gone wrong and we couldn\'t complete the optimization of your SEO data. Please make sure to activate your subscription in MyYoast by completing %1$sthese steps%2$s.', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/Indexation.js:387
 	__( 'SEO data optimization complete', 'wordpress-seo' ),
 
 	// Reference: packages/js/src/components/LocalSEOUpsell.js:76
@@ -212,29 +218,32 @@ $generated_i18n_strings = array(
 	_n_noop( 'Upon saving, this setting will apply to all of your %1$s. %1$s that are manually configured will be left untouched.', 'Upon saving, these settings will apply to all of your %1$s. %1$s that are manually configured will be left untouched.', 'wordpress-seo' ),
 
 	// Reference: packages/js/src/components/SchemaTab.js:103
+	__( 'Read more about Schema.', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/SchemaTab.js:130
+	__( 'What type of page or content is this?', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/SchemaTab.js:132
+	__( 'Learn more about page or content types', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/SchemaTab.js:137
+	// Reference: packages/js/src/containers/SchemaTab.js:54
+	__( 'Page type', 'wordpress-seo' ),
+
+	// Reference: packages/js/src/components/SchemaTab.js:144
 	// Reference: packages/js/src/containers/SchemaTab.js:53
 	__( 'Article type', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/SchemaTab.js:29
+	// Reference: packages/js/src/components/SchemaTab.js:31
 	/* %1$s expands to the plural name of the current post type, %2$s expands to the current site wide default. */
 	__( 'Default for %1$s (%2$s)', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/SchemaTab.js:48
+	// Reference: packages/js/src/components/SchemaTab.js:50
 	/* %1$s expands to the plural name of the current post type, %2$s and %3$s expand to a link to the Search Appearance Settings page */
 	__( 'You can change the default type for %1$s in your %2$sSearch Appearance Settings%3$s.', 'wordpress-seo' ),
 
-	// Reference: packages/js/src/components/SchemaTab.js:85
+	// Reference: packages/js/src/components/SchemaTab.js:82
 	__( 'Learn more about structured data with Schema.org', 'wordpress-seo' ),
-
-	// Reference: packages/js/src/components/SchemaTab.js:89
-	__( 'What type of page or content is this?', 'wordpress-seo' ),
-
-	// Reference: packages/js/src/components/SchemaTab.js:91
-	__( 'Learn more about page or content types', 'wordpress-seo' ),
-
-	// Reference: packages/js/src/components/SchemaTab.js:96
-	// Reference: packages/js/src/containers/SchemaTab.js:54
-	__( 'Page type', 'wordpress-seo' ),
 
 	// Reference: packages/js/src/components/SettingsReplacementVariableEditor.js:39
 	__( 'Modify your meta description by editing it right here', 'wordpress-seo' ),

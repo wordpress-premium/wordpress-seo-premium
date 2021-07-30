@@ -8,6 +8,7 @@ use Yoast\WP\SEO\Conditionals\Yoast_Admin_And_Dashboard_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Helpers\Zapier_Helper;
 use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
+use Yoast_Feature_Toggle;
 
 /**
  * Zapier integration class for managing the toggle.
@@ -64,7 +65,7 @@ class Zapier implements Integration_Interface {
 	 */
 	public function register_hooks() {
 		// Add the Zapier toggle to the Integrations tab in the admin.
-		\add_filter( 'wpseo_integration_toggles', [ $this, 'add_integration_toggle' ] );
+		\add_filter( 'Yoast\WP\SEO\admin_integration_after', [ $this, 'toggle_after' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
 
@@ -79,44 +80,23 @@ class Zapier implements Integration_Interface {
 	}
 
 	/**
-	 * Adds integration toggles to the Integrations to be loaded.
-	 *
-	 * @param array $integration_toggles The feature toggles to extend.
-	 *
-	 * @return array
-	 */
-	public function add_integration_toggle( array $integration_toggles ) {
-		$integration_toggles[] = (object) [
-			/* translators: %s: Zapier. */
-			'name'            => \sprintf( \esc_html__( '%s integration', 'wordpress-seo-premium' ), 'Zapier' ),
-			'setting'         => 'zapier_integration_active',
-			'label'           => \sprintf(
-				/* translators: 1: Yoast SEO, 2: Zapier. */
-				\__( 'Connecting %1$s to %2$s means you can instantly share your published posts with 2000+ destinations such as Twitter, Facebook and more.', 'wordpress-seo-premium' ),
-				'Yoast SEO',
-				'Zapier'
-			),
-			/* translators: %s: Zapier. */
-			'read_more_label' => \sprintf( \__( 'Read more about %s.', 'wordpress-seo-premium' ), 'Zapier' ),
-			'read_more_url'   => 'https://yoa.st/46o',
-			'after'           => $this->toggle_after(),
-			'order'           => 20, // The SEMrush integration on Free has order => 10.
-		];
-
-		return $integration_toggles;
-	}
-
-	/**
 	 * Returns additional content to be displayed after the Zapier toggle.
 	 *
-	 * @return string The additional content.
+	 * @param Yoast_Feature_Toggle $integration The integration feature we've shown the toggle for.
+	 *
+	 * @return void
 	 */
-	private function toggle_after() {
+	public function toggle_after( $integration ) {
+		if ( $integration->name !== 'Zapier integration' ) {
+			return;
+		}
 		if ( $this->zapier_helper->is_connected() ) {
-			return $this->get_connected_content();
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped in function.
+			echo $this->get_connected_content();
 		}
 
-		return $this->get_not_connected_content();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped in function.
+		echo $this->get_not_connected_content();
 	}
 
 	/**

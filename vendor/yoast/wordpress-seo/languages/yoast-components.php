@@ -74,9 +74,11 @@ $generated_i18n_strings = array(
 	// Reference: packages/components/src/help-icon/HelpIcon.js:50
 	__( '(Opens in a new browser tab)', 'wordpress-seo' ),
 
+	// Reference: packages/components/src/image-select/ImageSelect.js:43
 	// Reference: packages/components/src/image-select/ImageSelectButtons.js:34
 	__( 'Replace image', 'wordpress-seo' ),
 
+	// Reference: packages/components/src/image-select/ImageSelect.js:44
 	// Reference: packages/components/src/image-select/ImageSelectButtons.js:35
 	__( 'Select image', 'wordpress-seo' ),
 

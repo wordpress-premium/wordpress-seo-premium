@@ -10,6 +10,7 @@ use Yoast\WP\SEO\Actions\Indexing\Indexable_Term_Indexation_Action;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Helpers\Language_Helper;
+use Yoast\WP\SEO\Helpers\Url_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Content_Action;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
@@ -79,6 +80,13 @@ class Indexing_Integration implements Integration_Interface {
 	protected $language_helper;
 
 	/**
+	 * Represents the url helper.
+	 *
+	 * @var Url_Helper
+	 */
+	protected $url_helper;
+
+	/**
 	 * Represents the prominent words helper.
 	 *
 	 * @var Prominent_Words_Helper
@@ -101,6 +109,7 @@ class Indexing_Integration implements Integration_Interface {
 	 * @param Indexable_General_Indexation_Action           $general_indexation_action           The general indexing action.
 	 * @param Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation_action The post type archive indexing action.
 	 * @param Language_Helper                               $language_helper                     The language helper.
+	 * @param Url_Helper                                    $url_helper                          The url helper.
 	 * @param Prominent_Words_Helper                        $prominent_words_helper              The prominent words helper.
 	 */
 	public function __construct(
@@ -110,6 +119,7 @@ class Indexing_Integration implements Integration_Interface {
 		Indexable_General_Indexation_Action $general_indexation_action,
 		Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation_action,
 		Language_Helper $language_helper,
+		Url_Helper $url_helper,
 		Prominent_Words_Helper $prominent_words_helper
 	) {
 		$this->content_indexation_action           = $content_indexation_action;
@@ -118,6 +128,7 @@ class Indexing_Integration implements Integration_Interface {
 		$this->general_indexation_action           = $general_indexation_action;
 		$this->post_type_archive_indexation_action = $post_type_archive_indexation_action;
 		$this->language_helper                     = $language_helper;
+		$this->url_helper                          = $url_helper;
 		$this->prominent_words_helper              = $prominent_words_helper;
 	}
 
@@ -208,6 +219,7 @@ class Indexing_Integration implements Integration_Interface {
 		$this->prominent_words_helper->set_indexing_completed( $is_completed );
 
 		\wp_enqueue_script( 'yoast-premium-prominent-words-indexation' );
+		\wp_localize_script( 'yoast-premium-prominent-words-indexation', 'wpseoPremiumIndexationData', [ 'licensedURL' => $this->url_helper->network_safe_home_url() ] );
 	}
 
 	/**

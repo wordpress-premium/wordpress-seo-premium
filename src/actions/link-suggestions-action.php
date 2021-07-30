@@ -110,6 +110,40 @@ class Link_Suggestions_Action {
 	}
 
 	/**
+	 * Suggests a list of links, based on the given array of prominent words.
+	 *
+	 * @param int $id    The object id for the current indexable.
+	 * @param int $limit The maximum number of link suggestions to retrieve.
+	 *
+	 * @return array Links for the post that are suggested.
+	 */
+	public function get_indexable_suggestions_for_indexable( $id, $limit ) {
+		$weighted_words  = [];
+		$prominent_words = $this->prominent_words_repository->query()
+			->where( 'indexable_id', $id )
+			->find_array();
+		foreach ( $prominent_words as $prominent_word ) {
+			$weighted_words[ $prominent_word['stem'] ] = $prominent_word['weight'];
+		}
+
+		/*
+		 * Gets best suggestions (returns a sorted array [$indexable_id => score]).
+		 * The indexables are processed in batches of 100 indexables each.
+		 */
+		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $weighted_words, $limit, 100, $id );
+
+		$indexable_ids = \array_keys( $suggestions_scores );
+
+		// Return the empty list if no suggestions have been found.
+		if ( empty( $indexable_ids ) ) {
+			return [];
+		}
+
+		// Retrieve indexables for suggestions.
+		return $this->indexable_repository->query()->where_id_in( $indexable_ids )->find_array();
+	}
+
+	/**
 	 * Retrieves the titles of the posts with the given IDs.
 	 *
 	 * @param array $post_ids The IDs of the posts to retrieve the titles of.

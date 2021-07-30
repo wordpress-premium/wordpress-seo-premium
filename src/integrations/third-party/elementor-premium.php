@@ -150,8 +150,13 @@ class Elementor_Premium implements Integration_Interface {
 			'licensedURL'        => WPSEO_Utils::get_home_url(),
 			'settingsPageUrl'    => \admin_url( 'admin.php?page=wpseo_dashboard#top#features' ),
 			'integrationsTabURL' => \admin_url( 'admin.php?page=wpseo_dashboard#top#integrations' ),
+
 		];
 		$data = \array_merge( $data, $this->get_post_metabox_config() );
+
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			$data['workoutsUrl'] = admin_url( 'admin.php?page=wpseo_workouts' );
+		}
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.
 		\wp_localize_script( static::SCRIPT_HANDLE, 'wpseoPremiumMetaboxData', [ 'data' => $data ] );

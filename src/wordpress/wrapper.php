@@ -5,6 +5,7 @@ namespace Yoast\WP\SEO\Premium\WordPress;
 use WPSEO_Premium_Prominent_Words_Support;
 use WPSEO_Premium_Prominent_Words_Unindexed_Post_Query;
 use WPSEO_Replace_Vars;
+use WPSEO_Shortlinker;
 
 /**
  * Wrapper class for Premium classes.
@@ -53,6 +54,21 @@ class Wrapper {
 
 		if ( \is_null( $instance ) ) {
 			$instance = new WPSEO_Premium_Prominent_Words_Support();
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * Wrapper method for returning the WPSEO_Shortlinker object for use in dependency injection.
+	 *
+	 * @return WPSEO_Shortlinker The WPSEO_Shortlinker global.
+	 */
+	public static function get_shortlinker() {
+		static $instance;
+
+		if ( \is_null( $instance ) ) {
+			$instance = new WPSEO_Shortlinker();
 		}
 
 		return $instance;

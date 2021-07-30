@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore Yoast.Files.FileName.InvalidClassFileName
 /**
  * WPSEO Premium plugin file.
  *
@@ -27,6 +27,9 @@ class WPSEO_Premium_Option extends WPSEO_Option {
 	protected $defaults = [
 		// Form fields.
 		'prominent_words_indexing_completed' => null,
+		'workouts'                           => [ 'cornerstone' => [ 'finishedSteps' => [] ] ],
+		'should_redirect_after_install'      => false,
+		'activation_redirect_timestamp'      => 0,
 	];
 
 	/**
@@ -67,6 +70,21 @@ class WPSEO_Premium_Option extends WPSEO_Option {
 						$clean[ $key ] = WPSEO_Utils::validate_bool( $dirty[ $key ] );
 					}
 
+					break;
+				case 'workouts':
+					if ( isset( $dirty[ $key ] ) && is_array( $dirty[ $key ] ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
+					break;
+				case 'should_redirect_after_install':
+					if ( isset( $dirty[ $key ] ) && is_bool( $dirty[ $key ] ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
+					break;
+				case 'activation_redirect_timestamp':
+					if ( isset( $dirty[ $key ] ) && is_int( $dirty[ $key ] ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
 					break;
 			}
 		}
