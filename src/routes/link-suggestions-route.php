@@ -1,17 +1,16 @@
 <?php
 
-namespace Yoast\WP\SEO\Routes;
+namespace Yoast\WP\SEO\Premium\Routes;
 
 use WP_REST_Request;
 use WP_REST_Response;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Main;
 use Yoast\WP\SEO\Premium\Actions\Link_Suggestions_Action;
+use Yoast\WP\SEO\Routes\Route_Interface;
 
 /**
  * Registers the route for the link suggestions retrieval.
- *
- * @package Yoast\WP\SEO\Routes
  */
 class Link_Suggestions_Route implements Route_Interface {
 

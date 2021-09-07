@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
+class ComposerStaticInitbb8cefa73d27581bc172feff7fd93e9f
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -137,7 +137,6 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
         'WPSEO_Admin_Gutenberg_Compatibility_Notification' => __DIR__ . '/../..' . '/admin/class-admin-gutenberg-compatibility-notification.php',
         'WPSEO_Admin_Help_Panel' => __DIR__ . '/../..' . '/admin/class-admin-help-panel.php',
         'WPSEO_Admin_Init' => __DIR__ . '/../..' . '/admin/class-admin-init.php',
-        'WPSEO_Admin_Media_Purge_Notification' => __DIR__ . '/../..' . '/admin/class-admin-media-purge-notification.php',
         'WPSEO_Admin_Menu' => __DIR__ . '/../..' . '/admin/menu/class-admin-menu.php',
         'WPSEO_Admin_Pages' => __DIR__ . '/../..' . '/admin/class-config.php',
         'WPSEO_Admin_Recommended_Replace_Vars' => __DIR__ . '/../..' . '/admin/class-admin-recommended-replace-vars.php',
@@ -554,6 +553,7 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
         'Yoast\\WP\\SEO\\Actions\\Indexation\\Indexation_Action_Interface' => __DIR__ . '/../..' . '/src/deprecated/src/actions/indexation/indexation-action-interface.php',
         'Yoast\\WP\\SEO\\Actions\\Indexation\\Post_Link_Indexing_Action' => __DIR__ . '/../..' . '/src/deprecated/src/actions/indexation/post-link-indexing-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexation\\Term_Link_Indexing_Action' => __DIR__ . '/../..' . '/src/deprecated/src/actions/indexation/term-link-indexing-action.php',
+        'Yoast\\WP\\SEO\\Actions\\Indexing\\Abstract_Indexing_Action' => __DIR__ . '/../..' . '/src/actions/indexing/abstract-indexing-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Abstract_Link_Indexing_Action' => __DIR__ . '/../..' . '/src/actions/indexing/abstract-link-indexing-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Indexable_General_Indexation_Action' => __DIR__ . '/../..' . '/src/actions/indexing/indexable-general-indexation-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Indexable_Indexing_Complete_Action' => __DIR__ . '/../..' . '/src/actions/indexing/indexable-indexing-complete-action.php',
@@ -564,6 +564,7 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Indexation_Action_Interface' => __DIR__ . '/../..' . '/src/actions/indexing/indexation-action-interface.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Indexing_Complete_Action' => __DIR__ . '/../..' . '/src/actions/indexing/indexing-complete-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Indexing_Prepare_Action' => __DIR__ . '/../..' . '/src/actions/indexing/indexing-prepare-action.php',
+        'Yoast\\WP\\SEO\\Actions\\Indexing\\Limited_Indexing_Action_Interface' => __DIR__ . '/../..' . '/src/actions/indexing/limited-indexing-action-interface.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Post_Link_Indexing_Action' => __DIR__ . '/../..' . '/src/actions/indexing/post-link-indexing-action.php',
         'Yoast\\WP\\SEO\\Actions\\Indexing\\Term_Link_Indexing_Action' => __DIR__ . '/../..' . '/src/actions/indexing/term-link-indexing-action.php',
         'Yoast\\WP\\SEO\\Actions\\SEMrush\\SEMrush_Login_Action' => __DIR__ . '/../..' . '/src/actions/semrush/semrush-login-action.php',
@@ -754,6 +755,7 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
         'Yoast\\WP\\SEO\\Integrations\\Blocks\\Internal_Linking_Category' => __DIR__ . '/../..' . '/src/integrations/blocks/block-categories.php',
         'Yoast\\WP\\SEO\\Integrations\\Blocks\\Structured_Data_Blocks' => __DIR__ . '/../..' . '/src/integrations/blocks/structured-data-blocks.php',
         'Yoast\\WP\\SEO\\Integrations\\Breadcrumbs_Integration' => __DIR__ . '/../..' . '/src/integrations/breadcrumbs-integration.php',
+        'Yoast\\WP\\SEO\\Integrations\\Cleanup_Integration' => __DIR__ . '/../..' . '/src/integrations/cleanup-integration.php',
         'Yoast\\WP\\SEO\\Integrations\\Duplicate_Post_Integration' => __DIR__ . '/../..' . '/src/integrations/duplicate-post-integration.php',
         'Yoast\\WP\\SEO\\Integrations\\Estimated_Reading_Time' => __DIR__ . '/../..' . '/src/integrations/estimated-reading-time.php',
         'Yoast\\WP\\SEO\\Integrations\\Exclude_Oembed_Cache_Post_Type' => __DIR__ . '/../..' . '/src/integrations/exclude-oembed-cache-post-type.php',
@@ -844,6 +846,7 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexation_Modal_Presenter' => __DIR__ . '/../..' . '/src/deprecated/src/presenters/admin/indexation-modal-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexation_Permalink_Warning_Presenter' => __DIR__ . '/../..' . '/src/deprecated/src/presenters/admin/indexation-permalink-warning-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexation_Warning_Presenter' => __DIR__ . '/../..' . '/src/deprecated/src/presenters/admin/indexation-warning-presenter.php',
+        'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexing_Error_Presenter' => __DIR__ . '/../..' . '/src/presenters/admin/indexing-error-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexing_Failed_Notification_Presenter' => __DIR__ . '/../..' . '/src/presenters/admin/indexing-failed-notification-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexing_List_Item_Presenter' => __DIR__ . '/../..' . '/src/presenters/admin/indexing-list-item-presenter.php',
         'Yoast\\WP\\SEO\\Presenters\\Admin\\Indexing_Notification_Presenter' => __DIR__ . '/../..' . '/src/presenters/admin/indexing-notification-presenter.php',
@@ -943,9 +946,9 @@ class ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita7c6fd7da5df98eb2fd3d34d17376c90::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbb8cefa73d27581bc172feff7fd93e9f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbb8cefa73d27581bc172feff7fd93e9f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitbb8cefa73d27581bc172feff7fd93e9f::$classMap;
 
         }, null, ClassLoader::class);
     }

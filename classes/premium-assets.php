@@ -98,6 +98,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 					'clipboard',
 					'wp-api-fetch',
 					'wp-a11y',
+					'wp-components',
 					'wp-compose',
 					'wp-data',
 					'wp-dom-ready',
@@ -286,9 +287,11 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 				'dependencies' => [],
 			],
 			[
-				'name'         => WPSEO_Admin_Asset_Manager::PREFIX . 'workouts',
+				'name'         => WPSEO_Admin_Asset_Manager::PREFIX . 'premium-workouts',
 				'source'       => 'assets/css/dist/premium-workouts-' . $version . '.css',
-				'dependencies' => [],
+				'dependencies' => [
+					'wp-components',
+				],
 			],
 			[
 				'name'         => 'elementor-premium',

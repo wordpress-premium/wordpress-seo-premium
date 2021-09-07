@@ -178,9 +178,8 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 			return;
 		}
 
-		if ( $this->is_redirect_needed( $term ) ) {
-			$url = $this->get_target_url( $term, $term->taxonomy );
-
+		$url = $this->get_target_url( $term, $term->taxonomy );
+		if ( $this->is_redirect_needed( $term, $url ) ) {
 			$this->set_delete_notification( $url );
 		}
 	}
@@ -189,11 +188,14 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * Checks if a redirect is needed for the term with the given ID.
 	 *
 	 * @param WP_Term $term The term to check.
+	 * @param string  $url  The target url.
 	 *
 	 * @return bool If a redirect is needed.
 	 */
-	protected function is_redirect_needed( $term ) {
-		return ! \is_nav_menu( $term->term_id ) && \is_taxonomy_viewable( $term->taxonomy );
+	protected function is_redirect_needed( $term, $url ) {
+		$redirect_manager = new WPSEO_Redirect_Manager( 'plain' );
+		$redirect         = $redirect_manager->get_redirect( $url );
+		return ! $redirect || ( ! \is_nav_menu( $term->term_id ) && \is_taxonomy_viewable( $term->taxonomy ) );
 	}
 
 	/**

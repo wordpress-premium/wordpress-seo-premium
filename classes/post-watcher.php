@@ -363,12 +363,11 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 				// Message should only be shown if there isn't already a redirect.
 				$redirect = $this->get_redirect( $url );
 
-				if ( is_a( $redirect, 'WPSEO_Redirect' ) === $should_exist ) {
-					if ( $should_exist === false ) {
-						return $url;
-					}
-
+				if ( is_a( $redirect, 'WPSEO_Redirect' ) && $should_exist ) {
 					return $redirect;
+				}
+				if ( ! is_a( $redirect, 'WPSEO_Redirect' ) && ! $should_exist ) {
+					return $url;
 				}
 			}
 		}

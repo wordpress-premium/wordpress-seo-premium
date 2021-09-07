@@ -127,6 +127,17 @@ class Content_Action implements Indexation_Action_Interface {
 	}
 
 	/**
+	 * The total number of indexables without prominent words.
+	 *
+	 * @param int $limit Limit the number of unindexed objects that are counted.
+	 *
+	 * @return int|false The total number of indexables without prominent words. False if the query fails.
+	 */
+	public function get_limited_unindexed_count( $limit ) {
+		return $this->get_total_unindexed();
+	}
+
+	/**
 	 * Retrieves a batch of indexables, to be indexed for internal linking suggestions.
 	 *
 	 * @deprecated 15.1
@@ -155,7 +166,9 @@ class Content_Action implements Indexation_Action_Interface {
 			->limit( $this->get_limit() )
 			->find_many();
 
-		\delete_transient( static::TRANSIENT_CACHE_KEY );
+		if ( \count( $indexables ) > 0 ) {
+			\delete_transient( static::TRANSIENT_CACHE_KEY );
+		}
 
 		// If no indexables have been left unindexed, return the empty array.
 		if ( ! $indexables ) {

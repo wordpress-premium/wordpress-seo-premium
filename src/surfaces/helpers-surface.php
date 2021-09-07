@@ -25,7 +25,7 @@ class Helpers_Surface {
 	/**
 	 * Loader constructor.
 	 *
-	 * @param ContainerInterface $container  The dependency injection container.
+	 * @param ContainerInterface $container The dependency injection container.
 	 */
 	public function __construct( ContainerInterface $container ) {
 		$this->container = $container;

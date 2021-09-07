@@ -1,17 +1,16 @@
 <?php
 
-namespace Yoast\WP\SEO\Routes;
+namespace Yoast\WP\SEO\Premium\Routes;
 
 use WP_REST_Request;
 use WP_REST_Response;
 use Yoast\WP\SEO\Main;
 use Yoast\WP\SEO\Premium\Actions\Zapier_Action;
 use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
+use Yoast\WP\SEO\Routes\Route_Interface;
 
 /**
  * Registers the route for the Zapier integration.
- *
- * @package Yoast\WP\SEO\Routes
  */
 class Zapier_Route implements Route_Interface {
 

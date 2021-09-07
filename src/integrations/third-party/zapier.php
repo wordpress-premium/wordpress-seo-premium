@@ -87,7 +87,7 @@ class Zapier implements Integration_Interface {
 	 * @return void
 	 */
 	public function toggle_after( $integration ) {
-		if ( $integration->name !== 'Zapier integration' ) {
+		if ( $integration->setting !== 'zapier_integration_active' ) {
 			return;
 		}
 		if ( $this->zapier_helper->is_connected() ) {

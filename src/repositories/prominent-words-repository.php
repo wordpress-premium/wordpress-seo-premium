@@ -1,16 +1,23 @@
 <?php
 
-namespace Yoast\WP\SEO\Repositories;
+namespace Yoast\WP\SEO\Premium\Repositories;
 
 use Yoast\WP\Lib\Model;
 use Yoast\WP\Lib\ORM;
 
 /**
- * Class Prominent_Words_Repository
- *
- * @package Yoast\WP\SEO\ORM\Repositories
+ * Class Prominent_Words_Repository.
  */
 class Prominent_Words_Repository {
+
+	/**
+	 * Class constructor.
+	 *
+	 * Empty constructor is necessary for BC.
+	 *
+	 * @see \Yoast\WP\SEO\Repositories\Prominent_Words_Repository
+	 */
+	public function __construct() {}
 
 	/**
 	 * Starts a query for this repository.

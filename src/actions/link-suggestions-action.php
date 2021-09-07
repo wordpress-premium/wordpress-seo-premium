@@ -6,8 +6,8 @@ use WP_Query;
 use WPSEO_Premium_Prominent_Words_Support;
 use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
+use Yoast\WP\SEO\Premium\Repositories\Prominent_Words_Repository;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
-use Yoast\WP\SEO\Repositories\Prominent_Words_Repository;
 
 /**
  * Handles the actual requests to the prominent words endpoints.

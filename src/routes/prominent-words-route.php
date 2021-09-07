@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\SEO\Routes;
+namespace Yoast\WP\SEO\Premium\Routes;
 
 use Exception;
 use WP_Error;
@@ -14,11 +14,10 @@ use Yoast\WP\SEO\Main;
 use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Complete_Action;
 use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Content_Action;
 use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Save_Action;
+use Yoast\WP\SEO\Routes\Abstract_Indexation_Route;
 
 /**
- * Class Prominent_Words_Route
- *
- * @package Yoast\WP\SEO\Routes
+ * Class Prominent_Words_Route.
  */
 class Prominent_Words_Route extends Abstract_Indexation_Route {
 

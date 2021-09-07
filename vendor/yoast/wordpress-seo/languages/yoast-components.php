@@ -25,7 +25,7 @@ $generated_i18n_strings = array(
 	// Reference: packages/analysis-report/src/ContentAnalysis.js:97
 	__( 'Problems', 'wordpress-seo' ),
 
-	// Reference: packages/components/src/Alert.js:131
+	// Reference: packages/components/src/Alert.js:135
 	__( 'Dismiss this alert', 'wordpress-seo' ),
 
 	// Reference: packages/components/src/ErrorBoundary.js:51
@@ -188,13 +188,13 @@ $generated_i18n_strings = array(
 	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditor.js:570
 	__( 'Edit snippet', 'wordpress-seo' ),
 
-	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:182
+	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:292
 	__( 'SEO title', 'wordpress-seo' ),
 
-	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:204
+	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:314
 	__( 'Slug', 'wordpress-seo' ),
 
-	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:225
+	// Reference: packages/search-metadata-previews/src/snippet-editor/SnippetEditorFields.js:335
 	__( 'Meta description', 'wordpress-seo' ),
 
 	// Reference: packages/search-metadata-previews/src/snippet-preview/FixedWidthContainer.js:133

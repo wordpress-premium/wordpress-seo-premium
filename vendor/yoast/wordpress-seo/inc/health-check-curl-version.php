@@ -23,7 +23,7 @@ class WPSEO_Health_Check_Curl_Version extends WPSEO_Health_Check {
 	 * @return void
 	 */
 	public function run() {
-		return;
+		return true;
 		if ( ! $this->has_premium_plugins_installed() ) {
 			return;
 		}

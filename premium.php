@@ -29,7 +29,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '16.8';
+	const PLUGIN_VERSION_NAME = '17.0';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -96,9 +96,6 @@ class WPSEO_Premium {
 			'redirect-export-manager'      => new WPSEO_Premium_Redirect_Export_Manager(),
 			'keyword-export-manager'       => new WPSEO_Premium_Keyword_Export_Manager(),
 			'orphaned-post-filter'         => new WPSEO_Premium_Orphaned_Post_Filter(),
-			// Joost de Valk, April 6th 2019.
-			// Disabling this until we've found a better way to display this data that doesn't become annoying when you have a lot of post types.
-			// 'orphaned-post-notifier'    => new WPSEO_Premium_Orphaned_Post_Notifier( array( 'post', 'page' ), Yoast_Notification_Center::get() ), // Commented out.
 			'request-free-translations'    => new WPSEO_Premium_Free_Translations(),
 			'expose-javascript-shortlinks' => new WPSEO_Premium_Expose_Shortlinks(),
 			'multi-keyword'                => new WPSEO_Multi_Keyword(),
