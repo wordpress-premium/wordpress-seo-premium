@@ -274,7 +274,7 @@ abstract class WPSEO_Watcher {
 	 * @param string $url The URL that will be redirected.
 	 * @param string $id  The ID of the element.
 	 *
-	 * @return string.
+	 * @return string
 	 */
 	protected function get_delete_action_list( $url, $id ) {
 		return sprintf(

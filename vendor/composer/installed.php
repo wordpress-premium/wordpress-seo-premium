@@ -6,37 +6,37 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'ef92fa21cb449ac0b2016aec8257beb256e7783d',
+    'reference' => '2fdfc47b72df571230094869d9f09583b1b64368',
     'name' => 'yoast/wordpress-seo-premium',
   ),
   'versions' => 
   array (
     'antecedent/patchwork' => 
     array (
-      'pretty_version' => '2.1.12',
-      'version' => '2.1.12.0',
+      'pretty_version' => '2.1.17',
+      'version' => '2.1.17.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b98e046dd4c0acc34a0846604f06f6111654d9ea',
+      'reference' => 'df5aba175a44c2996ced4edf8ec9f9081b5348c0',
     ),
     'brain/monkey' => 
     array (
-      'pretty_version' => '2.6.0',
-      'version' => '2.6.0.0',
+      'pretty_version' => '2.6.1',
+      'version' => '2.6.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7042140000b4b18034c0c0010d86274a00f25442',
+      'reference' => 'a31c84515bb0d49be9310f52ef1733980ea8ffbb',
     ),
     'composer/installers' => 
     array (
-      'pretty_version' => 'v1.10.0',
-      'version' => '1.10.0.0',
+      'pretty_version' => 'v1.12.0',
+      'version' => '1.12.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d',
+      'reference' => 'd20a64ed3c94748397ff5973488761b22f6d3f19',
     ),
     'cordoval/hamcrest-php' => 
     array (
@@ -116,12 +116,12 @@
     ),
     'mockery/mockery' => 
     array (
-      'pretty_version' => '1.3.4',
-      'version' => '1.3.4.0',
+      'pretty_version' => '1.3.5',
+      'version' => '1.3.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => '31467aeb3ca3188158613322d66df81cedd86626',
+      'reference' => '472fa8ca4e55483d55ee1e73c963718c4393791d',
     ),
     'myclabs/deep-copy' => 
     array (
@@ -156,12 +156,12 @@
     ),
     'php-parallel-lint/php-parallel-lint' => 
     array (
-      'pretty_version' => 'v1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => 'v1.3.1',
+      'version' => '1.3.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '772a954e5f119f6f5871d015b23eabed8cbdadfb',
+      'reference' => '761f3806e30239b5fcd90a0a45d41dc2138de192',
     ),
     'phpcompatibility/php-compatibility' => 
     array (
@@ -183,12 +183,12 @@
     ),
     'phpcompatibility/phpcompatibility-wp' => 
     array (
-      'pretty_version' => '2.1.1',
-      'version' => '2.1.1.0',
+      'pretty_version' => '2.1.2',
+      'version' => '2.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b7dc0cd7a8f767ccac5e7637550ea1c50a67b09e',
+      'reference' => 'a792ab623069f0ce971b2417edef8d9632e32f75',
     ),
     'phpdocumentor/reflection-common' => 
     array (
@@ -429,12 +429,12 @@
     ),
     'squizlabs/php_codesniffer' => 
     array (
-      'pretty_version' => '3.6.0',
-      'version' => '3.6.0.0',
+      'pretty_version' => '3.6.1',
+      'version' => '3.6.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ffced0d2c8fa8e6cdc4d695a743271fab6c38625',
+      'reference' => 'f268ca40d54617c6e06757f83f699775c9b3ff2e',
     ),
     'symfony/console' => 
     array (
@@ -465,12 +465,12 @@
     ),
     'symfony/polyfill-ctype' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.23.0',
+      'version' => '1.23.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c6c942b1ac76c82448322025e084cadc56048b4e',
+      'reference' => '46cd95797e9df938fdd2b03693b5fca5e64b01ce',
     ),
     'symfony/polyfill-mbstring' => 
     array (
@@ -483,21 +483,21 @@
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.23.1',
+      'version' => '1.23.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dc3063ba22c2a1fd2f45ed856374d79114998f91',
+      'reference' => '1100343ed1a92e3a38f9ae122fc0eb21602547be',
     ),
     'symfony/yaml' => 
     array (
-      'pretty_version' => 'v4.4.18',
-      'version' => '4.4.18.0',
+      'pretty_version' => 'v4.4.29',
+      'version' => '4.4.29.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bbce94f14d73732340740366fcbe63363663a403',
+      'reference' => '3abcc4db06d4e776825eaa3ed8ad924d5bc7432a',
     ),
     'theseer/fdomdocument' => 
     array (
@@ -510,12 +510,12 @@
     ),
     'webmozart/assert' => 
     array (
-      'pretty_version' => '1.9.1',
-      'version' => '1.9.1.0',
+      'pretty_version' => '1.10.0',
+      'version' => '1.10.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bafc69caeb4d49c39fd0779086c03a3738cbb389',
+      'reference' => '6964c76c7804814a842473e0c8fd15bab0f18e25',
     ),
     'wp-coding-standards/wpcs' => 
     array (
@@ -537,21 +537,21 @@
     ),
     'yoast/phpunit-polyfills' => 
     array (
-      'pretty_version' => '0.2.0',
-      'version' => '0.2.0.0',
+      'pretty_version' => '1.0.3',
+      'version' => '1.0.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c48e4cf0c44b2d892540846aff19fb0468627bab',
+      'reference' => '5ea3536428944955f969bc764bbe09738e151ada',
     ),
     'yoast/wordpress-seo' => 
     array (
-      'pretty_version' => '17.0',
-      'version' => '17.0.0.0',
+      'pretty_version' => '17.9',
+      'version' => '17.9.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '360c95418f9dd8d146b6defb014f234da4d008ce',
+      'reference' => '798cc343c543341add4c1cc142a69cb9fc1cb62e',
     ),
     'yoast/wordpress-seo-premium' => 
     array (
@@ -560,25 +560,25 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'ef92fa21cb449ac0b2016aec8257beb256e7783d',
+      'reference' => '2fdfc47b72df571230094869d9f09583b1b64368',
     ),
     'yoast/wp-test-utils' => 
     array (
-      'pretty_version' => '0.2.1',
-      'version' => '0.2.1.0',
+      'pretty_version' => '1.0.0',
+      'version' => '1.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c5cdabd58f2aa6f2a93f734cf48125f880c90101',
+      'reference' => '21df3a08974ee62f489f64e34be7f26a32ec872c',
     ),
     'yoast/yoastcs' => 
     array (
-      'pretty_version' => '2.1.0',
-      'version' => '2.1.0.0',
+      'pretty_version' => '2.2.0',
+      'version' => '2.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8cc5cb79b950588f05a45d68c3849ccfcfef6298',
+      'reference' => '0b82e890bda80571fe054166ef2535cb9cb54a13',
     ),
   ),
 );

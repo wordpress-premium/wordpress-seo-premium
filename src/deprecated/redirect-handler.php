@@ -21,7 +21,7 @@ class WPSEO_Redirect_Handler extends Redirect_Handler {
 	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
-		\_deprecated_function( __METHOD__, 'WPSEO Premium 16.0', \esc_html( Redirect_Handler::class ) );
+		_deprecated_function( __METHOD__, 'WPSEO Premium 16.0', esc_html( Redirect_Handler::class ) );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class WPSEO_Redirect_Handler extends Redirect_Handler {
 	 * @return void
 	 */
 	public function load() {
-		\_deprecated_function( __METHOD__, 'WPSEO Premium 16.0', \esc_html( Redirect_Handler::class . '::initialize' ) );
+		_deprecated_function( __METHOD__, 'WPSEO Premium 16.0', esc_html( Redirect_Handler::class . '::initialize' ) );
 		$this->initialize();
 	}
 }

@@ -6,8 +6,6 @@ use Elementor\Controls_Manager;
 use Elementor\Core\DocumentTypes\PageBase;
 use WP_Post;
 use WP_Screen;
-use WPSEO_Admin_Asset;
-use WPSEO_Admin_Asset_Analysis_Worker_Location;
 use WPSEO_Admin_Asset_Manager;
 use WPSEO_Admin_Asset_Yoast_Components_L10n;
 use WPSEO_Admin_Recommended_Replace_Vars;
@@ -17,10 +15,12 @@ use WPSEO_Metabox_Analysis_Readability;
 use WPSEO_Metabox_Analysis_SEO;
 use WPSEO_Metabox_Formatter;
 use WPSEO_Post_Metabox_Formatter;
+use WPSEO_Replace_Vars;
 use WPSEO_Utils;
 use Yoast\WP\SEO\Actions\Alert_Dismissal_Action;
 use Yoast\WP\SEO\Conditionals\Admin\Estimated_Reading_Time_Conditional;
 use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
+use Yoast\WP\SEO\Config\Wincher_Links;
 use Yoast\WP\SEO\Helpers\Capability_Helper;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
@@ -387,11 +387,13 @@ class Elementor implements Integration_Interface {
 		$this->asset_manager->enqueue_style( 'admin-css' );
 		$this->asset_manager->enqueue_style( 'elementor' );
 
+		$this->asset_manager->enqueue_script( 'admin-global' );
 		$this->asset_manager->enqueue_script( 'elementor' );
 
 		$yoast_components_l10n = new WPSEO_Admin_Asset_Yoast_Components_L10n();
 		$yoast_components_l10n->localize_script( 'elementor' );
 
+		$this->asset_manager->localize_script( 'elementor', 'wpseoAdminGlobalL10n', \YoastSEO()->helpers->wincher->get_admin_global_links() );
 		$this->asset_manager->localize_script( 'elementor', 'wpseoAdminL10n', WPSEO_Utils::get_admin_l10n() );
 		$this->asset_manager->localize_script( 'elementor', 'wpseoFeaturesL10n', WPSEO_Utils::retrieve_enabled_features() );
 
@@ -400,6 +402,7 @@ class Elementor implements Integration_Interface {
 				'no_parent_text'           => \__( '(no parent)', 'wordpress-seo' ),
 				'replace_vars'             => $this->get_replace_vars(),
 				'recommended_replace_vars' => $this->get_recommended_replace_vars(),
+				'hidden_replace_vars'      => $this->get_hidden_replace_vars(),
 				'scope'                    => $this->determine_scope(),
 				'has_taxonomies'           => $this->current_post_type_has_taxonomies(),
 			],
@@ -410,9 +413,9 @@ class Elementor implements Integration_Interface {
 		];
 
 		$worker_script_data = [
-			'url'                     => YoastSEO()->helpers->asset->get_asset_url( 'yoast-seo-analysis-worker' ),
-			'dependencies'            => YoastSEO()->helpers->asset->get_dependency_urls_by_handle( 'yoast-seo-analysis-worker' ),
-			'keywords_assessment_url' => YoastSEO()->helpers->asset->get_asset_url( 'yoast-seo-used-keywords-assessment' ),
+			'url'                     => \YoastSEO()->helpers->asset->get_asset_url( 'yoast-seo-analysis-worker' ),
+			'dependencies'            => \YoastSEO()->helpers->asset->get_dependency_urls_by_handle( 'yoast-seo-analysis-worker' ),
+			'keywords_assessment_url' => \YoastSEO()->helpers->asset->get_asset_url( 'yoast-seo-used-keywords-assessment' ),
 			'log_level'               => WPSEO_Utils::get_analysis_worker_log_level(),
 			// We need to make the feature flags separately available inside of the analysis web worker.
 			'enabled_features'        => WPSEO_Utils::retrieve_enabled_features(),
@@ -428,6 +431,7 @@ class Elementor implements Integration_Interface {
 			'isPost'            => true,
 			'isBlockEditor'     => WP_Screen::get()->is_block_editor(),
 			'isElementorEditor' => true,
+			'postStatus'        => get_post_status( $post_id ),
 			'analysis'          => [
 				'plugins'                     => $plugins_script_data,
 				'worker'                      => $worker_script_data,
@@ -481,13 +485,40 @@ class Elementor implements Integration_Interface {
 		\printf(
 			'<input type="hidden" id="%1$s" name="%1$s" value="%2$s" />',
 			\esc_attr( WPSEO_Meta::$form_prefix . 'slug' ),
-			\esc_attr( $this->get_metabox_post()->post_name )
+			\esc_attr( $this->get_post_slug() )
 		);
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output should be escaped in the filter.
 		echo \apply_filters( 'wpseo_elementor_hidden_fields', '' );
 
 		echo '</form>';
+	}
+
+	/**
+	 * Returns the slug for the post being edited.
+	 *
+	 * @return string
+	 */
+	protected function get_post_slug() {
+		$post = $this->get_metabox_post();
+
+		// In case get_metabox_post returns null for whatever reason.
+		if ( ! $post instanceof WP_Post ) {
+			return '';
+		}
+
+		// Drafts might not have a post_name unless the slug has been manually changed.
+		// In this case we get it using get_sample_permalink.
+		if ( ! $post->post_name ) {
+			$sample = \get_sample_permalink( $post );
+
+			// Since get_sample_permalink runs through filters, ensure that it has the expected return value.
+			if ( is_array( $sample ) && count( $sample ) === 2 && is_string( $sample[1] ) ) {
+				return $sample[1];
+			}
+		}
+
+		return $post->post_name;
 	}
 
 	/**
@@ -562,8 +593,12 @@ class Elementor implements Integration_Interface {
 			'sep',
 			'page',
 			'currentyear',
+			'currentdate',
+			'currentmonth',
+			'currentday',
 			'tag',
 			'category',
+			'category_title',
 			'primary_category',
 			'pt_single',
 			'pt_plural',
@@ -572,6 +607,13 @@ class Elementor implements Integration_Interface {
 			'user_description',
 			'pagetotal',
 			'pagenumber',
+			'post_year',
+			'post_month',
+			'post_day',
+			'author_first_name',
+			'author_last_name',
+			'permalink',
+			'post_content',
 		];
 
 		foreach ( $vars_to_cache as $var ) {
@@ -594,6 +636,15 @@ class Elementor implements Integration_Interface {
 		$post_type = $recommended_replace_vars->determine_for_post( $this->get_metabox_post() );
 
 		return $recommended_replace_vars->get_recommended_replacevars_for( $post_type );
+	}
+
+	/**
+	 * Returns the list of replace vars that should be hidden inside the editor.
+	 *
+	 * @return string[] The hidden replace vars.
+	 */
+	protected function get_hidden_replace_vars() {
+		return ( new WPSEO_Replace_Vars() )->get_hidden_replace_vars();
 	}
 
 	/**

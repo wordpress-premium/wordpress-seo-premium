@@ -213,7 +213,7 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	}
 
 	/**
-	 * Get the URL to the term and returns it's path.
+	 * Gets the URL to the term and returns its path.
 	 *
 	 * @param string $tag      The current tag name.
 	 * @param string $taxonomy The name of the current taxonomy.
@@ -221,8 +221,16 @@ class WPSEO_Term_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return string
 	 */
 	protected function get_target_url( $tag, $taxonomy ) {
+		// Get the term link.
+		$term_link = get_term_link( $tag, $taxonomy );
+
+		// Return early if the term link is not a string, i.e. a WP_Error Object.
+		if ( ! is_string( $term_link ) ) {
+			return '';
+		}
+
 		// Use the correct URL path.
-		$url = wp_parse_url( get_term_link( $tag, $taxonomy ) );
+		$url = wp_parse_url( $term_link );
 		if ( is_array( $url ) && isset( $url['path'] ) ) {
 			return $url['path'];
 		}

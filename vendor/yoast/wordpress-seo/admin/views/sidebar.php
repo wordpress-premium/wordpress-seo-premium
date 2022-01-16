@@ -7,8 +7,8 @@
 
 $wpseo_plugin_dir_url = plugin_dir_url( WPSEO_FILE );
 $new_tab_message      = WPSEO_Admin_Utils::get_new_tab_message();
-$wpseo_page           = filter_input( INPUT_GET, 'page' );
 ?>
+
 <div class="wpseo_content_cell" id="sidebar-container">
 	<div id="sidebar" class="yoast-sidebar">
 		<div class="wpseo_content_cell_title yoast-sidebar__title">
@@ -38,9 +38,8 @@ $wpseo_page           = filter_input( INPUT_GET, 'page' );
 				<li><strong><?php esc_html_e( '24/7 email support', 'wordpress-seo' ); ?></strong></li>
 				<li><strong><?php esc_html_e( 'No ads!', 'wordpress-seo' ); ?></strong></li>
 			</ul>
-
 			<a id="wpseo-premium-button" class="yoast-button-upsell"
-				href="<?php echo esc_url( add_query_arg( [ 'screen' => $wpseo_page ], WPSEO_Shortlinker::get( 'https://yoa.st/jj' ) ) ); ?>" target="_blank">
+				href="<?php WPSEO_Shortlinker::show( 'https://yoa.st/jj' ); ?>" target="_blank">
 				<?php
 				/* translators: %s expands to Yoast SEO Premium */
 				printf( esc_html__( 'Get %s', 'wordpress-seo' ), 'Yoast SEO Premium' );
@@ -48,7 +47,7 @@ $wpseo_page           = filter_input( INPUT_GET, 'page' );
 				echo $new_tab_message;
 				echo '<span aria-hidden="true" class="yoast-button-upsell__caret"></span>';
 				?>
-			</a><br>
+			</a>
 		</div>
 		<div class="yoast-sidebar__section">
 			<h2>
@@ -58,7 +57,7 @@ $wpseo_page           = filter_input( INPUT_GET, 'page' );
 			</h2>
 			<p>
 				<?php
-				$url = add_query_arg( [ 'screen' => $wpseo_page ], WPSEO_Shortlinker::get( 'https://yoa.st/3t6' ) );
+				$url = WPSEO_Shortlinker::get( 'https://yoa.st/3t6' );
 
 				/* translators: %1$s expands to Yoast SEO academy, which is a clickable link. */
 				printf( esc_html__( 'Want to learn SEO from Team Yoast? Check out our %1$s!', 'wordpress-seo' ), '<a href="' . esc_url( $url ) . '"><strong>Yoast SEO academy</strong></a>' );

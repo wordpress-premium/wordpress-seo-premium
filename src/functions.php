@@ -5,6 +5,7 @@
  * @package Yoast\WP\SEO\Premium
  */
 
+use Yoast\WP\SEO\Premium\Addon_Installer;
 use Yoast\WP\SEO\Premium\Main;
 
 /**
@@ -19,7 +20,8 @@ function YoastSEOPremium() {
 
 	static $main;
 	if ( did_action( 'wpseo_loaded' ) ) {
-		if ( $main === null ) {
+		$should_load = Addon_Installer::is_yoast_seo_up_to_date();
+		if ( $main === null && $should_load ) {
 			// Ensure free is loaded as loading premium will fail without it.
 			YoastSEO();
 			$main = new Main();

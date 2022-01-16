@@ -1,6 +1,9 @@
 <?php
+
 namespace Yoast\WP\SEO\Integrations\Third_Party;
 
+use DateTime;
+use stdClass;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Helpers\Date_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
@@ -32,6 +35,13 @@ class TranslationsPress implements Integration_Interface {
 	 * @var string
 	 */
 	protected $api_url;
+
+	/**
+	 * The array to cache our addition to the `site_transient_update_plugins` filter.
+	 *
+	 * @var array|null
+	 */
+	protected $cached_translations;
 
 	/**
 	 * The Date helper object.
@@ -83,6 +93,7 @@ class TranslationsPress implements Integration_Interface {
 
 	/**
 	 * Filters the translations transients to include the private plugin or theme.
+	 * Caches our own return value to prevent heavy overhead.
 	 *
 	 * @param bool|object $value The transient value.
 	 *
@@ -90,18 +101,26 @@ class TranslationsPress implements Integration_Interface {
 	 */
 	public function site_transient_update_plugins( $value ) {
 		if ( ! $value ) {
-			$value = new \stdClass();
+			$value = new stdClass();
 		}
 
 		if ( ! isset( $value->translations ) ) {
 			$value->translations = [];
 		}
 
+		if ( \is_array( $this->cached_translations ) ) {
+			$value->translations = \array_merge( $value->translations, $this->cached_translations );
+			return $value;
+		}
+
+		$this->cached_translations = [];
+
 		$translations = $this->get_translations();
 		if ( empty( $translations[ $this->slug ]['translations'] ) ) {
 			return $value;
 		}
 
+		// The following call is the reason we need to cache the results of this method.
 		$installed_translations = \wp_get_installed_translations( 'plugins' );
 		$available_languages    = \get_available_languages();
 		foreach ( $translations[ $this->slug ]['translations'] as $translation ) {
@@ -110,18 +129,19 @@ class TranslationsPress implements Integration_Interface {
 			}
 
 			if ( isset( $installed_translations[ $this->slug ][ $translation['language'] ] ) && $translation['updated'] ) {
-				$local  = new \DateTime( $installed_translations[ $this->slug ][ $translation['language'] ]['PO-Revision-Date'] );
-				$remote = new \DateTime( $translation['updated'] );
+				$local  = new DateTime( $installed_translations[ $this->slug ][ $translation['language'] ]['PO-Revision-Date'] );
+				$remote = new DateTime( $translation['updated'] );
 
 				if ( $local >= $remote ) {
 					continue;
 				}
 			}
 
-			$translation['type']       = 'plugin';
-			$translation['slug']       = $this->slug;
-			$translation['autoupdate'] = true;
-			$value->translations[]     = $translation;
+			$translation['type']         = 'plugin';
+			$translation['slug']         = $this->slug;
+			$translation['autoupdate']   = true;
+			$value->translations[]       = $translation;
+			$this->cached_translations[] = $translation;
 		}
 
 		return $value;

@@ -231,9 +231,9 @@ class Current_Page_Helper {
 		$queried_object = $wp_query->get_queried_object();
 
 		return (
-			$wp_query->is_posts_page &&
-			\is_a( $queried_object, WP_Post::class ) &&
-			$queried_object->post_type === 'page'
+			$wp_query->is_posts_page
+			&& \is_a( $queried_object, WP_Post::class )
+			&& $queried_object->post_type === 'page'
 		);
 	}
 
@@ -416,7 +416,7 @@ class Current_Page_Helper {
 
 		if ( $is_yoast_seo === null ) {
 			$current_page = \filter_input( \INPUT_GET, 'page' );
-			$is_yoast_seo = ( \strpos( $current_page, 'wpseo_' ) === 0 );
+			$is_yoast_seo = ( is_string( $current_page ) && \strpos( $current_page, 'wpseo_' ) === 0 );
 		}
 
 		return $is_yoast_seo;

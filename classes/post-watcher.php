@@ -524,7 +524,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Retrieves wpseo_old_post_url field from the post.
 	 *
-	 * @return mixed.
+	 * @return mixed
 	 */
 	protected function get_post_old_post_url() {
 		return filter_input( INPUT_POST, 'wpseo_old_post_url' );
@@ -533,7 +533,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Retrieves action field from the post.
 	 *
-	 * @return mixed.
+	 * @return mixed
 	 */
 	protected function get_post_action() {
 		return filter_input( INPUT_POST, 'action' );

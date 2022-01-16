@@ -7,6 +7,7 @@ use Yoast\WP\SEO\Actions\Indexing\Indexable_General_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Type_Archive_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Term_Indexation_Action;
+use Yoast\WP\SEO\Actions\Indexing\Indexation_Action_Interface;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Helpers\Language_Helper;
@@ -15,7 +16,6 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Actions\Prominent_Words\Content_Action;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Routes\Prominent_Words_Route;
-use Yoast\WP\SEO\Actions\Indexing\Indexation_Action_Interface;
 
 /**
  * Class Indexing_Integration.
@@ -194,7 +194,10 @@ class Indexing_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'wpseo_tools' || ( $_GET['page'] === 'wpseo_tools' && isset( $_GET['tool'] ) ) ) {
+		if ( ! isset( $_GET['page'] ) ||
+			 ( $_GET['page'] !== 'wpseo_tools' && $_GET['page'] !== 'wpseo_workouts' ) ||
+			 ( $_GET['page'] === 'wpseo_tools' && isset( $_GET['tool'] ) )
+		) {
 			return;
 		}
 

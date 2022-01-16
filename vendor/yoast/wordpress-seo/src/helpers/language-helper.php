@@ -18,7 +18,7 @@ class Language_Helper {
 	 * @return bool Whether word form recognition is active for the used language.
 	 */
 	public function is_word_form_recognition_active( $language ) {
-		$supported_languages = [ 'de', 'en', 'es', 'fr', 'it', 'nl', 'ru', 'id', 'pt', 'pl', 'ar', 'sv', 'he', 'hu', 'nb', 'tr', 'cs', 'sk' ];
+		$supported_languages = [ 'de', 'en', 'es', 'fr', 'it', 'nl', 'ru', 'id', 'pt', 'pl', 'ar', 'sv', 'he', 'hu', 'nb', 'tr', 'cs', 'sk', 'el', 'ja' ];
 
 		return \in_array( $language, $supported_languages, true );
 	}
@@ -32,7 +32,7 @@ class Language_Helper {
 	 * @return bool Whether the language has function word support.
 	 */
 	public function has_function_word_support( $language ) {
-		$supported_languages = [ 'en', 'de', 'nl', 'fr', 'es', 'it', 'pt', 'ru', 'pl', 'sv', 'id', 'he', 'ar', 'hu', 'nb', 'tr', 'cs', 'sk' ];
+		$supported_languages = [ 'en', 'de', 'nl', 'fr', 'es', 'it', 'pt', 'ru', 'pl', 'sv', 'id', 'he', 'ar', 'hu', 'nb', 'tr', 'cs', 'sk', 'fa', 'el', 'ja' ];
 
 		return \in_array( $language, $supported_languages, true );
 	}
@@ -44,11 +44,12 @@ class Language_Helper {
 	 * @return string The language to use to select a researcher.
 	 */
 	public function get_researcher_language() {
-		$researcher_language = WPSEO_Language_Utils::get_language( get_locale() );
-		if ( ! \in_array( $researcher_language, Researcher_Languages::SUPPORTED_LANGUAGES, true ) ) {
+		$researcher_language = WPSEO_Language_Utils::get_language( \get_locale() );
+		$supported_languages = Researcher_Languages::SUPPORTED_LANGUAGES;
+
+		if ( ! \in_array( $researcher_language, $supported_languages, true ) ) {
 			$researcher_language = 'default';
 		}
-
 		return $researcher_language;
 	}
 }

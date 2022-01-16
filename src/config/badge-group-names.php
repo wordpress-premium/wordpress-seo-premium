@@ -11,6 +11,7 @@ use Yoast\WP\SEO\Config\Badge_Group_Names as New_Badge_Group_Names;
  * to be "new".
  */
 class Badge_Group_Names extends New_Badge_Group_Names {
+
 	const GROUP_GLOBAL_TEMPLATES = 'global-templates';
 
 	/**
@@ -23,7 +24,7 @@ class Badge_Group_Names extends New_Badge_Group_Names {
 	/**
 	 * Badge_Group_Names constructor.
 	 *
-	 * @param string $version Optional: the current version number.
+	 * @param string|null $version Optional. The current version number.
 	 */
 	public function __construct( $version = null ) {
 		parent::__construct( $version );

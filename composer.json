@@ -1,8 +1,8 @@
 {
-  "name": "wordpress-premium/wpseo-premium",
+  "name": "wordpress-premium/wordpress-seo-premiumm",
   "description": "Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.",
   "type": "wordpress-plugin",
-  "version": "17.0",
+  "version": "17.9",
   "license": "GPL-3.0-or-later",
   "require": {
     "composer/installers": "~1.6"

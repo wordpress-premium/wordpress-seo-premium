@@ -17,7 +17,7 @@ class Addon_Installer {
 	/**
 	 * The minimum Yoast SEO version required.
 	 */
-	const MINIMUM_YOAST_SEO_VERSION = '16.9';
+	const MINIMUM_YOAST_SEO_VERSION = '17.9';
 
 	/**
 	 * The base directory for the installer.
@@ -199,12 +199,21 @@ class Addon_Installer {
 	}
 
 	/**
+	 * Checks if Yoast SEO is at a minimum required version.
+	 *
+	 * @return bool True if Yoast SEO is at a minimal required version
+	 */
+	public static function is_yoast_seo_up_to_date() {
+		return ( \defined( 'WPSEO_VERSION' ) && \version_compare( \WPSEO_VERSION, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '>=' ) );
+	}
+
+	/**
 	 * Resets the installation status if Yoast SEO is not installed or outdated.
 	 *
 	 * @return void
 	 */
 	public function validate_installation_status() {
-		if ( ! \defined( 'WPSEO_VERSION' ) || \version_compare( \WPSEO_VERSION, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '<' ) ) {
+		if ( ! self::is_yoast_seo_up_to_date() ) {
 			\delete_option( self::OPTION_KEY );
 			if ( ! \defined( 'WPSEO_VERSION' ) ) {
 				$this->load_yoast_seo_from_vendor_directory();

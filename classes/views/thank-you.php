@@ -100,7 +100,7 @@
 			?>
 
 		</p>
-		<a href="<?php echo esc_url( add_query_arg( [ 'screen' => 'wpseo_installation_successful' ], WPSEO_Shortlinker::get( 'https://yoa.st/4em' ) ) ); ?>" class="yoast-button yoast-button--secondary" target="_blank">
+		<a href="<?php echo esc_url( add_query_arg( [ 'screen' => 'wpseo_installation_successful' ], esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4em' ) ) ) ); ?>" class="yoast-button yoast-button--secondary" target="_blank">
 			<?php esc_html_e( 'Browse our courses', 'wordpress-seo-premium' ); ?>
 		</a>
 	</div>

@@ -1,4 +1,4 @@
-<?php // phpcs:ignore Yoast.Files.FileName.InvalidClassFileName
+<?php
 /**
  * WPSEO Premium plugin file.
  *

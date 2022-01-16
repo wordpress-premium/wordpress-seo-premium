@@ -20,7 +20,7 @@ final class WPSEO_CLI_Redirect_Follow_Command extends WPSEO_CLI_Redirect_Base_Co
 	/**
 	 * Stack of traversed targets.
 	 *
-	 * @var array<string>
+	 * @var string[]
 	 */
 	private $stack = [];
 

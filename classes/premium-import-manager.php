@@ -167,7 +167,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 *
 	 * @param array $result The import result.
 	 *
-	 * @return void.
+	 * @return void
 	 */
 	protected function set_import_success( array $result ) {
 		$this->import->success = true;

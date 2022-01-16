@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\SEO\Premium\Integrations\Admin;
 
+use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
@@ -60,7 +61,7 @@ class Thank_You_Page_Integration implements Integration_Interface {
 		if ( ! empty( $this->options_helper->get( 'activation_redirect_timestamp' ) ) ) {
 			return;
 		}
-		$this->options_helper->set( 'activation_redirect_timestamp', time() );
+		$this->options_helper->set( 'activation_redirect_timestamp', \time() );
 
 		\wp_safe_redirect( \admin_url( 'admin.php?page=wpseo_installation_successful' ), 302, 'Yoast SEO Premium' );
 		exit;
@@ -95,7 +96,7 @@ class Thank_You_Page_Integration implements Integration_Interface {
 			return;
 		}
 
-		$asset_manager = new \WPSEO_Admin_Asset_Manager();
+		$asset_manager = new WPSEO_Admin_Asset_Manager();
 		$asset_manager->enqueue_style( 'monorepo' );
 		\wp_enqueue_style( 'yoast-seo-premium-thank-you' );
 	}
@@ -104,6 +105,6 @@ class Thank_You_Page_Integration implements Integration_Interface {
 	 * Renders the thank you page.
 	 */
 	public function render_page() {
-		require WPSEO_PREMIUM_PATH . 'classes/views/thank-you.php';
+		require \WPSEO_PREMIUM_PATH . 'classes/views/thank-you.php';
 	}
 }

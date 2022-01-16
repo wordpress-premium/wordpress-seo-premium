@@ -8,11 +8,18 @@ use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Repositories\Prominent_Words_Repository;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
+use Yoast\WP\SEO\Repositories\SEO_Links_Repository;
 
 /**
  * Handles the actual requests to the prominent words endpoints.
  */
 class Link_Suggestions_Action {
+
+	/**
+	 * The amount of indexables to retrieve in one go
+	 * when generating internal linking suggestions.
+	 */
+	const BATCH_SIZE = 1000;
 
 	/**
 	 * The repository to retrieve prominent words from.
@@ -27,6 +34,13 @@ class Link_Suggestions_Action {
 	 * @var Indexable_Repository
 	 */
 	protected $indexable_repository;
+
+	/**
+	 * The repository to retrieve links from.
+	 *
+	 * @var SEO_Links_Repository
+	 */
+	protected $links_repository;
 
 	/**
 	 * Contains helper functions for calculating with and comparing prominent words.
@@ -49,30 +63,34 @@ class Link_Suggestions_Action {
 	 * @param Indexable_Repository                  $indexable_repository       The repository to retrieve indexables from.
 	 * @param Prominent_Words_Helper                $prominent_words_helper     Class with helper methods for prominent words.
 	 * @param WPSEO_Premium_Prominent_Words_Support $prominent_words_support    The prominent words support class.
+	 * @param SEO_Links_Repository                  $links_repository           The repository to retrieve links from.
 	 */
 	public function __construct(
 		Prominent_Words_Repository $prominent_words_repository,
 		Indexable_Repository $indexable_repository,
 		Prominent_Words_Helper $prominent_words_helper,
-		WPSEO_Premium_Prominent_Words_Support $prominent_words_support
+		WPSEO_Premium_Prominent_Words_Support $prominent_words_support,
+		SEO_Links_Repository $links_repository
 	) {
 		$this->prominent_words_repository = $prominent_words_repository;
 		$this->indexable_repository       = $indexable_repository;
 		$this->prominent_words_helper     = $prominent_words_helper;
 		$this->prominent_words_support    = $prominent_words_support;
+		$this->links_repository           = $links_repository;
 	}
 
 	/**
 	 * Suggests a list of links, based on the given array of prominent words.
 	 *
-	 * @param array  $words_from_request The prominent words as an array mapping words to weights.
-	 * @param int    $limit              The maximum number of link suggestions to retrieve.
-	 * @param int    $object_id          The object id for the current indexable.
-	 * @param string $object_type        The object type for the current indexable.
+	 * @param array  $words_from_request     The prominent words as an array mapping words to weights.
+	 * @param int    $limit                  The maximum number of link suggestions to retrieve.
+	 * @param int    $object_id              The object id for the current indexable.
+	 * @param string $object_type            The object type for the current indexable.
+	 * @param bool   $include_existing_links Optional. Whether or not to include existing links, defaults to true.
 	 *
 	 * @return array Links for the post that are suggested.
 	 */
-	public function get_suggestions( $words_from_request, $limit, $object_id, $object_type ) {
+	public function get_suggestions( $words_from_request, $limit, $object_id, $object_type, $include_existing_links = true ) {
 		$current_indexable_id = null;
 		$current_indexable    = $this->indexable_repository->find_by_id_and_type( $object_id, $object_type );
 		if ( $current_indexable ) {
@@ -81,9 +99,9 @@ class Link_Suggestions_Action {
 
 		/*
 		 * Gets best suggestions (returns a sorted array [$indexable_id => score]).
-		 * The indexables are processed in batches of 100 indexables each.
+		 * The indexables are processed in batches of 1000 indexables each.
 		 */
-		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $words_from_request, $limit, 100, $current_indexable_id );
+		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $words_from_request, $limit, self::BATCH_SIZE, $current_indexable_id, $include_existing_links );
 
 		$indexable_ids = \array_keys( $suggestions_scores );
 
@@ -112,12 +130,13 @@ class Link_Suggestions_Action {
 	/**
 	 * Suggests a list of links, based on the given array of prominent words.
 	 *
-	 * @param int $id    The object id for the current indexable.
-	 * @param int $limit The maximum number of link suggestions to retrieve.
+	 * @param int  $id                     The object id for the current indexable.
+	 * @param int  $limit                  The maximum number of link suggestions to retrieve.
+	 * @param bool $include_existing_links Optional. Whether or not to include existing links, defaults to true.
 	 *
 	 * @return array Links for the post that are suggested.
 	 */
-	public function get_indexable_suggestions_for_indexable( $id, $limit ) {
+	public function get_indexable_suggestions_for_indexable( $id, $limit, $include_existing_links = true ) {
 		$weighted_words  = [];
 		$prominent_words = $this->prominent_words_repository->query()
 			->where( 'indexable_id', $id )
@@ -128,9 +147,9 @@ class Link_Suggestions_Action {
 
 		/*
 		 * Gets best suggestions (returns a sorted array [$indexable_id => score]).
-		 * The indexables are processed in batches of 100 indexables each.
+		 * The indexables are processed in batches of 1000 indexables each.
 		 */
-		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $weighted_words, $limit, 100, $id );
+		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $weighted_words, $limit, self::BATCH_SIZE, $id, $include_existing_links );
 
 		$indexable_ids = \array_keys( $suggestions_scores );
 
@@ -331,16 +350,17 @@ class Link_Suggestions_Action {
 	 * Request prominent words for indexables in the batch (including the iDF of all words) to calculate
 	 * their vector length later.
 	 *
-	 * @param array $stems      The stems in the request.
-	 * @param int   $batch_size How many indexables to request in one query.
-	 * @param int   $page       The start of the current batch (in pages).
+	 * @param array $stems        The stems in the request.
+	 * @param int   $batch_size   How many indexables to request in one query.
+	 * @param int   $page         The start of the current batch (in pages).
+	 * @param int[] $excluded_ids The indexable IDs to exclude.
 	 *
 	 * @return array An array of ProminentWords objects, containing their stem, weight, indexable id,
 	 *               and document frequency.
 	 */
-	protected function get_candidate_words( $stems, $batch_size, $page ) {
+	protected function get_candidate_words( $stems, $batch_size, $page, $excluded_ids = [] ) {
 		return $this->prominent_words_repository->find_by_list_of_ids(
-			$this->prominent_words_repository->find_ids_by_stems( $stems, $batch_size, $page )
+			$this->prominent_words_repository->find_ids_by_stems( $stems, $batch_size, $page, $excluded_ids )
 		);
 	}
 
@@ -349,19 +369,32 @@ class Link_Suggestions_Action {
 	 * The candidate indexables are analyzed in batches.
 	 * After having computed scores for a batch the function saves the best candidates until now.
 	 *
-	 * @param array    $request_words        The words to match, as an array mapping words to weights.
-	 * @param int      $limit                The max number of suggestions that should be returned by the function.
-	 * @param int      $batch_size           The number of indexables that should be analyzed in every batch.
-	 * @param int|null $current_indexable_id The id for the current indexable.
+	 * @param array    $request_words          The words to match, as an array mapping words to weights.
+	 * @param int      $limit                  The max number of suggestions that should be returned by the function.
+	 * @param int      $batch_size             The number of indexables that should be analyzed in every batch.
+	 * @param int|null $current_indexable_id   The id for the current indexable.
+	 * @param bool     $include_existing_links Optional. Whether or not to include existing links, defaults to true.
 	 *
 	 * @return array An array mapping indexable IDs to scores. Higher scores mean better matches.
 	 */
-	protected function retrieve_suggested_indexable_ids( $request_words, $limit, $batch_size, $current_indexable_id ) {
+	protected function retrieve_suggested_indexable_ids( $request_words, $limit, $batch_size, $current_indexable_id, $include_existing_links = true ) {
 		// Combine stems, weights and DFs from request.
 		$request_data = $this->compose_request_data( $request_words );
 
 		// Calculate vector length of the request set (needed for score normalization later).
 		$request_vector_length = $this->prominent_words_helper->compute_vector_length( $request_data );
+
+		// Get all links the post already links to, those shouldn't be suggested.
+		$excluded_indexable_ids = [ $current_indexable_id ];
+		if ( ! $include_existing_links && $current_indexable_id ) {
+			$links                  = $this->links_repository->query()
+				->distinct()
+				->select( 'indexable_id' )
+				->where( 'target_indexable_id', $current_indexable_id )
+				->find_many();
+			$excluded_indexable_ids = \array_merge( $excluded_indexable_ids, \wp_list_pluck( $links, 'indexable_id' ) );
+		}
+		$excluded_indexable_ids = \array_filter( $excluded_indexable_ids );
 
 		$request_stems = \array_keys( $request_data );
 		$scores        = [];
@@ -369,7 +402,7 @@ class Link_Suggestions_Action {
 
 		do {
 			// Retrieve the words of all indexables in this batch that share prominent word stems with request.
-			$candidates_words = $this->get_candidate_words( $request_stems, $batch_size, $page );
+			$candidates_words = $this->get_candidate_words( $request_stems, $batch_size, $page, $excluded_indexable_ids );
 
 			// Transform the prominent words table so that it is indexed by indexable_ids.
 			$candidates_words_by_indexable_ids = $this->group_words_by_indexable_id( $candidates_words );
@@ -379,10 +412,6 @@ class Link_Suggestions_Action {
 			foreach ( $candidates_words_by_indexable_ids as $id => $candidate_data ) {
 				$scores[ $id ] = $this->calculate_score_for_indexable( $request_data, $request_vector_length, $candidate_data );
 				++$batch_scores_size;
-			}
-
-			if ( $current_indexable_id && isset( $scores[ $current_indexable_id ] ) ) {
-				unset( $scores[ $current_indexable_id ] );
 			}
 
 			// Sort the list of scores and keep only the top $limit of the scores.

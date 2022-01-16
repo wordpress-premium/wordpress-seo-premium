@@ -154,8 +154,8 @@ class Elementor_Premium implements Integration_Interface {
 		];
 		$data = \array_merge( $data, $this->get_post_metabox_config() );
 
-		if ( current_user_can( 'edit_others_posts' ) ) {
-			$data['workoutsUrl'] = admin_url( 'admin.php?page=wpseo_workouts' );
+		if ( \current_user_can( 'edit_others_posts' ) ) {
+			$data['workoutsUrl'] = \admin_url( 'admin.php?page=wpseo_workouts' );
 		}
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.

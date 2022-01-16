@@ -36,11 +36,11 @@ class Migration_Runner_Premium extends New_Migration_Runner_Premium {
 	/**
 	 * Class constructor.
 	 *
+	 * @deprecated 16.3 Use {@see \Yoast\WP\SEO\Premium\Database\Migration_Runner_Premium} instead.
+	 *
 	 * @param Migration_Status $migration_status The migration status.
 	 * @param Loader           $loader           The loader.
 	 * @param Adapter          $adapter          The migrations adapter.
-	 *
-	 * @deprecated 16.3 Use {@see \Yoast\WP\SEO\Premium\Database\Migration_Runner_Premium} instead.
 	 */
 	public function __construct(
 		Migration_Status $migration_status,

@@ -28,7 +28,7 @@ $yoast_seo_quick_edit_table = $view_vars['quick_edit_table'];
 		printf(
 			/* translators: 1: opens a link to a related help center article. 2: closes the link. */
 			esc_html__( 'Regular Expression (regex) Redirects are extremely powerful redirects. You should only use them if you know what you are doing. %1$sRead more about regex redirects on our help center%2$s.', 'wordpress-seo-premium' ),
-			'<a href="https://yoa.st/3lo" target="_blank">',
+			'<a href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/3lo' ) ) . '" target="_blank">',
 			'</a>'
 		);
 		?>

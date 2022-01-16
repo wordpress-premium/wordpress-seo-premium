@@ -3,6 +3,7 @@
 namespace Yoast\WP\Lib;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * Make Model compatible with WordPress.
@@ -88,6 +89,13 @@ class Model implements JsonSerializable {
 	protected $int_columns = [];
 
 	/**
+	 * Which columns contain float values.
+	 *
+	 * @var array
+	 */
+	protected $float_columns = [];
+
+	/**
 	 * Hacks around the Model to provide WordPress prefix to tables.
 	 *
 	 * @param string $class_name   Type of Model to load.
@@ -154,20 +162,22 @@ class Model implements JsonSerializable {
 	 * class or the property does not exist, returns the default
 	 * value supplied as the third argument (which defaults to null).
 	 *
-	 * @param string      $class_name The target class name.
-	 * @param string      $property   The property to get the value for.
-	 * @param string|null $default    Default value when property does not exist.
+	 * @param string     $class_name    The target class name.
+	 * @param string     $property      The property to get the value for.
+	 * @param mixed|null $default_value Default value when property does not exist.
 	 *
-	 * @return string The value of the property.
+	 * @return mixed|null The value of the property.
 	 */
-	protected static function get_static_property( $class_name, $property, $default = null ) {
+	protected static function get_static_property( $class_name, $property, $default_value = null ) {
 		if ( ! \class_exists( $class_name ) || ! \property_exists( $class_name, $property ) ) {
-			return $default;
+			return $default_value;
 		}
 
-		$properties = \get_class_vars( $class_name );
+		if ( ! isset( $class_name::${$property} ) ) {
+			return $default_value;
+		}
 
-		return $properties[ $property ];
+		return $class_name::${$property};
 	}
 
 	/**
@@ -505,6 +515,9 @@ class Model implements JsonSerializable {
 		if ( $value !== null && \in_array( $property, $this->int_columns, true ) ) {
 			return (int) $value;
 		}
+		if ( $value !== null && \in_array( $property, $this->float_columns, true ) ) {
+			return (float) $value;
+		}
 
 		return $value;
 	}
@@ -522,6 +535,9 @@ class Model implements JsonSerializable {
 			$value = ( $value ) ? '1' : '0';
 		}
 		if ( $value !== null && \in_array( $property, $this->int_columns, true ) ) {
+			$value = (string) $value;
+		}
+		if ( $value !== null && \in_array( $property, $this->float_columns, true ) ) {
 			$value = (string) $value;
 		}
 
@@ -544,6 +560,7 @@ class Model implements JsonSerializable {
 	 *
 	 * @return array The data of this object.
 	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->orm->as_array();
 	}

@@ -75,6 +75,11 @@ use Yoast\WP\Lib\Model;
  * @property bool   $has_ancestors
  *
  * @property int    $estimated_reading_time_minutes
+ *
+ * @property string $object_last_modified
+ * @property string $object_published_at
+ *
+ * @property int    $version
  */
 class Indexable extends Model {
 
@@ -127,6 +132,7 @@ class Indexable extends Model {
 		'prominent_words_version',
 		'blog_id',
 		'estimated_reading_time_minutes',
+		'version',
 	];
 
 	/**
@@ -161,7 +167,7 @@ class Indexable extends Model {
 			$this->sanitize_permalink();
 			$this->permalink_hash = \strlen( $this->permalink ) . ':' . \md5( $this->permalink );
 		}
-		if ( \strlen( $this->primary_focus_keyword ) > 191 ) {
+		if ( is_string( $this->primary_focus_keyword ) && \mb_strlen( $this->primary_focus_keyword ) > 191 ) {
 			$this->primary_focus_keyword = \mb_substr( $this->primary_focus_keyword, 0, 191, 'UTF-8' );
 		}
 
