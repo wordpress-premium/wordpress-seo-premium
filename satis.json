@@ -1,0 +1,7 @@
+{
+  "name": "Yoast SEO Premium",
+  "repositories": [
+    { "type": "vcs", "url": "https://gitlab.com/wordpress-premium-private/wordpress-seo-premium" }
+  ],
+  "require-all": true
+}
