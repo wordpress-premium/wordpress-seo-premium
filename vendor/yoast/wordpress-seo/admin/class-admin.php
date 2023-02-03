@@ -6,6 +6,7 @@
  */
 
 use Yoast\WP\SEO\Helpers\Wordpress_Helper;
+use Yoast\WP\SEO\Integrations\Settings_Integration;
 
 /**
  * Class that holds most of the admin functionality for Yoast SEO.
@@ -166,7 +167,7 @@ class WPSEO_Admin {
 		// phpcs:ignore WordPress.Security -- The variable is only used in strpos and thus safe to not unslash or sanitize.
 		$option_page = ! empty( $_POST['option_page'] ) ? $_POST['option_page'] : '';
 
-		if ( strpos( $option_page, 'yoast_wpseo' ) === 0 ) {
+		if ( strpos( $option_page, 'yoast_wpseo' ) === 0 || strpos( $option_page, Settings_Integration::PAGE ) === 0 ) {
 			add_filter( 'option_page_capability_' . $option_page, [ $this, 'get_manage_options_cap' ] );
 		}
 	}
@@ -251,7 +252,7 @@ class WPSEO_Admin {
 		}
 
 		// Add link to premium landing page.
-		$premium_link = '<a style="font-weight: bold;" href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/1yb' ) ) . '" target="_blank">' . __( 'Get Premium', 'wordpress-seo' ) . '</a>';
+		$premium_link = '<a style="font-weight: bold;" href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/1yb' ) ) . '" target="_blank" data-action="load-nfd-ctb" data-ctb-id="57d6a568-783c-45e2-a388-847cff155897">' . __( 'Get Premium', 'wordpress-seo' ) . '</a>';
 		array_unshift( $links, $premium_link );
 
 		return $links;

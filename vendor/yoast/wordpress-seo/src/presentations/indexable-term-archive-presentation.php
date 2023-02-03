@@ -3,6 +3,7 @@
 namespace Yoast\WP\SEO\Presentations;
 
 use WP_Term;
+use Yoast\WP\SEO\Helpers\Pagination_Helper;
 use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
 use Yoast\WP\SEO\Wrappers\WP_Query_Wrapper;
 
@@ -16,6 +17,13 @@ use Yoast\WP\SEO\Wrappers\WP_Query_Wrapper;
 class Indexable_Term_Archive_Presentation extends Indexable_Presentation {
 
 	use Archive_Adjacent;
+
+	/**
+	 * Holds the Pagination_Helper instance.
+	 *
+	 * @var Pagination_Helper
+	 */
+	protected $pagination;
 
 	/**
 	 * Holds the WP query wrapper instance.
@@ -61,17 +69,16 @@ class Indexable_Term_Archive_Presentation extends Indexable_Presentation {
 			return $this->model->canonical;
 		}
 
-		$permalink = $this->get_permalink();
-		if ( ! $permalink ) {
+		if ( ! $this->permalink ) {
 			return '';
 		}
 
 		$current_page = $this->pagination->get_current_archive_page_number();
 		if ( $current_page > 1 ) {
-			return $this->pagination->get_paginated_url( $permalink, $current_page );
+			return $this->pagination->get_paginated_url( $this->permalink, $current_page );
 		}
 
-		return $permalink;
+		return $this->permalink;
 	}
 
 	/**
@@ -93,7 +100,11 @@ class Indexable_Term_Archive_Presentation extends Indexable_Presentation {
 	 * @return array The source.
 	 */
 	public function generate_source() {
-		return \get_term( $this->model->object_id, $this->model->object_sub_type );
+		if ( ! empty( $this->model->object_id ) ) {
+			return \get_term( $this->model->object_id, $this->model->object_sub_type );
+		}
+
+		return \get_term( \get_queried_object()->term_id, \get_queried_object()->taxonomy );
 	}
 
 	/**

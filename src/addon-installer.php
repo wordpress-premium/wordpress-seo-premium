@@ -17,7 +17,7 @@ class Addon_Installer {
 	/**
 	 * The minimum Yoast SEO version required.
 	 */
-	const MINIMUM_YOAST_SEO_VERSION = '18.5';
+	const MINIMUM_YOAST_SEO_VERSION = '20.0';
 
 	/**
 	 * The base directory for the installer.
@@ -370,8 +370,9 @@ class Addon_Installer {
 	 * @throws Exception If the move failed.
 	 */
 	protected function move_vendor_directory() {
-		if ( ! \rename( $this->base_dir . '/vendor/yoast/wordpress-seo', $this->yoast_seo_dir ) ) {
-			throw new Exception( 'Could not automatically installed Yoast SEO' );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Prevent a potential PHP warning on Windows.
+		if ( ! @\rename( $this->base_dir . '/vendor/yoast/wordpress-seo', $this->yoast_seo_dir ) ) {
+			throw new Exception( 'Could not automatically install Yoast SEO' );
 		}
 	}
 

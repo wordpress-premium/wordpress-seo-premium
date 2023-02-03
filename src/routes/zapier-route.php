@@ -50,6 +50,20 @@ class Zapier_Route implements Route_Interface {
 	const PERFORM_LIST = self::ROUTE_PREFIX . '/list';
 
 	/**
+	 * The is_connected route constant.
+	 *
+	 * @var string
+	 */
+	const IS_CONNECTED = self::ROUTE_PREFIX . '/is_connected';
+
+	/**
+	 * The reset_api_key route constant.
+	 *
+	 * @var string
+	 */
+	const RESET_API_KEY = self::ROUTE_PREFIX . '/reset_api_key';
+
+	/**
 	 * Instance of the Zapier_Action.
 	 *
 	 * @var Zapier_Action
@@ -131,6 +145,28 @@ class Zapier_Route implements Route_Interface {
 			'permission_callback' => '__return_true',
 		];
 		\register_rest_route( Main::API_V1_NAMESPACE, self::PERFORM_LIST, $perform_list_route_args );
+
+		$is_connected_route_args = [
+			'methods'             => 'GET',
+			'args'                => [],
+			'callback'            => [ $this, 'is_connected' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		];
+		\register_rest_route( Main::API_V1_NAMESPACE, self::IS_CONNECTED, $is_connected_route_args );
+
+		$reset_api_key_route_args = [
+			'methods'             => 'POST',
+			'args'                => [
+				'api_key' => [
+					'required'    => true,
+					'type'        => 'string',
+					'description' => 'The API key to reset.',
+				],
+			],
+			'callback'            => [ $this, 'reset_api_key' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		];
+		\register_rest_route( Main::API_V1_NAMESPACE, self::RESET_API_KEY, $reset_api_key_route_args );
 	}
 
 	/**
@@ -178,16 +214,51 @@ class Zapier_Route implements Route_Interface {
 	}
 
 	/**
-	 * Runs the check_api_key action.
+	 * Runs the perform_list action.
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 *
-	 * @return WP_REST_Response The response of the check_api_key action.
+	 * @return WP_REST_Response The response of the perform_list action.
 	 */
 	public function perform_list( WP_REST_Request $request ) {
 		$response = $this->zapier_action->perform_list( $request['api_key'] );
 
 		return new WP_REST_Response( $response->data, $response->status );
+	}
+
+	/**
+	 * Runs the is_connected action.
+	 *
+	 * @return WP_REST_Response The response of the is_connected action.
+	 */
+	public function is_connected() {
+		$response = $this->zapier_action->is_connected();
+
+		return new WP_REST_Response( [ 'json' => $response->data ] );
+	}
+
+	/**
+	 * Runs the reset_api_key action.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 *
+	 * @return WP_REST_Response The response of the reset_api_key action.
+	 */
+	public function reset_api_key( WP_REST_Request $request ) {
+		$result = $this->zapier_action->reset_api_key( $request['api_key'] );
+
+		return new WP_REST_Response( [ 'json' => $result->data ] );
+	}
+
+	/**
+	 * Checks if the user is authorised to query the connection status or reset the key.
+	 *
+	 * @codeCoverageIgnore Just a wrapper for a WordPress function.
+	 *
+	 * @return bool Whether the user is authorised to query the connection status or reset the key.
+	 */
+	public function check_permissions() {
+		return \current_user_can( 'wpseo_manage_options' );
 	}
 
 	/**

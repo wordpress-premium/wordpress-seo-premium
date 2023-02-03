@@ -12,8 +12,6 @@ use Yoast\WP\SEO\Values\Indexables\Indexable_Builder_Versions;
 
 /**
  * Reindexing action for post indexables.
- *
- * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Indexable_Post_Indexation_Action extends Abstract_Indexing_Action {
 
@@ -141,7 +139,7 @@ class Indexable_Post_Indexation_Action extends Abstract_Indexing_Action {
 	protected function get_count_query() {
 		$indexable_table = Model::get_table_name( 'Indexable' );
 
-		$post_types             = $this->get_post_types();
+		$post_types             = $this->post_type_helper->get_indexable_post_types();
 		$excluded_post_statuses = $this->post_helper->get_excluded_post_statuses();
 		$replacements           = \array_merge(
 			$post_types,
@@ -176,7 +174,7 @@ class Indexable_Post_Indexation_Action extends Abstract_Indexing_Action {
 	protected function get_select_query( $limit = false ) {
 		$indexable_table = Model::get_table_name( 'Indexable' );
 
-		$post_types             = $this->get_post_types();
+		$post_types             = $this->post_type_helper->get_indexable_post_types();
 		$excluded_post_statuses = $this->post_helper->get_excluded_post_statuses();
 		$replacements           = \array_merge(
 			$post_types,
@@ -205,18 +203,5 @@ class Indexable_Post_Indexation_Action extends Abstract_Indexing_Action {
 			$limit_query",
 			$replacements
 		);
-	}
-
-	/**
-	 * Returns the post types that should be indexed.
-	 *
-	 * @return array The post types that should be indexed.
-	 */
-	protected function get_post_types() {
-		$public_post_types   = $this->post_type_helper->get_public_post_types();
-		$excluded_post_types = $this->post_type_helper->get_excluded_post_types_for_indexables();
-
-		// `array_values`, to make sure that the keys are reset.
-		return \array_values( \array_diff( $public_post_types, $excluded_post_types ) );
 	}
 }

@@ -76,9 +76,9 @@ class Thank_You_Page_Integration implements Integration_Interface {
 	 */
 	public function add_submenu_page( $submenu_pages ) {
 		\add_submenu_page(
-			null,
+			'',
 			\__( 'Installation Successful', 'wordpress-seo-premium' ),
-			null,
+			'',
 			'manage_options',
 			'wpseo_installation_successful',
 			[ $this, 'render_page' ]

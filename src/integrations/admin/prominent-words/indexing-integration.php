@@ -195,7 +195,7 @@ class Indexing_Integration implements Integration_Interface {
 	 */
 	public function enqueue_scripts() {
 		if ( ! isset( $_GET['page'] )
-			|| ( $_GET['page'] !== 'wpseo_tools' && $_GET['page'] !== 'wpseo_workouts' )
+			|| ( $_GET['page'] !== 'wpseo_tools' && $_GET['page'] !== 'wpseo_workouts' && $_GET['page'] !== 'wpseo_dashboard' )
 			|| ( $_GET['page'] === 'wpseo_tools' && isset( $_GET['tool'] ) )
 		) {
 			return;

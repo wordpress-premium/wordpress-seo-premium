@@ -119,7 +119,7 @@ if ( $yoast_seo_disable_toggles ) {
 		}
 		?>
 		<p class="submit">
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'wordpress-seo-premium' ); ?>" />
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'wordpress-seo-premium' ); ?>" />
 		</p>
 	</form>
 </div>

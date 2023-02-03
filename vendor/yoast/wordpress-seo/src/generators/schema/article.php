@@ -30,8 +30,7 @@ class Article extends Abstract_Schema_Piece {
 		}
 
 		if ( $this->context->schema_article_type !== 'None' ) {
-			$this->context->main_schema_id = $this->context->canonical . Schema_IDs::ARTICLE_HASH;
-
+			$this->context->has_article = true;
 			return true;
 		}
 
@@ -44,15 +43,19 @@ class Article extends Abstract_Schema_Piece {
 	 * @return array Article data.
 	 */
 	public function generate() {
-		$data = [
+		$author = \get_userdata( $this->context->post->post_author );
+		$data   = [
 			'@type'            => $this->context->schema_article_type,
 			'@id'              => $this->context->canonical . Schema_IDs::ARTICLE_HASH,
-			'isPartOf'         => [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ],
-			'author'           => [ '@id' => $this->helpers->schema->id->get_user_schema_id( $this->context->post->post_author, $this->context ) ],
+			'isPartOf'         => [ '@id' => $this->context->main_schema_id ],
+			'author'           => [
+				'name' => $this->helpers->schema->html->smart_strip_tags( $author->display_name ),
+				'@id'  => $this->helpers->schema->id->get_user_schema_id( $this->context->post->post_author, $this->context ),
+			],
 			'headline'         => $this->helpers->schema->html->smart_strip_tags( $this->helpers->post->get_post_title_with_fallback( $this->context->id ) ),
 			'datePublished'    => $this->helpers->date->format( $this->context->post->post_date_gmt ),
 			'dateModified'     => $this->helpers->date->format( $this->context->post->post_modified_gmt ),
-			'mainEntityOfPage' => [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ],
+			'mainEntityOfPage' => [ '@id' => $this->context->main_schema_id ],
 			'wordCount'        => $this->word_count( $this->context->post->post_content, $this->context->post->post_title ),
 		];
 
@@ -200,9 +203,34 @@ class Article extends Abstract_Schema_Piece {
 		// Strip pre/code blocks and their content.
 		$post_content = \preg_replace( '@<(pre|code)[^>]*?>.*?</\\1>@si', '', $post_content );
 
+		// Add space between tags that don't have it.
+		$post_content = \preg_replace( '@><@', '> <', $post_content );
+
 		// Strips all other tags.
 		$post_content = \wp_strip_all_tags( $post_content );
 
-		return \str_word_count( $post_content, 0 );
+		$characters = '';
+
+		if ( \preg_match( '@[а-я]@ui', $post_content ) ) {
+			// Correct counting of the number of words in the Russian and Ukrainian languages.
+			$alphabet = [
+				'ru' => 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+				'ua' => 'абвгґдеєжзиіїйклмнопрстуфхцчшщьюя',
+			];
+
+			$characters  = \implode( '', $alphabet );
+			$characters  = \preg_split( '//u', $characters, -1, \PREG_SPLIT_NO_EMPTY );
+			$characters  = \array_unique( $characters );
+			$characters  = \implode( '', $characters );
+			$characters .= \mb_strtoupper( $characters );
+		}
+
+
+
+
+		// Remove characters from HTML entities.
+		$post_content = \preg_replace( '@&[a-z0-9]+;@i', ' ', \htmlentities( $post_content ) );
+
+		return \str_word_count( $post_content, 0, $characters );
 	}
 }

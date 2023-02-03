@@ -1,4 +1,4 @@
-<?php // @phpcs:ignore Yoast.Files.FileName.InvalidClassFileName -- reason: this explicitly concerns the Yoast head fields.
+<?php // phpcs:ignore Yoast.Files.FileName.InvalidClassFileName -- Reason: this explicitly concerns the Yoast head fields.
 
 namespace Yoast\WP\SEO\Routes;
 
@@ -13,8 +13,6 @@ use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
  *
  * Registers the yoast head REST field.
  * Not technically a route but behaves the same so is included here.
- *
- * @phpcs:ignore Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Yoast_Head_REST_Field implements Route_Interface {
 
@@ -95,13 +93,13 @@ class Yoast_Head_REST_Field implements Route_Interface {
 	 * @return void
 	 */
 	public function register_routes() {
-		$public_post_types = $this->post_type_helper->get_public_post_types();
+		$public_post_types = $this->post_type_helper->get_indexable_post_types();
 
 		foreach ( $public_post_types as $post_type ) {
 			$this->register_rest_fields( $post_type, 'for_post' );
 		}
 
-		$public_taxonomies = $this->taxonomy_helper->get_public_taxonomies();
+		$public_taxonomies = $this->taxonomy_helper->get_indexable_taxonomies();
 
 		foreach ( $public_taxonomies as $taxonomy ) {
 			if ( $taxonomy === 'post_tag' ) {

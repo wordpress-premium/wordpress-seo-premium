@@ -38,7 +38,7 @@ class Metabox_Integration implements Integration_Interface {
 		\add_filter( 'update_post_metadata', [ $this, 'save_prominent_words_for_post' ], 10, 4 );
 
 		\add_filter( 'wpseo_taxonomy_content_fields', [ $this, 'add_words_for_linking_hidden_field' ] );
-		\add_filter( 'edit_term', [ $this, 'save_prominent_words_for_term' ] );
+		\add_action( 'edit_term', [ $this, 'save_prominent_words_for_term' ] );
 	}
 
 	/**

@@ -174,7 +174,8 @@ class User_Profile_Integration implements Integration_Interface {
 	 * @param int $user_id User ID of the updated user.
 	 */
 	public function process_user_option_update( $user_id ) {
-		$nonce_value = \filter_input( \INPUT_POST, self::NONCE_FIELD_NAME, \FILTER_SANITIZE_STRING );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
+		$nonce_value = \filter_input( \INPUT_POST, self::NONCE_FIELD_NAME, @\FILTER_SANITIZE_STRING );
 		if ( empty( $nonce_value ) ) {
 			return;
 		}
@@ -195,7 +196,8 @@ class User_Profile_Integration implements Integration_Interface {
 			if ( $field['type'] === 'group' ) {
 				continue;
 			}
-			$args[ $key ] = \FILTER_SANITIZE_STRING;
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
+			$args[ $key ] = @\FILTER_SANITIZE_STRING;
 		}
 
 		return $args;
@@ -211,7 +213,8 @@ class User_Profile_Integration implements Integration_Interface {
 	private function get_posted_user_fields() {
 		$args        = [
 			'wpseo_user_schema' => [
-				'filter' => \FILTER_SANITIZE_STRING,
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
+				'filter' => @\FILTER_SANITIZE_STRING,
 				'flags'  => \FILTER_FORCE_ARRAY,
 			],
 		];

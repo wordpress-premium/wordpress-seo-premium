@@ -66,6 +66,11 @@ class WPSEO_Redirect_Url_Formatter {
 	 * @return string
 	 */
 	protected function get_subdirectory( $url ) {
-		return $this->sanitize_url( wp_parse_url( $url, PHP_URL_PATH ) );
+		$path = wp_parse_url( $url, PHP_URL_PATH );
+		if ( is_string( $path ) ) {
+			return $this->sanitize_url( $path );
+		}
+
+		return '';
 	}
 }

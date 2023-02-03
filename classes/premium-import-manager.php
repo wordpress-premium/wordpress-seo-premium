@@ -330,7 +330,12 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 	 * @return string The posted htaccess.
 	 */
 	protected function get_posted_htaccess() {
-		return stripcslashes( filter_input( INPUT_POST, 'htaccess' ) );
+		$htaccess = filter_input( INPUT_POST, 'htaccess' );
+		if ( $htaccess === null ) {
+			return '';
+		}
+
+		return stripcslashes( $htaccess );
 	}
 
 	/**

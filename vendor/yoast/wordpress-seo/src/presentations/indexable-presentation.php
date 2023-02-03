@@ -23,34 +23,39 @@ use Yoast\WP\SEO\Models\Indexable;
  *
  * Presentation object for indexables.
  *
- * @property string $title
- * @property string $meta_description
- * @property array  $robots
- * @property string $canonical
- * @property string $rel_next
- * @property string $rel_prev
- * @property string $open_graph_type
- * @property string $open_graph_title
- * @property string $open_graph_description
- * @property array  $open_graph_images
- * @property string $open_graph_url
- * @property string $open_graph_site_name
- * @property string $open_graph_article_publisher
- * @property string $open_graph_article_author
- * @property string $open_graph_article_published_time
- * @property string $open_graph_article_modified_time
- * @property string $open_graph_locale
- * @property string $open_graph_fb_app_id
- * @property array  $schema
- * @property string $twitter_card
- * @property string $twitter_title
- * @property string $twitter_description
- * @property string $twitter_image
- * @property string $twitter_creator
- * @property string $twitter_site
- * @property array  $source
- * @property array  $breadcrumbs
- * @property int    $estimated_reading_time_minutes
+ * @property string       $title
+ * @property string       $meta_description
+ * @property array        $robots
+ * @property string       $canonical
+ * @property string       $rel_next
+ * @property string       $rel_prev
+ * @property string       $open_graph_type
+ * @property string       $open_graph_title
+ * @property string       $open_graph_description
+ * @property array        $open_graph_images
+ * @property int          $open_graph_image_id
+ * @property string       $open_graph_image
+ * @property string       $open_graph_url
+ * @property string       $open_graph_site_name
+ * @property string       $open_graph_article_publisher
+ * @property string       $open_graph_article_author
+ * @property string       $open_graph_article_published_time
+ * @property string       $open_graph_article_modified_time
+ * @property string       $open_graph_locale
+ * @property string       $open_graph_fb_app_id
+ * @property string       $permalink
+ * @property array        $schema
+ * @property string       $twitter_card
+ * @property string       $twitter_title
+ * @property string       $twitter_description
+ * @property string       $twitter_image
+ * @property string       $twitter_creator
+ * @property string       $twitter_site
+ * @property object|array $source
+ * @property array        $breadcrumbs
+ * @property int          $estimated_reading_time_minutes
+ * @property array        $googlebot
+ * @property array        $bingbot
  */
 class Indexable_Presentation extends Abstract_Presentation {
 
@@ -223,9 +228,18 @@ class Indexable_Presentation extends Abstract_Presentation {
 	 *
 	 * @return string The permalink.
 	 */
-	public function get_permalink() {
+	public function generate_permalink() {
 		if ( $this->indexable_helper->dynamic_permalinks_enabled() ) {
 			return $this->permalink_helper->get_permalink_for_indexable( $this->model );
+		}
+
+		if ( \is_date() ) {
+			return $this->current_page->get_date_archive_permalink();
+		}
+
+		if ( \is_attachment() ) {
+			global $wp;
+			return \trailingslashit( \home_url( $wp->request ) );
 		}
 
 		return $this->model->permalink;
@@ -336,6 +350,13 @@ class Indexable_Presentation extends Abstract_Presentation {
 			$robots = $robots_new;
 		}
 
+		if ( \is_bool( $robots_filtered ) && ( $robots_filtered === false ) ) {
+			return [
+				'index'  => 'noindex',
+				'follow' => 'nofollow',
+			];
+		}
+
 		if ( ! $robots_filtered ) {
 			return [];
 		}
@@ -351,34 +372,6 @@ class Indexable_Presentation extends Abstract_Presentation {
 	}
 
 	/**
-	 * Generates the robots value for the googlebot tag.
-	 *
-	 * @deprecated 14.9 Values merged into the robots meta tag.
-	 * @codeCoverageIgnore
-	 *
-	 * @return array The robots value with opt-in snippets.
-	 */
-	public function generate_googlebot() {
-		\_deprecated_function( __METHOD__, 'WPSEO 14.9' );
-
-		return [];
-	}
-
-	/**
-	 * Generates the value for the bingbot tag.
-	 *
-	 * @deprecated 14.9 Values merged into the robots meta tag.
-	 * @codeCoverageIgnore
-	 *
-	 * @return array The robots value with opt-in snippets.
-	 */
-	public function generate_bingbot() {
-		\_deprecated_function( __METHOD__, 'WPSEO 14.9' );
-
-		return [];
-	}
-
-	/**
 	 * Generates the canonical.
 	 *
 	 * @return string The canonical.
@@ -388,9 +381,8 @@ class Indexable_Presentation extends Abstract_Presentation {
 			return $this->model->canonical;
 		}
 
-		$permalink = $this->get_permalink();
-		if ( $permalink ) {
-			return $permalink;
+		if ( $this->permalink ) {
+			return $this->permalink;
 		}
 
 		return '';
@@ -516,7 +508,7 @@ class Indexable_Presentation extends Abstract_Presentation {
 			return $this->model->canonical;
 		}
 
-		return $this->get_permalink();
+		return $this->permalink;
 	}
 
 	/**
@@ -562,18 +554,6 @@ class Indexable_Presentation extends Abstract_Presentation {
 	 */
 	public function generate_open_graph_locale() {
 		return $this->open_graph_locale_generator->generate( $this->context );
-	}
-
-	/**
-	 * Generates the open graph Facebook app ID.
-	 *
-	 * @deprecated 15.5
-	 * @codeCoverageIgnore
-	 *
-	 * @return string The open graph Facebook app ID.
-	 */
-	public function generate_open_graph_fb_app_id() {
-		return $this->options->get( 'fbadminapp', '' );
 	}
 
 	/**

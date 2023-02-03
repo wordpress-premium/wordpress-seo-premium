@@ -1,11 +1,12 @@
 <?php
 // phpcs:disable Yoast.NamingConventions.NamespaceName.Invalid
 // phpcs:disable Yoast.NamingConventions.NamespaceName.MaxExceeded
-// phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
 namespace Yoast\WP\SEO\Schema_Templates\Block_Patterns;
 
 /**
  * A job posting containing all the required and recommended blocks, shown in one column (with a three-column header).
+ *
+ * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Job_Posting_One_Column extends Job_Posting_Base_Pattern {
 

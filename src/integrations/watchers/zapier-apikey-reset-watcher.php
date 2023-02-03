@@ -10,6 +10,8 @@ use Yoast\WP\SEO\Premium\Conditionals\Zapier_Enabled_Conditional;
  * Watcher for resetting the Zapier API key.
  *
  * Represents the Zapier API key reset watcher for Premium.
+ *
+ * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Zapier_APIKey_Reset_Watcher implements Integration_Interface {
 

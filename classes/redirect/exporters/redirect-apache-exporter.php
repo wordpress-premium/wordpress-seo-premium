@@ -59,16 +59,18 @@ class WPSEO_Redirect_Apache_Exporter extends WPSEO_Redirect_File_Exporter {
 			return $this->format_non_target( $redirect );
 		}
 
+		$origin = $redirect->get_origin();
+
 		if ( $redirect->get_format() === WPSEO_Redirect_Formats::PLAIN ) {
-			return sprintf(
-				$this->get_format( $redirect->get_format() ),
-				$this->format_url( $redirect->get_origin() ),
-				$this->format_url( $redirect->get_target() ),
-				$redirect->get_type()
-			);
+			$origin = $this->format_url( $redirect->get_origin() );
 		}
 
-		return parent::format( $redirect );
+		return sprintf(
+			$this->get_format( $redirect->get_format() ),
+			$origin,
+			$this->format_url( $redirect->get_target() ),
+			$redirect->get_type()
+		);
 	}
 
 	/**

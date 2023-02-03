@@ -38,6 +38,13 @@ class WPSEO_Metabox extends WPSEO_Meta {
 	protected $readability_analysis;
 
 	/**
+	 * Helper to determine whether or not the inclusive language analysis is enabled.
+	 *
+	 * @var WPSEO_Metabox_Analysis_Inclusive_Language
+	 */
+	protected $inclusive_language_analysis;
+
+	/**
 	 * The metabox editor object.
 	 *
 	 * @var WPSEO_Metabox_Editor
@@ -71,6 +78,7 @@ class WPSEO_Metabox extends WPSEO_Meta {
 	public function __construct() {
 		if ( $this->is_internet_explorer() ) {
 			add_action( 'add_meta_boxes', [ $this, 'internet_explorer_metabox' ] );
+
 			return;
 		}
 
@@ -92,8 +100,9 @@ class WPSEO_Metabox extends WPSEO_Meta {
 			new Input_Helper()
 		);
 
-		$this->seo_analysis         = new WPSEO_Metabox_Analysis_SEO();
-		$this->readability_analysis = new WPSEO_Metabox_Analysis_Readability();
+		$this->seo_analysis                = new WPSEO_Metabox_Analysis_SEO();
+		$this->readability_analysis        = new WPSEO_Metabox_Analysis_Readability();
+		$this->inclusive_language_analysis = new WPSEO_Metabox_Analysis_Inclusive_Language();
 	}
 
 	/**
@@ -204,6 +213,12 @@ class WPSEO_Metabox extends WPSEO_Meta {
 			'<a href="https://googlewebmastercentral.blogspot.com/2009/12/handling-legitimate-cross-domain.html" target="_blank" rel="noopener">',
 			WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 		);
+		/* translators: %s expands to the post type name. */
+		WPSEO_Meta::$meta_fields['advanced']['wordproof_timestamp']['title']        = __( 'Timestamp this %s', 'wordpress-seo' );
+		WPSEO_Meta::$meta_fields['advanced']['wordproof_timestamp']['description']  = __( 'Use WordProof to timestamp this page to comply with legal regulations and join the fight for a more transparant and accountable internet.', 'wordpress-seo' );
+		WPSEO_Meta::$meta_fields['advanced']['wordproof_timestamp']['options']['0'] = __( 'Off', 'wordpress-seo' );
+		WPSEO_Meta::$meta_fields['advanced']['wordproof_timestamp']['options']['1'] = __( 'On', 'wordpress-seo' );
+		WPSEO_Meta::$meta_fields['advanced']['wordproof_timestamp']['type']         = 'hidden';
 
 		WPSEO_Meta::$meta_fields['advanced']['redirect']['title']       = __( '301 Redirect', 'wordpress-seo' );
 		WPSEO_Meta::$meta_fields['advanced']['redirect']['description'] = __( 'The URL that this page should redirect to.', 'wordpress-seo' );
@@ -418,6 +433,10 @@ class WPSEO_Metabox extends WPSEO_Meta {
 			$tabs[] = new WPSEO_Metabox_Section_Readability();
 		}
 
+		if ( $this->inclusive_language_analysis->is_enabled() ) {
+			$tabs[] = new WPSEO_Metabox_Section_Inclusive_Language();
+		}
+
 		if ( $this->is_advanced_metadata_enabled ) {
 			$tabs[] = new WPSEO_Metabox_Section_React(
 				'schema',
@@ -592,7 +611,6 @@ class WPSEO_Metabox extends WPSEO_Meta {
 
 					$options_count = count( $meta_field_def['options'] );
 
-					// This select now uses Select2.
 					$content .= '<select multiple="multiple" size="' . esc_attr( $options_count ) . '" name="' . $esc_form_key . '[]" id="' . $esc_form_key . '" class="yoast' . $class . '"' . $aria_describedby . '>';
 					foreach ( $meta_field_def['options'] as $val => $option ) {
 						$selected = '';
@@ -811,6 +829,10 @@ class WPSEO_Metabox extends WPSEO_Meta {
 			return true;
 		}
 
+		if ( $key === 'inclusive_language_score' && ! $this->inclusive_language_analysis->is_enabled() ) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -851,7 +873,6 @@ class WPSEO_Metabox extends WPSEO_Meta {
 
 		$asset_manager->enqueue_style( 'metabox-css' );
 		$asset_manager->enqueue_style( 'scoring' );
-		$asset_manager->enqueue_style( 'select2' );
 		$asset_manager->enqueue_style( 'monorepo' );
 
 		$is_block_editor  = WP_Screen::get()->is_block_editor();
@@ -897,18 +918,19 @@ class WPSEO_Metabox extends WPSEO_Meta {
 
 		$script_data = [
 			// @todo replace this translation with JavaScript translations.
-			'media'            => [ 'choose_image' => __( 'Use Image', 'wordpress-seo' ) ],
-			'metabox'          => $this->get_metabox_script_data(),
-			'userLanguageCode' => WPSEO_Language_Utils::get_language( \get_user_locale() ),
-			'isPost'           => true,
-			'isBlockEditor'    => $is_block_editor,
-			'postStatus'       => get_post_status( $post_id ),
-			'analysis'         => [
-				'plugins'                     => $plugins_script_data,
-				'worker'                      => $worker_script_data,
-				'estimatedReadingTimeEnabled' => $this->estimated_reading_time_conditional->is_met(),
+			'media'                      => [ 'choose_image' => __( 'Use Image', 'wordpress-seo' ) ],
+			'metabox'                    => $this->get_metabox_script_data(),
+			'userLanguageCode'           => WPSEO_Language_Utils::get_language( \get_user_locale() ),
+			'isPost'                     => true,
+			'isBlockEditor'              => $is_block_editor,
+			'postId'                     => $post_id,
+			'postStatus'                 => get_post_status( $post_id ),
+			'analysis'                   => [
+				'plugins' => $plugins_script_data,
+				'worker'  => $worker_script_data,
 			],
-			'dismissedAlerts'  => $dismissed_alerts,
+			'dismissedAlerts'            => $dismissed_alerts,
+			'webinarIntroBlockEditorUrl' => WPSEO_Shortlinker::get( 'https://yoa.st/webinar-intro-block-editor' ),
 		];
 
 		if ( post_type_supports( get_post_type(), 'thumbnail' ) ) {
@@ -1097,9 +1119,31 @@ class WPSEO_Metabox extends WPSEO_Meta {
 			return $custom_replace_vars;
 		}
 
+		$meta = YoastSEO()->meta->for_post( $post->ID );
+
+		if ( ! $meta ) {
+			return $custom_replace_vars;
+		}
+
+		// Simply concatenate all fields containing replace vars so we can handle them all with a single regex find.
+		$replace_vars_fields = implode(
+			' ',
+			[
+				$meta->presentation->title,
+				$meta->presentation->meta_description,
+			]
+		);
+
+		preg_match_all( '/%%cf_([A-Za-z0-9_]+)%%/', $replace_vars_fields, $matches );
+		$fields_to_include = $matches[1];
 		foreach ( $custom_fields as $custom_field_name => $custom_field ) {
 			// Skip private custom fields.
 			if ( substr( $custom_field_name, 0, 1 ) === '_' ) {
+				continue;
+			}
+
+			// Skip custom fields that are not used, new ones will be fetched dynamically.
+			if ( ! in_array( $custom_field_name, $fields_to_include, true ) ) {
 				continue;
 			}
 

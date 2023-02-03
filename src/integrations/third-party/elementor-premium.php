@@ -3,6 +3,7 @@
 namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WP_Post;
+use WPSEO_Admin_Asset_Manager;
 use WPSEO_Capability_Utils;
 use WPSEO_Custom_Fields_Plugin;
 use WPSEO_Language_Utils;
@@ -20,6 +21,7 @@ use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
+use Yoast\WP\SEO\Premium\Integrations\Admin\Replacement_Variables_Integration;
 
 /**
  * Elementor integration class for Yoast SEO Premium.
@@ -111,6 +113,9 @@ class Elementor_Premium implements Integration_Interface {
 		$social_previews->enqueue_assets();
 		$custom_fields = new WPSEO_Custom_Fields_Plugin();
 		$custom_fields->enqueue();
+
+		$replacement_variables = new Replacement_Variables_Integration();
+		$replacement_variables->enqueue_assets();
 	}
 
 	// Below is mostly copied from `premium-metabox.php`.
@@ -138,16 +143,30 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return void
 	 */
 	public function send_data_to_assets() {
-		$analysis_seo = new WPSEO_Metabox_Analysis_SEO();
+		$analysis_seo   = new WPSEO_Metabox_Analysis_SEO();
+		$assets_manager = new WPSEO_Admin_Asset_Manager();
 
 		$data = [
-			'restApi'            => $this->get_rest_api_config(),
-			'seoAnalysisEnabled' => $analysis_seo->is_enabled(),
-			'licensedURL'        => WPSEO_Utils::get_home_url(),
-			'settingsPageUrl'    => \admin_url( 'admin.php?page=wpseo_dashboard#top#features' ),
-			'integrationsTabURL' => \admin_url( 'admin.php?page=wpseo_dashboard#top#integrations' ),
-
+			'restApi'                         => $this->get_rest_api_config(),
+			'seoAnalysisEnabled'              => $analysis_seo->is_enabled(),
+			'licensedURL'                     => WPSEO_Utils::get_home_url(),
+			'settingsPageUrl'                 => \admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
+			'integrationsTabURL'              => \admin_url( 'admin.php?page=wpseo_integrations' ),
+			'commonsScriptUrl'                => \plugins_url(
+				'assets/js/dist/commons-premium-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			),
+			'premiumAssessmentsScriptUrl'     => \plugins_url(
+				'assets/js/dist/register-premium-assessments-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			),
 		];
+		if ( \defined( 'YOAST_SEO_TEXT_FORMALITY' ) && \YOAST_SEO_TEXT_FORMALITY === true ) {
+			$data['textFormalityScriptUrl'] = \plugins_url(
+				'assets/js/dist/register-text-formality-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			);
+		}
 		$data = \array_merge( $data, $this->get_post_metabox_config() );
 
 		if ( \current_user_can( 'edit_others_posts' ) ) {
@@ -164,25 +183,23 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return array The config.
 	 */
 	protected function get_post_metabox_config() {
-		$insights_enabled         = WPSEO_Options::get( 'enable_metabox_insights', false );
 		$link_suggestions_enabled = WPSEO_Options::get( 'enable_link_suggestions', false );
 
-		$prominent_words_support = new WPSEO_Premium_Prominent_Words_Support();
-		if ( ! $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type ) ) {
-			$insights_enabled = false;
-		}
+		$prominent_words_support      = new WPSEO_Premium_Prominent_Words_Support();
+		$is_prominent_words_available = $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type );
 
 		$site_locale = \get_locale();
 		$language    = WPSEO_Language_Utils::get_language( $site_locale );
 
+
 		return [
-			'insightsEnabled'          => ( $insights_enabled ) ? 'enabled' : 'disabled',
-			'currentObjectId'          => $this->get_metabox_post()->ID,
-			'currentObjectType'        => 'post',
-			'linkSuggestionsEnabled'   => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
-			'linkSuggestionsAvailable' => $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type ),
-			'linkSuggestionsUnindexed' => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
-			'perIndexableLimit'        => $this->per_indexable_limit( $language ),
+			'currentObjectId'                 => $this->get_metabox_post()->ID,
+			'currentObjectType'               => 'post',
+			'linkSuggestionsEnabled'          => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
+			'linkSuggestionsAvailable'        => $is_prominent_words_available,
+			'linkSuggestionsUnindexed'        => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
+			'perIndexableLimit'               => $this->per_indexable_limit( $language ),
+			'isProminentWordsAvailable'       => $is_prominent_words_available,
 		];
 	}
 
@@ -266,7 +283,8 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return string The post type.
 	 */
 	protected function get_current_post_type() {
-		$post = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_STRING );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
+		$post = \filter_input( \INPUT_GET, 'post', @\FILTER_SANITIZE_STRING );
 
 		if ( $post ) {
 			return \get_post_type( \get_post( $post ) );
@@ -275,7 +293,7 @@ class Elementor_Premium implements Integration_Interface {
 		return \filter_input(
 			\INPUT_GET,
 			'post_type',
-			\FILTER_SANITIZE_STRING,
+			@\FILTER_SANITIZE_STRING, // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
 			[
 				'options' => [
 					'default' => 'post',

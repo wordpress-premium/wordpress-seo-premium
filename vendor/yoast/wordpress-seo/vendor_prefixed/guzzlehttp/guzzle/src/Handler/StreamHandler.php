@@ -8,6 +8,7 @@ use YoastSEO_Vendor\GuzzleHttp\Promise\FulfilledPromise;
 use YoastSEO_Vendor\GuzzleHttp\Promise\PromiseInterface;
 use YoastSEO_Vendor\GuzzleHttp\Psr7;
 use YoastSEO_Vendor\GuzzleHttp\TransferStats;
+use YoastSEO_Vendor\GuzzleHttp\Utils;
 use YoastSEO_Vendor\Psr\Http\Message\RequestInterface;
 use YoastSEO_Vendor\Psr\Http\Message\ResponseInterface;
 use YoastSEO_Vendor\Psr\Http\Message\StreamInterface;
@@ -31,7 +32,7 @@ class StreamHandler
         if (isset($options['delay'])) {
             \usleep($options['delay'] * 1000);
         }
-        $startTime = isset($options['on_stats']) ? \YoastSEO_Vendor\GuzzleHttp\_current_time() : null;
+        $startTime = isset($options['on_stats']) ? \YoastSEO_Vendor\GuzzleHttp\Utils::currentTime() : null;
         try {
             // Does not support the expect header.
             $request = $request->withoutHeader('Expect');
@@ -58,7 +59,7 @@ class StreamHandler
     private function invokeStats(array $options, \YoastSEO_Vendor\Psr\Http\Message\RequestInterface $request, $startTime, \YoastSEO_Vendor\Psr\Http\Message\ResponseInterface $response = null, $error = null)
     {
         if (isset($options['on_stats'])) {
-            $stats = new \YoastSEO_Vendor\GuzzleHttp\TransferStats($request, $response, \YoastSEO_Vendor\GuzzleHttp\_current_time() - $startTime, $error, []);
+            $stats = new \YoastSEO_Vendor\GuzzleHttp\TransferStats($request, $response, \YoastSEO_Vendor\GuzzleHttp\Utils::currentTime() - $startTime, $error, []);
             \call_user_func($options['on_stats'], $stats);
         }
     }

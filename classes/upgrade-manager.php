@@ -114,6 +114,19 @@ class WPSEO_Upgrade_Manager {
 		if ( version_compare( $version_number, '17.7-RC0', '<' ) ) {
 			add_action( 'init', [ $this, 'upgrade_17_7' ], 12 );
 		}
+
+		if ( version_compare( $version_number, '19.3-RC0', '<' ) ) {
+			add_action( 'init', [ $this, 'upgrade_19_3' ], 12 );
+		}
+	}
+
+	/**
+	 * Removes the inclusive language feature notification from the Notification center.
+	 *
+	 * @return void
+	 */
+	public function upgrade_19_3() {
+		Yoast_Notification_Center::get()->remove_notification_by_id( 'wpseo-inclusive-language-notice' );
 	}
 
 	/**

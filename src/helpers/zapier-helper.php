@@ -85,6 +85,16 @@ class Zapier_Helper {
 	}
 
 	/**
+	 * Resets the stored Zapier API Key and subscription data.
+	 *
+	 * @return void
+	 */
+	public function reset_api_key_and_subscription() {
+		$this->options->set( 'zapier_api_key', '' );
+		$this->options->set( 'zapier_subscription', [] );
+	}
+
+	/**
 	 * Check if a string matches the API key in the DB, if present.
 	 *
 	 * @param string $api_key The API key to test.

@@ -2,7 +2,7 @@
   "name": "wordpress-seo-premium/wordpress-seo-premium",
   "license": "GPL-3.0-or-later",
   "type": "wordpress-plugin",
-  "version": "15.3",
+  "version": "20.0",
   "require": {
     "composer/installers": "^1.6"
   },

@@ -147,16 +147,19 @@ class WPSEO_Redirect_Page {
 	/**
 	 * Catch redirects_per_page.
 	 *
-	 * @param string $status Unused.
-	 * @param string $option The option name where the value is set for.
-	 * @param string $value  The new value for the screen option.
+	 * @param string|false $status The value to save instead of the option value.
+	 *                             Default false (to skip saving the current option).
+	 * @param string       $option The option name where the value is set for.
+	 * @param string       $value  The new value for the screen option.
 	 *
-	 * @return string|void
+	 * @return string|false
 	 */
 	public function set_screen_option( $status, $option, $value ) {
 		if ( $option === 'redirects_per_page' ) {
 			return $value;
 		}
+
+		return $status;
 	}
 
 	/**

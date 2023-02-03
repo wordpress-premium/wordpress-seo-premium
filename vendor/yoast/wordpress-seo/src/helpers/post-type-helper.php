@@ -2,6 +2,8 @@
 
 namespace Yoast\WP\SEO\Helpers;
 
+use WP_Post_Type;
+
 /**
  * A helper object for post types.
  */
@@ -38,6 +40,17 @@ class Post_Type_Helper {
 		}
 
 		return ( $this->options_helper->get( 'noindex-' . $post_type_name, false ) === false );
+	}
+
+	/**
+	 * Checks if the request post type has the Yoast Metabox enabled.
+	 *
+	 * @param string $post_type_name The name of the post type to lookup.
+	 *
+	 * @return bool True if metabox is enabled.
+	 */
+	public function has_metabox( $post_type_name ) {
+		return ( $this->options_helper->get( 'display-metabox-pt-' . $post_type_name, true ) === true );
 	}
 
 	/**
@@ -126,5 +139,33 @@ class Post_Type_Helper {
 		}
 
 		return ( ! empty( $post_type->has_archive ) );
+	}
+
+	/**
+	 * Returns the post types that should be indexed.
+	 *
+	 * @return array The post types that should be indexed.
+	 */
+	public function get_indexable_post_types() {
+		$public_post_types   = $this->get_public_post_types();
+		$excluded_post_types = $this->get_excluded_post_types_for_indexables();
+
+		// `array_values`, to make sure that the keys are reset.
+		return \array_values( \array_diff( $public_post_types, $excluded_post_types ) );
+	}
+
+	/**
+	 * Returns an array of complete post type objects for all indexable post types.
+	 *
+	 * @return array List of indexable post type objects.
+	 */
+	public function get_indexable_post_type_objects() {
+		$post_type_objects    = [];
+		$indexable_post_types = $this->get_indexable_post_types();
+		foreach ( $indexable_post_types as $post_type ) {
+			$post_type_objects[] = \get_post_type_object( $post_type );
+		}
+
+		return $post_type_objects;
 	}
 }

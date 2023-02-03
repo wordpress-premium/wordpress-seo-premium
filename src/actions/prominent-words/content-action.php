@@ -140,19 +140,6 @@ class Content_Action implements Indexation_Action_Interface {
 	/**
 	 * Retrieves a batch of indexables, to be indexed for internal linking suggestions.
 	 *
-	 * @deprecated 15.1
-	 * @codeCoverageIgnore
-	 *
-	 * @return array The indexables data to use for generating prominent words.
-	 */
-	public function get() {
-		\_deprecated_function( __METHOD__, '15.1', 'Content_Action::index' );
-		return $this->index();
-	}
-
-	/**
-	 * Retrieves a batch of indexables, to be indexed for internal linking suggestions.
-	 *
 	 * @return array The indexables data to use for generating prominent words.
 	 */
 	public function index() {

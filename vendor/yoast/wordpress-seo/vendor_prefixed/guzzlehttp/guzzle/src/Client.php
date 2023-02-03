@@ -3,7 +3,7 @@
 namespace YoastSEO_Vendor\GuzzleHttp;
 
 use YoastSEO_Vendor\GuzzleHttp\Cookie\CookieJar;
-use YoastSEO_Vendor\GuzzleHttp\Exception\InvalidArgumentException;
+use YoastSEO_Vendor\GuzzleHttp\Exception\GuzzleException;
 use YoastSEO_Vendor\GuzzleHttp\Promise;
 use YoastSEO_Vendor\GuzzleHttp\Psr7;
 use YoastSEO_Vendor\Psr\Http\Message\RequestInterface;
@@ -46,9 +46,8 @@ class Client implements \YoastSEO_Vendor\GuzzleHttp\ClientInterface
      *   wire. The function is called with a Psr7\Http\Message\RequestInterface
      *   and array of transfer options, and must return a
      *   GuzzleHttp\Promise\PromiseInterface that is fulfilled with a
-     *   Psr7\Http\Message\ResponseInterface on success. "handler" is a
-     *   constructor only option that cannot be overridden in per/request
-     *   options. If no handler is provided, a default handler will be created
+     *   Psr7\Http\Message\ResponseInterface on success.
+     *   If no handler is provided, a default handler will be created
      *   that enables all of the request options below by attaching all of the
      *   default middleware to the handler.
      * - base_uri: (string|UriInterface) Base URI of the client that is merged
@@ -194,7 +193,7 @@ class Client implements \YoastSEO_Vendor\GuzzleHttp\ClientInterface
         }
         if (isset($config['idn_conversion']) && $config['idn_conversion'] !== \false) {
             $idnOptions = $config['idn_conversion'] === \true ? \IDNA_DEFAULT : $config['idn_conversion'];
-            $uri = _idn_uri_convert($uri, $idnOptions);
+            $uri = \YoastSEO_Vendor\GuzzleHttp\Utils::idnUriConvert($uri, $idnOptions);
         }
         return $uri->getScheme() === '' && $uri->getHost() !== '' ? $uri->withScheme('http') : $uri;
     }
@@ -206,9 +205,7 @@ class Client implements \YoastSEO_Vendor\GuzzleHttp\ClientInterface
      */
     private function configureDefaults(array $config)
     {
-        $defaults = ['allow_redirects' => \YoastSEO_Vendor\GuzzleHttp\RedirectMiddleware::$defaultSettings, 'http_errors' => \true, 'decode_content' => \true, 'verify' => \true, 'cookies' => \false];
-        // idn_to_ascii() is a part of ext-intl and might be not available
-        $defaults['idn_conversion'] = \function_exists('idn_to_ascii') && (\defined('INTL_IDNA_VARIANT_UTS46') || \PHP_VERSION_ID < 70200);
+        $defaults = ['allow_redirects' => \YoastSEO_Vendor\GuzzleHttp\RedirectMiddleware::$defaultSettings, 'http_errors' => \true, 'decode_content' => \true, 'verify' => \true, 'cookies' => \false, 'idn_conversion' => \false];
         // Use the standard Linux HTTP_PROXY and HTTPS_PROXY if set.
         // We can only trust the HTTP_PROXY environment variable in a CLI
         // process due to the fact that PHP has no reliable mechanism to
@@ -418,7 +415,7 @@ class Client implements \YoastSEO_Vendor\GuzzleHttp\ClientInterface
     /**
      * Throw Exception with pre-set message.
      * @return void
-     * @throws InvalidArgumentException Invalid body.
+     * @throws \InvalidArgumentException Invalid body.
      */
     private function invalidBody()
     {

@@ -7,8 +7,6 @@ use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
 
 /**
  * Reindexing action for term link indexables.
- *
- * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Term_Link_Indexing_Action extends Abstract_Link_Indexing_Action {
 
@@ -75,7 +73,7 @@ class Term_Link_Indexing_Action extends Abstract_Link_Indexing_Action {
 	 * @return string The prepared query string.
 	 */
 	protected function get_count_query() {
-		$public_taxonomies = $this->taxonomy_helper->get_public_taxonomies();
+		$public_taxonomies = $this->taxonomy_helper->get_indexable_taxonomies();
 		$placeholders      = \implode( ', ', \array_fill( 0, \count( $public_taxonomies ), '%s' ) );
 		$indexable_table   = Model::get_table_name( 'Indexable' );
 
@@ -102,9 +100,10 @@ class Term_Link_Indexing_Action extends Abstract_Link_Indexing_Action {
 	 * @return string The prepared query string.
 	 */
 	protected function get_select_query( $limit = false ) {
-		$public_taxonomies = $this->taxonomy_helper->get_public_taxonomies();
-		$indexable_table   = Model::get_table_name( 'Indexable' );
-		$replacements      = $public_taxonomies;
+		$public_taxonomies = $this->taxonomy_helper->get_indexable_taxonomies();
+
+		$indexable_table = Model::get_table_name( 'Indexable' );
+		$replacements    = $public_taxonomies;
 
 		$limit_query = '';
 		if ( $limit ) {

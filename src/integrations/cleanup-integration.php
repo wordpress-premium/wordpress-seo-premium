@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\SEO\Premium\Integrations;
 
+use wpdb;
 use Yoast\WP\Lib\Model;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
@@ -125,8 +126,8 @@ class Cleanup_Integration implements Integration_Interface {
 	/**
 	 * Retrieve a list of prominent word taxonomy IDs.
 	 *
-	 * @param \wpdb $wpdb  The WordPress database object.
-	 * @param int   $limit The maximum amount of prominent word taxonomies to retrieve.
+	 * @param wpdb $wpdb  The WordPress database object.
+	 * @param int  $limit The maximum amount of prominent word taxonomies to retrieve.
 	 *
 	 * @return string[] A list of prominent word taxonomy IDs (of size 'limit').
 	 */
@@ -142,7 +143,7 @@ class Cleanup_Integration implements Integration_Interface {
 	/**
 	 * Deletes the given list of taxonomies and their terms.
 	 *
-	 * @param \wpdb    $wpdb         The WordPress database object.
+	 * @param wpdb     $wpdb         The WordPress database object.
 	 * @param string[] $taxonomy_ids The IDs of the taxonomies to remove and their corresponding terms.
 	 *
 	 * @return bool|int `false` if the query failed, the amount of rows deleted otherwise.

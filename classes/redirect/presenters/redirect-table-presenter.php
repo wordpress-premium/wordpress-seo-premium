@@ -48,11 +48,11 @@ class WPSEO_Redirect_Table_Presenter extends WPSEO_Redirect_Tab_Presenter {
 		// Check if there's an old URL set.
 		$old_url = filter_input( INPUT_GET, 'old_url', FILTER_DEFAULT, [ 'default' => '' ] );
 
-		if ( $old_url !== '' ) {
+		if ( ! empty( $old_url ) ) {
 			return esc_attr( rawurldecode( $old_url ) );
 		}
 
-		return $old_url;
+		return '';
 	}
 
 	/**

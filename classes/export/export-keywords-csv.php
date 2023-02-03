@@ -82,9 +82,7 @@ class WPSEO_Export_Keywords_CSV {
 			}
 		}
 
-		$csv .= PHP_EOL;
-
-		return $csv;
+		return $csv . PHP_EOL;
 	}
 
 	/**

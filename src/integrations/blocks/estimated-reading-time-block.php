@@ -6,6 +6,8 @@ use Yoast\WP\SEO\Integrations\Blocks\Dynamic_Block;
 
 /**
  * Estimated_Reading_Time_Block class.
+ *
+ * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Estimated_Reading_Time_Block extends Dynamic_Block {
 

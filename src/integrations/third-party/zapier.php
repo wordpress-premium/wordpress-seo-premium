@@ -11,7 +11,7 @@ use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
 use Yoast_Feature_Toggle;
 
 /**
- * Zapier integration class for managing the toggle.
+ * Zapier integration class for managing the toggle and the connection setup.
  */
 class Zapier implements Integration_Interface {
 
@@ -65,8 +65,9 @@ class Zapier implements Integration_Interface {
 	 */
 	public function register_hooks() {
 		// Add the Zapier toggle to the Integrations tab in the admin.
-		\add_filter( 'Yoast\WP\SEO\admin_integration_after', [ $this, 'toggle_after' ] );
+		\add_action( 'Yoast\WP\SEO\admin_integration_after', [ $this, 'toggle_after' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		\add_filter( 'wpseo_premium_integrations_page_data', [ $this, 'enhance_integrations_page_data' ] );
 	}
 
 	/**
@@ -75,8 +76,12 @@ class Zapier implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_assets() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Date is not processed or saved.
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'wpseo_integrations' ) {
+			return;
+		}
+
 		$this->asset_manager->enqueue_style( 'monorepo' );
-		\wp_enqueue_script( 'clipboard' );
 	}
 
 	/**
@@ -185,5 +190,24 @@ class Zapier implements Integration_Interface {
 		$output .= '</div>';
 
 		return $output;
+	}
+
+	/**
+	 * Enhances the array for the integrations page script with additional data.
+	 *
+	 * @param array $data The array to add data to.
+	 *
+	 * @return array The enhances data.
+	 */
+	public function enhance_integrations_page_data( $data ) {
+		if ( ! \is_array( $data ) ) {
+			$data = [ $data ];
+		}
+
+		$data['zapierKey']         = $this->zapier_helper->get_or_generate_zapier_api_key();
+		$data['zapierUrl']         = self::ZAPIER_DASHBOARD_URL;
+		$data['zapierIsConnected'] = $this->zapier_helper->is_connected();
+
+		return $data;
 	}
 }

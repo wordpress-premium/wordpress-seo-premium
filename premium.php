@@ -29,7 +29,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '18.3';
+	const PLUGIN_VERSION_NAME = '20.0';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -124,11 +124,6 @@ class WPSEO_Premium {
 			// Make sure priority is below registration of other implementations of the beacon in News, Video, etc.
 			add_filter( 'wpseo_helpscout_beacon_settings', [ $this, 'filter_helpscout_beacon' ], 1 );
 
-			// Only register the yoast i18n when the page is a Yoast SEO page.
-			if ( $this->is_yoast_seo_premium_page( filter_input( INPUT_GET, 'page' ) ) ) {
-				$this->register_i18n_promo_class();
-			}
-
 			add_filter( 'wpseo_enable_tracking', '__return_true', 1 );
 
 			// Add Sub Menu page and add redirect page to admin page array.
@@ -137,7 +132,7 @@ class WPSEO_Premium {
 
 			// Add input fields to page meta post types.
 			add_action(
-				'Yoast\WP\SEO\admin_post_types_beforearchive',
+				'Yoast\WP\SEO\admin_post_types_beforearchive_internal',
 				[
 					$this,
 					'admin_page_meta_post_types_checkboxes',
@@ -195,26 +190,6 @@ class WPSEO_Premium {
 		$premium_pages = [ 'wpseo_redirects' ];
 
 		return in_array( $page, $premium_pages, true );
-	}
-
-	/**
-	 * Registers the promotion class for our GlotPress instance.
-	 *
-	 * @link https://github.com/Yoast/i18n-module
-	 */
-	private function register_i18n_promo_class() {
-		new Yoast_I18n_v3(
-			[
-				'textdomain'     => 'wordpress-seo-premium',
-				'project_slug'   => 'wordpress-seo-premium',
-				'plugin_name'    => 'Yoast SEO premium',
-				'hook'           => 'wpseo_admin_promo_footer',
-				'api_url'        => 'https://translationspress.com/app/api/yoast/wordpress-seo-premium/',
-				'glotpress_name' => 'Yoast Translate',
-				'glotpress_logo' => 'https://yoast.com/app/uploads/yoast/Yoast_Translate.svg',
-				'register_url'   => 'https://yoa.st/translationspress',
-			]
-		);
 	}
 
 	/**

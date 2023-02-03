@@ -110,18 +110,4 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 			]
 		);
 	}
-
-	/**
-	 * Returns whether or not we need to index more posts for correct link suggestion functionality
-	 *
-	 * @deprecated 14.7
-	 * @codeCoverageIgnore
-	 *
-	 * @return bool Whether or not we need to index more posts.
-	 */
-	public function is_site_unindexed() {
-		_deprecated_function( __METHOD__, 'WPSEO Premium 14.7' );
-
-		return false;
-	}
 }

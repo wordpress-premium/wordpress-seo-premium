@@ -82,7 +82,7 @@ class WPSEO_Redirect_Util {
 	public static function has_extension( $url ) {
 		$parsed = wp_parse_url( $url, PHP_URL_PATH );
 
-		return strpos( $parsed, '.' ) !== false;
+		return ( is_string( $parsed ) && strpos( $parsed, '.' ) !== false );
 	}
 
 	/**
@@ -111,7 +111,9 @@ class WPSEO_Redirect_Util {
 	 */
 	public static function strip_base_url_path_from_url( $base_url, $url ) {
 		$base_url_path = wp_parse_url( $base_url, PHP_URL_PATH );
-		$base_url_path = ltrim( $base_url_path, '/' );
+		if ( ! empty( $base_url_path ) ) {
+			$base_url_path = ltrim( $base_url_path, '/' );
+		}
 
 		if ( empty( $base_url_path ) ) {
 			return $url;
