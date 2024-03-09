@@ -5,6 +5,8 @@
  * @package WPSEO\CLI
  */
 
+use WP_CLI\Utils;
+
 /**
  * Implementation of the 'redirect follow' WP-CLI command.
  */
@@ -48,8 +50,8 @@ final class WPSEO_CLI_Redirect_Follow_Command extends WPSEO_CLI_Redirect_Base_Co
 	 */
 	public function __invoke( $args, $assoc_args ) {
 		list( $origin ) = $args;
-		$trace          = (bool) WP_CLI\Utils\get_flag_value( $assoc_args, 'trace', false );
-		$limit          = (int) WP_CLI\Utils\get_flag_value( $assoc_args, 'limit', '0' );
+		$trace          = (bool) Utils\get_flag_value( $assoc_args, 'trace', false );
+		$limit          = (int) Utils\get_flag_value( $assoc_args, 'limit', '0' );
 
 		$redirect = $this->get_redirect( $origin );
 

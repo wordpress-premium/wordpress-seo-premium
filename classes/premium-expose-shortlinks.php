@@ -12,6 +12,8 @@ class WPSEO_Premium_Expose_Shortlinks implements WPSEO_WordPress_Integration {
 
 	/**
 	 * Registers all hooks to WordPress
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		add_filter( 'wpseo_admin_l10n', [ $this, 'expose_shortlinks' ] );
@@ -26,11 +28,8 @@ class WPSEO_Premium_Expose_Shortlinks implements WPSEO_WordPress_Integration {
 	 */
 	public function expose_shortlinks( $input ) {
 		$input['shortlinks.keyword_synonyms_info']      = WPSEO_Shortlinker::get( 'https://yoa.st/kd1' );
-		$input['shortlinks.estimated_reading_time']     = WPSEO_Shortlinker::get( 'https://yoa.st/4fd' );
 		$input['shortlinks.site_structure_metabox']     = WPSEO_Shortlinker::get( 'https://yoa.st/site-structure-metabox' );
 		$input['shortlinks.notification_internal_link'] = WPSEO_Shortlinker::get( 'https://yoa.st/notification-internal-link' );
-		$input['shortlinks.keyword_research_link']      = WPSEO_Shortlinker::get( 'https://yoa.st/keyword-research-metabox' );
-
 
 		return $input;
 	}

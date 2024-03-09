@@ -33,6 +33,8 @@ interface WPSEO_Export_Keywords_Query {
 	 * Prepares the necessary selects and joins to get all data in a single query.
 	 *
 	 * @param array $columns The columns we want our query to return.
+	 *
+	 * @return void
 	 */
 	public function set_columns( array $columns );
 }

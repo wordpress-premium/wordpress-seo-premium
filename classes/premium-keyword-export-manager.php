@@ -1,4 +1,4 @@
-<?php
+<?php  // phpcs:ignore Yoast.Files.FileName.InvalidClassFileName -- Reason: this is an old premium file.
 /**
  * WPSEO Premium plugin file.
  *
@@ -13,14 +13,9 @@
 class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integration {
 
 	/**
-	 * A WordPress database object.
-	 *
-	 * @var wpdb instance
-	 */
-	protected $wpdb;
-
-	/**
 	 * Registers all hooks to WordPress.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		// Hook into the request in case of CSV download and return our generated CSV instead.
@@ -33,6 +28,8 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 
 	/**
 	 * Outputs a tab header for the CSV export block.
+	 *
+	 * @return void
 	 */
 	public function keywords_export_tab_header() {
 		if ( current_user_can( 'export' ) ) {
@@ -44,6 +41,8 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 
 	/**
 	 * Adds the export block for CSV. Makes it able to export redirects to CSV.
+	 *
+	 * @return void
 	 */
 	public function add_keyword_export_tab_block() {
 		// Display the forms.
@@ -55,9 +54,10 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 
 	/**
 	 * Hooks into the request and returns a CSV file if we're on the right page with the right method and the right capabilities.
+	 *
+	 * @return void
 	 */
 	public function keywords_csv_export() {
-		global $wpdb;
 
 		if ( ! $this->is_valid_csv_export_request() || ! current_user_can( 'export' ) ) {
 			return;
@@ -65,8 +65,6 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 
 		// Check if we have a valid nonce.
 		check_admin_referer( 'wpseo-export' );
-
-		$this->wpdb = $wpdb;
 
 		// Clean any content that has been already outputted, for example by other plugins or faulty PHP files.
 		if ( ob_get_contents() ) {
@@ -78,6 +76,8 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 
 		// Set CSV headers and content.
 		$this->set_csv_headers();
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is controlled output.
 		echo $this->get_csv_contents();
 
 		// And exit so we don't start appending HTML to our CSV file.
@@ -91,13 +91,18 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	 * @return bool True if this is a valid CSV export request.
 	 */
 	protected function is_valid_csv_export_request() {
-		return filter_input( INPUT_GET, 'page' ) === 'wpseo_tools'
-			&& filter_input( INPUT_GET, 'tool' ) === 'import-export'
-			&& filter_input( INPUT_POST, 'export-posts' );
+		// phpcs:disable WordPress.Security.NonceVerification -- Reason: Nonce is checked in export.
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are strictly comparing only or ignoring the value.
+		return ( isset( $_GET['page'] ) && is_string( $_GET['page'] ) && wp_unslash( $_GET['page'] ) === 'wpseo_tools' )
+			&& ( isset( $_GET['tool'] ) && is_string( $_GET['tool'] ) && wp_unslash( $_GET['tool'] ) === 'import-export' )
+			&& ( isset( $_POST['export-posts'] ) && ! empty( $_POST['export-posts'] ) );
+		// phpcs:enable
 	}
 
 	/**
 	 * Sets the headers to trigger a CSV download in the browser.
+	 *
+	 * @return void
 	 */
 	protected function set_csv_headers() {
 		header( 'Content-type: text/csv' );
@@ -157,13 +162,13 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	protected function prepare_export( WPSEO_Export_Keywords_CSV $builder, array $columns ) {
 		$this->feed_to_builder(
 			$builder,
-			new WPSEO_Export_Keywords_Post_Query( $this->wpdb, $columns, 1000 ),
+			new WPSEO_Export_Keywords_Post_Query( $columns, 1000 ),
 			new WPSEO_Export_Keywords_Post_Presenter( $columns )
 		);
 
 		$this->feed_to_builder(
 			$builder,
-			new WPSEO_Export_Keywords_Term_Query( $this->wpdb, $columns, 1000 ),
+			new WPSEO_Export_Keywords_Term_Query( $columns, 1000 ),
 			new WPSEO_Export_Keywords_Term_Presenter( $columns )
 		);
 	}

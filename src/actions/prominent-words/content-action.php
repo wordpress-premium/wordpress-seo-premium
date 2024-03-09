@@ -18,7 +18,7 @@ use Yoast\WP\SEO\Repositories\Indexable_Repository;
  */
 class Content_Action implements Indexation_Action_Interface {
 
-	const TRANSIENT_CACHE_KEY = 'total_unindexed_prominent_words';
+	public const TRANSIENT_CACHE_KEY = 'total_unindexed_prominent_words';
 
 	/**
 	 * An instance of the WPSEO_Premium_Prominent_Words_Support.
@@ -85,7 +85,7 @@ class Content_Action implements Indexation_Action_Interface {
 		/**
 		 * Filter 'wpseo_prominent_words_indexation_limit' - Allow filtering the amount of indexables indexed during each indexing pass.
 		 *
-		 * @api int The maximum number of indexables indexed.
+		 * @param int $max The maximum number of indexables indexed.
 		 */
 		$limit = \apply_filters( 'wpseo_prominent_words_indexation_limit', 25 );
 
@@ -135,19 +135,6 @@ class Content_Action implements Indexation_Action_Interface {
 	 */
 	public function get_limited_unindexed_count( $limit ) {
 		return $this->get_total_unindexed();
-	}
-
-	/**
-	 * Retrieves a batch of indexables, to be indexed for internal linking suggestions.
-	 *
-	 * @deprecated 15.1
-	 * @codeCoverageIgnore
-	 *
-	 * @return array The indexables data to use for generating prominent words.
-	 */
-	public function get() {
-		\_deprecated_function( __METHOD__, '15.1', 'Content_Action::index' );
-		return $this->index();
 	}
 
 	/**

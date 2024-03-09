@@ -1,0 +1,8 @@
+*** Yoast SEO premium Changelog ***
+
+
+2024-02-22 - version 22.2
+* fix -  Fixes a bug where upsell message for Woo SEO would appear when using the AI feature on product post that is not from WooCommerce.
+* fix -  Fixes a bug where the link in the redirect overview would wrongly link to the home url + redirect url in the case of an absolute url.
+* update -  Bumps the minimum required version of Yoast SEO to 22.2.
+

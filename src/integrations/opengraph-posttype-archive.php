@@ -12,28 +12,28 @@ class OpenGraph_PostType_Archive extends Abstract_OpenGraph_Integration {
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_TITLE = 'social-title-ptarchive-';
+	public const OPTION_TITLES_KEY_TITLE = 'social-title-ptarchive-';
 
 	/**
 	 * The prefix for the social description option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-ptarchive-';
+	public const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-ptarchive-';
 
 	/**
 	 * The prefix for the social image ID option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-ptarchive-';
+	public const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-ptarchive-';
 
 	/**
 	 * The prefix for the social image URL option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE = 'social-image-url-ptarchive-';
+	public const OPTION_TITLES_KEY_IMAGE = 'social-image-url-ptarchive-';
 
 	/**
 	 * Initializes the integration.

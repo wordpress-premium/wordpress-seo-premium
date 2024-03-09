@@ -79,14 +79,16 @@ class Prominent_Words_Repository {
 	/**
 	 * Finds all indexable ids which have prominent words with stems from the list.
 	 *
-	 * @param array $stems        The stems of prominent words to search for.
-	 * @param int   $limit        The number of indexable ids to return in 1 call.
-	 * @param int   $page         From which page (batch) to begin.
-	 * @param int[] $excluded_ids The indexable IDs to exclude.
+	 * @param array $stems               The stems of prominent words to search for.
+	 * @param int   $limit               The number of indexable ids to return in 1 call.
+	 * @param int   $page                From which page (batch) to begin.
+	 * @param int[] $excluded_ids        The indexable IDs to exclude.
+	 * @param array $post_type           Optional. The list of post types where suggestions may come from.
+	 * @param bool  $only_include_public Optional. Only include public indexables, defaults to false.
 	 *
 	 * @return array The list of indexable ids.
 	 */
-	public function find_ids_by_stems( $stems, $limit, $page, $excluded_ids = [] ) {
+	public function find_ids_by_stems( $stems, $limit, $page, $excluded_ids = [], $post_type = [], $only_include_public = false ) {
 		if ( empty( $stems ) ) {
 			return [];
 		}
@@ -108,6 +110,14 @@ class Prominent_Words_Repository {
 
 		if ( ! empty( $excluded_ids ) ) {
 			$query = $query->where_not_in( 'id', $excluded_ids );
+		}
+
+		if ( ! empty( $post_type ) && \is_array( $post_type ) ) {
+			$query = $query->where_in( 'object_sub_type', $post_type );
+		}
+
+		if ( $only_include_public ) {
+			$query = $query->where_raw( '(i.is_public = 1 OR i.is_public is null)' );
 		}
 
 		$results = $query->find_array();
@@ -137,11 +147,30 @@ class Prominent_Words_Repository {
 	}
 
 	/**
+	 * Deletes all prominent words for an indexable
+	 *
+	 * @param int $indexable_id The id of the indexable which needs to have
+	 *                          some of its prominent words deleted.
+	 *
+	 * @return bool Whether the deletion was successful.
+	 */
+	public function delete_by_indexable_id( $indexable_id ) {
+		if ( ! $indexable_id ) {
+			return false;
+		}
+
+		return $this->query()
+			->where( 'indexable_id', $indexable_id )
+			->delete_many();
+	}
+
+	/**
 	 * Counts the number of documents in which each of the given stems occurs.
 	 *
 	 * @param string[] $stems The stems of the words for which to find the document frequencies.
 	 *
-	 * @return array The list of stems and their respective document frequencies. Each entry has a 'stem' and a 'document_frequency' parameter.
+	 * @return array The list of stems and their respective document frequencies. Each entry has a 'stem' and a
+	 *               'document_frequency' parameter.
 	 */
 	public function count_document_frequencies( $stems ) {
 		if ( empty( $stems ) ) {
@@ -161,7 +190,7 @@ class Prominent_Words_Repository {
 
 		// We want to change the raw document frequencies into a map mapping stems to document frequency.
 		$stems = \array_map(
-			static function( $item ) {
+			static function ( $item ) {
 				return $item->stem;
 			},
 			$raw_doc_frequencies

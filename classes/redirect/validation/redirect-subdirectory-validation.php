@@ -19,7 +19,7 @@ class WPSEO_Redirect_Subdirectory_Validation extends WPSEO_Redirect_Abstract_Val
 	 *
 	 * @return bool
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 
 		$subdirectory = $this->get_subdirectory();
 

@@ -10,6 +10,8 @@
  * }
  */
 
+use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
+
 $yoast_seo_file_path     = $view_vars['file_path'];
 $yoast_seo_redirect_file = $view_vars['redirect_file'];
 
@@ -72,6 +74,20 @@ if ( ! empty( $yoast_seo_redirect_file ) ) {
 
 <div id="table-settings" class="tab-url redirect-table-tab">
 <?php echo '<h2>' . esc_html__( 'Redirects settings', 'wordpress-seo-premium' ) . '</h2>'; ?>
+
+<?php
+	$yoast_seo_disable_toggles = ( ( WPSEO_Options::get( 'disable_php_redirect' ) === 'off' ) && is_multisite() );
+
+if ( $yoast_seo_disable_toggles ) {
+		$yoast_seo_disable_htaccess_message = esc_html__( 'Since this site is a multisite, web server redirect methods have been disabled to prevent issues.', 'wordpress-seo-premium' )
+		. '&nbsp;<a href="https://yoa.st/4k9 ">'
+		. esc_html__( 'Read more about why web server redirect methods have been disabled on a multisite.', 'wordpress-seo-premium' )
+		. '</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in Alert_Presenter.
+		echo new Alert_Presenter( $yoast_seo_disable_htaccess_message, 'info' );
+}
+?>
+
 	<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
 		<?php
 		settings_fields( 'yoast_wpseo_redirect_options' );
@@ -84,24 +100,26 @@ if ( ! empty( $yoast_seo_redirect_file ) ) {
 			'off' => 'PHP',
 			'on'  => ( WPSEO_Utils::is_apache() ) ? '.htaccess' : __( 'Web server', 'wordpress-seo-premium' ),
 		];
-		$yoast_seo_form->toggle_switch( 'disable_php_redirect', $yoast_seo_toggle_values, __( 'Redirect method', 'wordpress-seo-premium' ) );
+		$yoast_seo_form->toggle_switch( 'disable_php_redirect', $yoast_seo_toggle_values, __( 'Redirect method', 'wordpress-seo-premium' ), '', [ 'disabled' => $yoast_seo_disable_toggles ] );
+
+		$yoast_seo_opening_p = ( $yoast_seo_disable_toggles ) ? '<p class="redirect_htaccess_disabled">' : '<p>';
 
 		if ( WPSEO_Utils::is_apache() ) {
 			/* translators: 1: '.htaccess' file name */
-			echo '<p>' . sprintf( esc_html__( 'Write redirects to the %1$s file. Make sure the %1$s file is writable.', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';
+			echo $yoast_seo_opening_p . sprintf( esc_html__( 'Write redirects to the %1$s file. Make sure the %1$s file is writable.', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';
 
-			$yoast_seo_form->light_switch( 'separate_file', __( 'Generate a separate redirect file', 'wordpress-seo-premium' ) );
+			$yoast_seo_form->light_switch( 'separate_file', __( 'Generate a separate redirect file', 'wordpress-seo-premium' ), [], true, '', false, [ 'disabled' => $yoast_seo_disable_toggles ] );
 
 			/* translators: %s: '.htaccess' file name */
-			echo '<p>' . sprintf( esc_html__( 'By default we write the redirects to your %s file, check this if you want the redirects written to a separate file. Only check this option if you know what you are doing!', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';
+			echo $yoast_seo_opening_p . sprintf( esc_html__( 'By default we write the redirects to your %s file, check this if you want the redirects written to a separate file. Only check this option if you know what you are doing!', 'wordpress-seo-premium' ), '<code>.htaccess</code>' ) . '</p>';
 		}
 		else {
 			/* translators: %s: 'Yoast SEO Premium' */
-			echo '<p>' . sprintf( esc_html__( '%s can generate redirect files that can be included in your website web server configuration. If you choose this option the PHP redirects will be disabled. Only check this option if you know what you are doing!', 'wordpress-seo-premium' ), 'Yoast SEO Premium' ) . '</p>';
+			echo $yoast_seo_opening_p . sprintf( esc_html__( '%s can generate redirect files that can be included in your website web server configuration. If you choose this option the PHP redirects will be disabled. Only check this option if you know what you are doing!', 'wordpress-seo-premium' ), 'Yoast SEO Premium' ) . '</p>';
 		}
 		?>
 		<p class="submit">
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'wordpress-seo-premium' ); ?>" />
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'wordpress-seo-premium' ); ?>" />
 		</p>
 	</form>
 </div>

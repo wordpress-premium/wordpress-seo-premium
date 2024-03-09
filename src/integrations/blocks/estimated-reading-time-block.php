@@ -6,6 +6,8 @@ use Yoast\WP\SEO\Integrations\Blocks\Dynamic_Block;
 
 /**
  * Estimated_Reading_Time_Block class.
+ *
+ * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
 class Estimated_Reading_Time_Block extends Dynamic_Block {
 
@@ -76,6 +78,13 @@ class Estimated_Reading_Time_Block extends Dynamic_Block {
 	 * @return string The block output.
 	 */
 	public function present( $attributes, $content = '' ) {
+
+		$content = \preg_replace(
+			'/<span class="yoast-reading-time__time-unit">.*<\/span>/',
+			'<span class="yoast-reading-time__time-unit"> ' . \sprintf( \_n( 'minute', 'minutes', $attributes['estimatedReadingTime'], 'wordpress-seo-premium' ), $attributes['estimatedReadingTime'] ) . '</span>',
+			$content,
+			1
+		);
 		if ( $attributes['showIcon'] ) {
 			// Replace 15.7 icon placeholder.
 			$content = \preg_replace(

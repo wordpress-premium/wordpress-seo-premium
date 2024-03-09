@@ -38,6 +38,8 @@ class WPSEO_Redirect_Ajax {
 
 	/**
 	 * Function that handles the AJAX 'wpseo_add_redirect' action.
+	 *
+	 * @return void
 	 */
 	public function ajax_add_redirect() {
 		$this->valid_ajax_check();
@@ -75,6 +77,8 @@ class WPSEO_Redirect_Ajax {
 
 	/**
 	 * Function that handles the AJAX 'wpseo_update_redirect' action.
+	 *
+	 * @return void
 	 */
 	public function ajax_update_redirect() {
 
@@ -112,8 +116,10 @@ class WPSEO_Redirect_Ajax {
 	 *
 	 * @param WPSEO_Redirect      $redirect         The redirect to save.
 	 * @param WPSEO_Redirect|null $current_redirect The current redirect.
+	 *
+	 * @return void
 	 */
-	private function validate( WPSEO_Redirect $redirect, WPSEO_Redirect $current_redirect = null ) {
+	private function validate( WPSEO_Redirect $redirect, ?WPSEO_Redirect $current_redirect = null ) {
 		$validator = new WPSEO_Redirect_Validator();
 
 		if ( $validator->validate( $redirect, $current_redirect ) === true ) {
@@ -136,6 +142,8 @@ class WPSEO_Redirect_Ajax {
 	 * Setting the AJAX hooks.
 	 *
 	 * @param string $hook_suffix The piece that will be stitched after the hooknames.
+	 *
+	 * @return void
 	 */
 	private function set_hooks( $hook_suffix ) {
 		// Add the new redirect.
@@ -152,6 +160,8 @@ class WPSEO_Redirect_Ajax {
 
 	/**
 	 * Check if the posted nonce is valid and if the user has the needed rights.
+	 *
+	 * @return void
 	 */
 	private function valid_ajax_check() {
 		// Check nonce.
@@ -162,6 +172,8 @@ class WPSEO_Redirect_Ajax {
 
 	/**
 	 * Checks whether the current user is allowed to do what he's doing.
+	 *
+	 * @return void
 	 */
 	private function permission_check() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
@@ -177,14 +189,20 @@ class WPSEO_Redirect_Ajax {
 	 * @return WPSEO_Redirect
 	 */
 	private function get_redirect_from_post( $post_value ) {
-		$post_values = filter_input( INPUT_POST, $post_value, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		// phpcs:ignore WordPress.Security.NonceVerification -- Reason: nonce is verified in ajax_update_redirect and ajax_add_redirect.
+		if ( isset( $_POST[ $post_value ] ) && is_array( $_POST[ $post_value ] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.NonceVerification -- Reason: we want to stick to sanitize_url function, while the nonce has been already checked.
+			$post_values = wp_unslash( $_POST[ $post_value ] );
 
-		return new WPSEO_Redirect(
-			$this->sanitize_url( $post_values['origin'] ),
-			$this->sanitize_url( $post_values['target'] ),
-			urldecode( $post_values['type'] ),
-			$this->redirect_format
-		);
+			return new WPSEO_Redirect(
+				$this->sanitize_url( $post_values['origin'] ),
+				$this->sanitize_url( $post_values['target'] ),
+				urldecode( $post_values['type'] ),
+				$this->redirect_format
+			);
+		}
+
+		return new WPSEO_Redirect( '', '', '', '' );
 	}
 
 	/**

@@ -22,9 +22,9 @@ class Workouts_Routes_Integration implements Integration_Interface {
 	/**
 	 * Allowed cornerstone steps.
 	 *
-	 * @var array
+	 * @var array<string>
 	 */
-	const ALLOWED_CORNERSTONE_STEPS = [
+	public const ALLOWED_CORNERSTONE_STEPS = [
 		'chooseCornerstones',
 		'checkLinks',
 		'addLinks',
@@ -35,9 +35,9 @@ class Workouts_Routes_Integration implements Integration_Interface {
 	/**
 	 * Allowed orphaned steps.
 	 *
-	 * @var array
+	 * @var array<string>
 	 */
-	const ALLOWED_ORPHANED_STEPS = [
+	public const ALLOWED_ORPHANED_STEPS = [
 		'improveRemove',
 		'update',
 		'addLinks',
@@ -282,7 +282,7 @@ class Workouts_Routes_Integration implements Integration_Interface {
 				$premium_option[ $workout ]['indexablesByStep'][ $step ] = \array_values(
 					\array_filter(
 						\array_map(
-							static function( $indexable_id ) use ( $indexables_in_workouts ) {
+							static function ( $indexable_id ) use ( $indexables_in_workouts ) {
 								foreach ( $indexables_in_workouts as $updated_indexable ) {
 									if ( \is_array( $indexable_id ) ) {
 										$indexable_id = $indexable_id['id'];

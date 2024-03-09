@@ -64,11 +64,13 @@ class Save_Action {
 	 *
 	 * @param array $data The data to process. This is an array consisting of associative arrays (1 per indexable) with the keys
 	 *                    'object_id', 'object_type' and 'prominent_words' (an array with 'stem' => 'weight' mappings).
+	 *
+	 * @return void
 	 */
 	public function save( $data ) {
 		if ( $data ) {
 			foreach ( $data as $row ) {
-				$prominent_words = ( isset( $row['prominent_words'] ) ? $row['prominent_words'] : [] );
+				$prominent_words = ( $row['prominent_words'] ?? [] );
 
 				$this->link( $row['object_type'], $row['object_id'], $prominent_words );
 			}
@@ -81,28 +83,32 @@ class Save_Action {
 	 * @param string $object_type The object type of the indexable (e.g. `post` or `term`).
 	 * @param int    $object_id   The object id of the indexable.
 	 * @param array  $words       The words to link, as a `'stem' => weight` map.
+	 *
+	 * @return void
 	 */
 	public function link( $object_type, $object_id, $words ) {
 		$indexable = $this->indexable_repository->find_by_id_and_type( $object_id, $object_type );
 
-		// Set the prominent words version number on the indexable.
-		$indexable->prominent_words_version = WPSEO_Premium_Prominent_Words_Versioning::get_version_number();
+		if ( $indexable ) {
+			// Set the prominent words version number on the indexable.
+			$indexable->prominent_words_version = WPSEO_Premium_Prominent_Words_Versioning::get_version_number();
 
-		/*
-		 * It is correct to save here, because if the indexable didn't exist yet,
-		 * find_by_id_and_type (in the above 'save' function) will have auto-created an indexable object
-		 * with the correct data. So we are not saving an incomplete indexable.
-		 */
-		$indexable->save();
+			/*
+			 * It is correct to save here, because if the indexable didn't exist yet,
+			 * find_by_id_and_type (in the above 'save' function) will have auto-created an indexable object
+			 * with the correct data. So we are not saving an incomplete indexable.
+			 */
+			$indexable->save();
 
-		// Find the prominent words that were already associated with this indexable.
-		$old_words = $this->prominent_words_repository->find_by_indexable_id( $indexable->id );
+			// Find the prominent words that were already associated with this indexable.
+			$old_words = $this->prominent_words_repository->find_by_indexable_id( $indexable->id );
 
-		// Handle these words.
-		$words = $this->handle_old_words( $indexable->id, $old_words, $words );
+			// Handle these words.
+			$words = $this->handle_old_words( $indexable->id, $old_words, $words );
 
-		// Create database entries for all new words that are not yet in the database.
-		$this->create_words( $indexable->id, $words );
+			// Create database entries for all new words that are not yet in the database.
+			$this->create_words( $indexable->id, $words );
+		}
 	}
 
 	/**

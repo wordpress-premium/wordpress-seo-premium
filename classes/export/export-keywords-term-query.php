@@ -13,13 +13,6 @@
 class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 
 	/**
-	 * The WordPress database object.
-	 *
-	 * @var wpdb
-	 */
-	protected $wpdb;
-
-	/**
 	 * The columns to query for, an array of strings.
 	 *
 	 * @var array
@@ -46,12 +39,10 @@ class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 	 * Supported values for columns are 'title', 'url', 'keywords', 'readability_score' and 'keywords_score'.
 	 * Requesting 'keywords_score' will always also return 'keywords'.
 	 *
-	 * @param wpdb  $wpdb      A WordPress Database object.
 	 * @param array $columns   List of columns that need to be retrieved.
 	 * @param int   $page_size Number of items to retrieve.
 	 */
-	public function __construct( $wpdb, array $columns, $page_size = 1000 ) {
-		$this->wpdb      = $wpdb;
+	public function __construct( array $columns, $page_size = 1000 ) {
 		$this->page_size = max( 1, (int) $page_size );
 		$this->set_columns( $columns );
 	}
@@ -75,6 +66,8 @@ class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 	 */
 	public function get_data( $page = 1 ) {
 
+		global $wpdb;
+
 		if ( $this->columns === [] ) {
 			return [];
 		}
@@ -94,28 +87,38 @@ class WPSEO_Export_Keywords_Term_Query implements WPSEO_Export_Keywords_Query {
 		// Pages have a starting index of 1, we need to convert to a 0 based offset.
 		$offset_multiplier = max( 0, ( $page - 1 ) );
 
-		$replacements   = $taxonomies;
+		$replacements   = [];
+		$replacements[] = $wpdb->terms;
+		$replacements[] = $wpdb->term_taxonomy;
+		$replacements[] = 'term_id';
+		$replacements[] = 'term_id';
+		$replacements[] = 'taxonomy';
+		$replacements   = array_merge( $replacements, $taxonomies );
 		$replacements[] = $this->page_size;
 		$replacements[] = ( $offset_multiplier * $this->page_size );
 
-		// Construct the query.
-		$query = $this->wpdb->prepare(
-			'SELECT ' . implode( ', ', $this->selects )
-				. ' FROM ' . $this->wpdb->prefix . 'terms AS terms'
-				. ' INNER JOIN ' . $this->wpdb->prefix . 'term_taxonomy AS taxonomies'
-				. ' ON terms.term_id = taxonomies.term_id AND taxonomies.taxonomy IN ('
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Already prepared, and no cache applicable.
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT ' . implode( ', ', $this->selects )
+				. ' FROM %i AS terms'
+				. ' INNER JOIN %i AS taxonomies'
+				. ' ON terms.%i = taxonomies.%i AND taxonomies.%i IN ('
 				. implode( ',', array_fill( 0, count( $taxonomies ), '%s' ) ) . ')'
 				. ' LIMIT %d OFFSET %d',
-			$replacements
+				$replacements
+			),
+			ARRAY_A
 		);
-
-		return $this->wpdb->get_results( $query, ARRAY_A );
+		// phpcs:enable
 	}
 
 	/**
 	 * Prepares the necessary selects and joins to get all data in a single query.
 	 *
 	 * @param array $columns The columns we want our query to return.
+	 *
+	 * @return void
 	 */
 	public function set_columns( array $columns ) {
 		$this->columns = $columns;

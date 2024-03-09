@@ -119,6 +119,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	 * @return bool True on success or false on failure.
 	 *              The return value will be cast to boolean if non-boolean was returned.
 	 */
+	#[ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
 		return in_array( $offset, [ 'url', 'type' ], true );
 	}
@@ -132,6 +133,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	 *
 	 * @return mixed Can return all value types.
 	 */
+	#[ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		switch ( $offset ) {
 			case 'old':
@@ -157,6 +159,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	 *
 	 * @return void
 	 */
+	#[ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
 		switch ( $offset ) {
 			case 'url':
@@ -179,6 +182,7 @@ class WPSEO_Redirect implements ArrayAccess {
 	 *
 	 * @return void
 	 */
+	#[ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
 	}
 
@@ -211,7 +215,6 @@ class WPSEO_Redirect implements ArrayAccess {
 		if ( $url !== '/' && ! isset( $url_pieces['scheme'] ) ) {
 			return trim( $url_to_sanitize, '/' );
 		}
-
 
 		return $url;
 	}

@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements multi keyword int he admin.
+ * Implements multi keyword in the admin.
  */
 class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 
@@ -14,6 +14,8 @@ class WPSEO_Multi_Keyword implements WPSEO_WordPress_Integration {
 	 * Sets WordPress hooks.
 	 *
 	 * @codeCoverageIgnore It relies on dependencies.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		add_filter( 'wpseo_metabox_entries_general', [ $this, 'add_focus_keywords_input' ] );

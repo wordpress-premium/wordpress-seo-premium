@@ -68,7 +68,7 @@ class WPSEO_Redirect_Validator {
 	 *
 	 * @return bool|string
 	 */
-	public function validate( WPSEO_Redirect $redirect, WPSEO_Redirect $current_redirect = null ) {
+	public function validate( WPSEO_Redirect $redirect, ?WPSEO_Redirect $current_redirect = null ) {
 
 		$validators = $this->get_validations( $this->get_filtered_validation_rules( $this->validation_rules, $redirect ) );
 		$redirects  = $this->get_redirects( $redirect->get_format() );
@@ -99,6 +99,8 @@ class WPSEO_Redirect_Validator {
 	 *
 	 * @param array  $validations    Array with the validations.
 	 * @param string $rule_to_remove The rule that will be removed.
+	 *
+	 * @return void
 	 */
 	protected function remove_rule( &$validations, $rule_to_remove ) {
 		if ( array_key_exists( $rule_to_remove, $validations ) ) {

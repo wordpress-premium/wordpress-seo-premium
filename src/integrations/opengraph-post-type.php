@@ -12,28 +12,28 @@ class OpenGraph_Post_Type extends Abstract_OpenGraph_Integration {
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_TITLE = 'social-title-';
+	public const OPTION_TITLES_KEY_TITLE = 'social-title-';
 
 	/**
 	 * The prefix for the social description option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-';
+	public const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-';
 
 	/**
 	 * The prefix for the social image ID option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-';
+	public const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-';
 
 	/**
 	 * The prefix for the social image URL option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE = 'social-image-url-';
+	public const OPTION_TITLES_KEY_IMAGE = 'social-image-url-';
 
 	/**
 	 * Initializes the integration.

@@ -2,13 +2,33 @@
 
 namespace Yoast\WP\SEO\Premium\Integrations;
 
+use wpdb;
 use Yoast\WP\Lib\Model;
+use Yoast\WP\SEO\Analytics\Domain\To_Be_Cleaned_Indexable_Bucket;
+use Yoast\WP\SEO\Analytics\Domain\To_Be_Cleaned_Indexable_Count;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Repositories\Indexable_Cleanup_Repository;
 
 /**
  * Adds cleanup hooks.
  */
 class Cleanup_Integration implements Integration_Interface {
+
+	/**
+	 * The indexable cleanup repository.
+	 *
+	 * @var Indexable_Cleanup_Repository
+	 */
+	private $indexable_cleanup_repository;
+
+	/**
+	 * The constructor.
+	 *
+	 * @param Indexable_Cleanup_Repository $indexable_cleanup_repository The indexable cleanup repository.
+	 */
+	public function __construct( Indexable_Cleanup_Repository $indexable_cleanup_repository ) {
+		$this->indexable_cleanup_repository = $indexable_cleanup_repository;
+	}
 
 	/**
 	 * Returns the conditionals based in which this loadable should be active.
@@ -28,6 +48,7 @@ class Cleanup_Integration implements Integration_Interface {
 	 */
 	public function register_hooks() {
 		\add_filter( 'wpseo_cleanup_tasks', [ $this, 'add_cleanup_tasks' ] );
+		\add_action( 'wpseo_add_cleanup_counts_to_indexable_bucket', [ $this, 'add_cleanup_counts' ] );
 	}
 
 	/**
@@ -41,17 +62,30 @@ class Cleanup_Integration implements Integration_Interface {
 		return \array_merge(
 			$tasks,
 			[
-				'clean_orphaned_indexables_prominent_words' => function( $limit ) {
+				'clean_orphaned_indexables_prominent_words' => function ( $limit ) {
 					return $this->cleanup_orphaned_from_table( 'Prominent_Words', 'indexable_id', $limit );
 				},
-				'clean_old_prominent_word_entries' => function( $limit ) {
+				'clean_old_prominent_word_entries' => function ( $limit ) {
 					return $this->cleanup_old_prominent_words( $limit );
 				},
-				'clean_old_prominent_word_version_numbers' => function( $limit ) {
+				'clean_old_prominent_word_version_numbers' => function ( $limit ) {
 					return $this->cleanup_old_prominent_word_version_numbers( $limit );
 				},
 			]
 		);
+	}
+
+	/**
+	 * Adds cleanup counts to the data bucket object.
+	 *
+	 * @param To_Be_Cleaned_Indexable_Bucket $to_be_cleaned_indexable_bucket The bucket with current indexable count data.
+	 *
+	 * @return void
+	 */
+	public function add_cleanup_counts( To_Be_Cleaned_Indexable_Bucket $to_be_cleaned_indexable_bucket ): void {
+		$to_be_cleaned_indexable_bucket->add_to_be_cleaned_indexable_count( new To_Be_Cleaned_Indexable_Count( 'orphaned_indexables_prominent_words', $this->indexable_cleanup_repository->count_orphaned_from_table( 'Prominent_Words', 'indexable_id' ) ) );
+		$to_be_cleaned_indexable_bucket->add_to_be_cleaned_indexable_count( new To_Be_Cleaned_Indexable_Count( 'orphaned_prominent_word_entries', $this->count_old_prominent_words() ) );
+		$to_be_cleaned_indexable_bucket->add_to_be_cleaned_indexable_count( new To_Be_Cleaned_Indexable_Count( 'orphaned_prominent_word_version_numbers', $this->count_old_prominent_word_version_numbers() ) );
 	}
 
 	/**
@@ -84,13 +118,14 @@ class Cleanup_Integration implements Integration_Interface {
 		);
 		// phpcs:enable
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
 		$orphans = $wpdb->get_col( $query );
 
 		if ( empty( $orphans ) ) {
 			return 0;
 		}
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
 		return \intval( $wpdb->query( "DELETE FROM $table WHERE {$column} IN( " . \implode( ',', $orphans ) . ' ) ' ) );
 	}
 
@@ -120,13 +155,30 @@ class Cleanup_Integration implements Integration_Interface {
 		return $nr_of_deleted_rows;
 	}
 
-	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	/**
+	 * Count up old style prominent words from the database.
+	 *
+	 * @return int The number of old prominent word rows.
+	 */
+	public function count_old_prominent_words() {
+		global $wpdb;
+
+		$query = $wpdb->prepare(
+			"SELECT count(term_taxonomy_id) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
+			[ 'yst_prominent_words' ]
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
+		return $wpdb->get_col( $query )[0];
+	}
 
 	/**
 	 * Retrieve a list of prominent word taxonomy IDs.
 	 *
-	 * @param \wpdb $wpdb  The WordPress database object.
-	 * @param int   $limit The maximum amount of prominent word taxonomies to retrieve.
+	 * @param wpdb $wpdb  The WordPress database object.
+	 * @param int  $limit The maximum amount of prominent word taxonomies to retrieve.
 	 *
 	 * @return string[] A list of prominent word taxonomy IDs (of size 'limit').
 	 */
@@ -142,7 +194,7 @@ class Cleanup_Integration implements Integration_Interface {
 	/**
 	 * Deletes the given list of taxonomies and their terms.
 	 *
-	 * @param \wpdb    $wpdb         The WordPress database object.
+	 * @param wpdb     $wpdb         The WordPress database object.
 	 * @param string[] $taxonomy_ids The IDs of the taxonomies to remove and their corresponding terms.
 	 *
 	 * @return bool|int `false` if the query failed, the amount of rows deleted otherwise.
@@ -176,8 +228,27 @@ class Cleanup_Integration implements Integration_Interface {
 		);
 		// phpcs:enable
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
 		return $wpdb->query( $query );
+	}
+
+	/**
+	 * Counts up the old prominent word versions from the postmeta table in the database.
+	 *
+	 * @return bool|int The number of prominent word version numbers.
+	 */
+	protected function count_old_prominent_word_version_numbers() {
+		global $wpdb;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: There is no unescaped user input.
+		$query = $wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->postmeta} WHERE meta_key = %s",
+			[ '_yst_prominent_words_version' ]
+		);
+		// phpcs:enable
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: Already prepared.
+		return $wpdb->get_col( $query )[0];
 	}
 
 	// phpcs:enable

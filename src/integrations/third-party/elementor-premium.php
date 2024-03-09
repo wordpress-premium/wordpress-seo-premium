@@ -3,7 +3,7 @@
 namespace Yoast\WP\SEO\Premium\Integrations\Third_Party;
 
 use WP_Post;
-use WPSEO_Admin_Asset_Yoast_Components_L10n;
+use WPSEO_Admin_Asset_Manager;
 use WPSEO_Capability_Utils;
 use WPSEO_Custom_Fields_Plugin;
 use WPSEO_Language_Utils;
@@ -19,8 +19,10 @@ use WPSEO_Social_Previews;
 use WPSEO_Utils;
 use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
+use Yoast\WP\SEO\Premium\Integrations\Admin\Replacement_Variables_Integration;
 
 /**
  * Elementor integration class for Yoast SEO Premium.
@@ -32,7 +34,14 @@ class Elementor_Premium implements Integration_Interface {
 	 *
 	 * @var string
 	 */
-	const SCRIPT_HANDLE = 'elementor-premium';
+	public const SCRIPT_HANDLE = 'elementor-premium';
+
+	/**
+	 * Holds the Current_Page_Helper.
+	 *
+	 * @var Current_Page_Helper
+	 */
+	protected $current_page_helper;
 
 	/**
 	 * Represents the post.
@@ -68,10 +77,12 @@ class Elementor_Premium implements Integration_Interface {
 	 * Constructs the class.
 	 *
 	 * @param Prominent_Words_Helper $prominent_words_helper The prominent words helper.
+	 * @param Current_Page_Helper    $current_page_helper    The Current_Page_Helper.
 	 */
-	public function __construct( Prominent_Words_Helper $prominent_words_helper ) {
+	public function __construct( Prominent_Words_Helper $prominent_words_helper, Current_Page_Helper $current_page_helper ) {
 		$this->prominent_words_helper = $prominent_words_helper;
 		$this->post_watcher           = new WPSEO_Post_Watcher();
+		$this->current_page_helper    = $current_page_helper;
 	}
 
 	/**
@@ -112,6 +123,9 @@ class Elementor_Premium implements Integration_Interface {
 		$social_previews->enqueue_assets();
 		$custom_fields = new WPSEO_Custom_Fields_Plugin();
 		$custom_fields->enqueue();
+
+		$replacement_variables = new Replacement_Variables_Integration();
+		$replacement_variables->enqueue_assets();
 	}
 
 	// Below is mostly copied from `premium-metabox.php`.
@@ -127,9 +141,6 @@ class Elementor_Premium implements Integration_Interface {
 		\wp_enqueue_script( static::SCRIPT_HANDLE );
 		\wp_enqueue_style( static::SCRIPT_HANDLE );
 
-		$localization = new WPSEO_Admin_Asset_Yoast_Components_L10n();
-		$localization->localize_script( static::SCRIPT_HANDLE );
-
 		$premium_localization = new WPSEO_Premium_Asset_JS_L10n();
 		$premium_localization->localize_script( static::SCRIPT_HANDLE );
 
@@ -142,16 +153,31 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return void
 	 */
 	public function send_data_to_assets() {
-		$analysis_seo = new WPSEO_Metabox_Analysis_SEO();
+		$analysis_seo   = new WPSEO_Metabox_Analysis_SEO();
+		$assets_manager = new WPSEO_Admin_Asset_Manager();
 
 		$data = [
-			'restApi'            => $this->get_rest_api_config(),
-			'seoAnalysisEnabled' => $analysis_seo->is_enabled(),
-			'licensedURL'        => WPSEO_Utils::get_home_url(),
-			'settingsPageUrl'    => \admin_url( 'admin.php?page=wpseo_dashboard#top#features' ),
-			'integrationsTabURL' => \admin_url( 'admin.php?page=wpseo_dashboard#top#integrations' ),
-
+			'restApi'                     => $this->get_rest_api_config(),
+			'seoAnalysisEnabled'          => $analysis_seo->is_enabled(),
+			'licensedURL'                 => WPSEO_Utils::get_home_url(),
+			'settingsPageUrl'             => \admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
+			'integrationsTabURL'          => \admin_url( 'admin.php?page=wpseo_integrations' ),
+			'commonsScriptUrl'            => \plugins_url(
+				'assets/js/dist/commons-premium-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			),
+			'premiumAssessmentsScriptUrl' => \plugins_url(
+				'assets/js/dist/register-premium-assessments-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			),
+			'pluginUrl'                   => \plugins_url( '', \WPSEO_PREMIUM_FILE ),
 		];
+		if ( \defined( 'YOAST_SEO_TEXT_FORMALITY' ) && \YOAST_SEO_TEXT_FORMALITY === true ) {
+			$data['textFormalityScriptUrl'] = \plugins_url(
+				'assets/js/dist/register-text-formality-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
+				\WPSEO_PREMIUM_FILE
+			);
+		}
 		$data = \array_merge( $data, $this->get_post_metabox_config() );
 
 		if ( \current_user_can( 'edit_others_posts' ) ) {
@@ -168,25 +194,22 @@ class Elementor_Premium implements Integration_Interface {
 	 * @return array The config.
 	 */
 	protected function get_post_metabox_config() {
-		$insights_enabled         = WPSEO_Options::get( 'enable_metabox_insights', false );
 		$link_suggestions_enabled = WPSEO_Options::get( 'enable_link_suggestions', false );
 
-		$prominent_words_support = new WPSEO_Premium_Prominent_Words_Support();
-		if ( ! $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type ) ) {
-			$insights_enabled = false;
-		}
+		$prominent_words_support      = new WPSEO_Premium_Prominent_Words_Support();
+		$is_prominent_words_available = $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type );
 
 		$site_locale = \get_locale();
 		$language    = WPSEO_Language_Utils::get_language( $site_locale );
 
 		return [
-			'insightsEnabled'          => ( $insights_enabled ) ? 'enabled' : 'disabled',
-			'currentObjectId'          => $this->get_metabox_post()->ID,
-			'currentObjectType'        => 'post',
-			'linkSuggestionsEnabled'   => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
-			'linkSuggestionsAvailable' => $prominent_words_support->is_post_type_supported( $this->get_metabox_post()->post_type ),
-			'linkSuggestionsUnindexed' => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
-			'perIndexableLimit'        => $this->per_indexable_limit( $language ),
+			'currentObjectId'                 => $this->get_metabox_post()->ID,
+			'currentObjectType'               => 'post',
+			'linkSuggestionsEnabled'          => ( $link_suggestions_enabled ) ? 'enabled' : 'disabled',
+			'linkSuggestionsAvailable'        => $is_prominent_words_available,
+			'linkSuggestionsUnindexed'        => ! $this->is_prominent_words_indexing_completed() && WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' ),
+			'perIndexableLimit'               => $this->per_indexable_limit( $language ),
+			'isProminentWordsAvailable'       => $is_prominent_words_available,
 		];
 	}
 
@@ -229,9 +252,9 @@ class Elementor_Premium implements Integration_Interface {
 			return $this->post;
 		}
 
-		$post = \filter_input( \INPUT_GET, 'post' );
-		if ( ! empty( $post ) ) {
-			$post_id = (int) WPSEO_Utils::validate_int( $post );
+		$post_id = $this->current_page_helper->get_current_post_id();
+
+		if ( $post_id ) {
 
 			$this->post = \get_post( $post_id );
 
@@ -255,37 +278,11 @@ class Elementor_Premium implements Integration_Interface {
 	protected function load_metabox() {
 		// When the current page isn't a post related one.
 		if ( WPSEO_Metabox::is_post_edit( $this->get_current_page() ) ) {
-			return WPSEO_Post_Type::has_metabox_enabled( $this->get_current_post_type() );
+			return WPSEO_Post_Type::has_metabox_enabled( $this->current_page_helper->get_current_post_type() );
 		}
 
 		// Make sure ajax integrations are loaded.
 		return \wp_doing_ajax();
-	}
-
-	/**
-	 * Retrieves the current post type.
-	 *
-	 * @codeCoverageIgnore It depends on external request input.
-	 *
-	 * @return string The post type.
-	 */
-	protected function get_current_post_type() {
-		$post = \filter_input( \INPUT_GET, 'post', \FILTER_SANITIZE_STRING );
-
-		if ( $post ) {
-			return \get_post_type( \get_post( $post ) );
-		}
-
-		return \filter_input(
-			\INPUT_GET,
-			'post_type',
-			\FILTER_SANITIZE_STRING,
-			[
-				'options' => [
-					'default' => 'post',
-				],
-			]
-		);
 	}
 
 	/**

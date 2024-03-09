@@ -28,7 +28,7 @@ class Indexing_Integration implements Integration_Interface {
 	 *
 	 * @var int
 	 */
-	const PER_INDEXABLE_LIMIT = 20;
+	public const PER_INDEXABLE_LIMIT = 20;
 
 	/**
 	 * Number of prominent words to index per indexable
@@ -36,7 +36,7 @@ class Indexing_Integration implements Integration_Interface {
 	 *
 	 * @var int
 	 */
-	const PER_INDEXABLE_LIMIT_NO_FUNCTION_WORD_SUPPORT = 30;
+	public const PER_INDEXABLE_LIMIT_NO_FUNCTION_WORD_SUPPORT = 30;
 
 	/**
 	 * All indexing actions.
@@ -194,9 +194,9 @@ class Indexing_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		if ( ! isset( $_GET['page'] ) ||
-			 ( $_GET['page'] !== 'wpseo_tools' && $_GET['page'] !== 'wpseo_workouts' ) ||
-			 ( $_GET['page'] === 'wpseo_tools' && isset( $_GET['tool'] ) )
+		if ( ! isset( $_GET['page'] )
+			|| ( $_GET['page'] !== 'wpseo_tools' && $_GET['page'] !== 'wpseo_workouts' && $_GET['page'] !== 'wpseo_dashboard' )
+			|| ( $_GET['page'] === 'wpseo_tools' && isset( $_GET['tool'] ) )
 		) {
 			return;
 		}

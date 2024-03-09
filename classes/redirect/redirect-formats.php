@@ -10,8 +10,8 @@
  */
 class WPSEO_Redirect_Formats {
 
-	const PLAIN = 'plain';
-	const REGEX = 'regex';
+	public const PLAIN = 'plain';
+	public const REGEX = 'regex';
 
 	/**
 	 * Returns the redirect formats.

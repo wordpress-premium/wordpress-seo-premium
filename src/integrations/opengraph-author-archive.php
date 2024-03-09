@@ -12,28 +12,28 @@ class OpenGraph_Author_Archive extends Abstract_OpenGraph_Integration {
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_TITLE = 'social-title-author-wpseo';
+	public const OPTION_TITLES_KEY_TITLE = 'social-title-author-wpseo';
 
 	/**
 	 * The name of the social description option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-author-wpseo';
+	public const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-author-wpseo';
 
 	/**
 	 * The name of the social image ID option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-author-wpseo';
+	public const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-author-wpseo';
 
 	/**
 	 * The name of the social image URL option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE = 'social-image-url-author-wpseo';
+	public const OPTION_TITLES_KEY_IMAGE = 'social-image-url-author-wpseo';
 
 	/**
 	 * Initializes the integration.

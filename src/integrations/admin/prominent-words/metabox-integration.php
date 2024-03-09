@@ -32,13 +32,15 @@ class Metabox_Integration implements Integration_Interface {
 
 	/**
 	 * Implements the register_hooks function of the Integration interface.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		\add_filter( 'wpseo_metabox_entries_general', [ $this, 'add_words_for_linking_hidden_field' ] );
 		\add_filter( 'update_post_metadata', [ $this, 'save_prominent_words_for_post' ], 10, 4 );
 
 		\add_filter( 'wpseo_taxonomy_content_fields', [ $this, 'add_words_for_linking_hidden_field' ] );
-		\add_filter( 'edit_term', [ $this, 'save_prominent_words_for_term' ] );
+		\add_action( 'edit_term', [ $this, 'save_prominent_words_for_term' ] );
 	}
 
 	/**
@@ -96,6 +98,8 @@ class Metabox_Integration implements Integration_Interface {
 	 * Saves the prominent words for a term.
 	 *
 	 * @param int $term_id The term id to save the words for.
+	 *
+	 * @return void
 	 */
 	public function save_prominent_words_for_term( $term_id ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is already validated.

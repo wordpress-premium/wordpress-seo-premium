@@ -84,6 +84,8 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 	 * Adds a meta box for the given post type.
 	 *
 	 * @param string $post_type The post type to add a meta box for.
+	 *
+	 * @return void
 	 */
 	protected function add_meta_box( $post_type ) {
 		if ( ! $this->is_available( $post_type ) || ! $this->is_enabled() ) {
@@ -109,19 +111,5 @@ class WPSEO_Metabox_Link_Suggestions implements WPSEO_WordPress_Integration {
 				'__block_editor_compatible_meta_box' => true,
 			]
 		);
-	}
-
-	/**
-	 * Returns whether or not we need to index more posts for correct link suggestion functionality
-	 *
-	 * @deprecated 14.7
-	 * @codeCoverageIgnore
-	 *
-	 * @return bool Whether or not we need to index more posts.
-	 */
-	public function is_site_unindexed() {
-		_deprecated_function( __METHOD__, 'WPSEO Premium 14.7' );
-
-		return false;
 	}
 }

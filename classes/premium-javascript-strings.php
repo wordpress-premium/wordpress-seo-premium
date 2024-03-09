@@ -19,6 +19,8 @@ class WPSEO_Premium_Javascript_Strings {
 
 	/**
 	 * Fill the value of self::$strings with translated strings.
+	 *
+	 * @return void
 	 */
 	private static function fill() {
 		self::$strings = [

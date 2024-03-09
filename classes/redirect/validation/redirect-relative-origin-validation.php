@@ -19,7 +19,7 @@ class WPSEO_Redirect_Relative_Origin_Validation extends WPSEO_Redirect_Abstract_
 	 *
 	 * @return bool True if the redirect is valid, false otherwise.
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 		if ( WPSEO_Redirect_Util::is_relative_url( $redirect->get_origin() ) ) {
 			return true;
 		}

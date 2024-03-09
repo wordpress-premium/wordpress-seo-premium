@@ -73,26 +73,11 @@ abstract class WPSEO_Watcher {
 	 * @param string      $message           The message that will be added to the notification.
 	 * @param string      $notification_type The type of the notification.
 	 * @param string|null $id                ID that will be given to the notice.
+	 *
+	 * @return void
 	 */
 	protected function create_notification( $message, $notification_type, $id = null ) {
 		$show_notification = true;
-
-		/**
-		 * Filter: "Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}" - Filter whether or not the
-		 * notification for a given watch type and notification type should be shown.
-		 *
-		 * @deprecated 16.5. Use the 'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}' filter instead.
-		 *
-		 * @see https://developer.yoast.com/customization/yoast-seo-premium/disabling-automatic-redirects-notifications
-		 *
-		 * @api bool $show_notification Defaults to true.
-		 */
-		$show_notification = apply_filters_deprecated(
-			"Yoast\WP\SEO\enable_notification_{$this->watch_type}_{$notification_type}",
-			[ $show_notification ],
-			'YoastSEO Premium 16.5',
-			'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}'
-		);
 
 		/**
 		 * Filter: 'Yoast\WP\SEO\enable_notification_{$watch_type}_{$notification_type}' - Filter whether or
@@ -104,7 +89,7 @@ abstract class WPSEO_Watcher {
 		 *
 		 * @see https://developer.yoast.com/customization/yoast-seo-premium/disabling-automatic-redirects-notifications
 		 *
-		 * @api bool $show_notification Defaults to true.
+		 * @param bool $show_notification Defaults to true.
 		 */
 		$show_notification = apply_filters(
 			'Yoast\WP\SEO\enable_notification_' . $this->watch_type . '_' . $notification_type,
@@ -126,6 +111,8 @@ abstract class WPSEO_Watcher {
 	 * Display the delete notification.
 	 *
 	 * @param string $url The redirect that will be deleted.
+	 *
+	 * @return void
 	 */
 	protected function set_delete_notification( $url ) {
 		$id = 'wpseo_delete_redirect_' . md5( $url );
@@ -234,6 +221,8 @@ abstract class WPSEO_Watcher {
 	 * @param WPSEO_Redirect $redirect    The old URL to the post.
 	 * @param int            $object_id   The post or term ID.
 	 * @param string         $object_type The object type: post or term.
+	 *
+	 * @return void
 	 */
 	protected function set_undo_slug_notification( WPSEO_Redirect $redirect, $object_id, $object_type ) {
 		$old_url = $this->format_redirect_url( $redirect->get_origin() );

@@ -11,9 +11,9 @@
 class WPSEO_Premium_Prominent_Words_Versioning {
 
 	// Needs to be manually updated in case of a major change.
-	const VERSION_NUMBER = 2;
+	public const VERSION_NUMBER = 2;
 
-	const POST_META_NAME = '_yst_prominent_words_version';
+	public const POST_META_NAME = '_yst_prominent_words_version';
 
 	/**
 	 * Gets the version number.
@@ -26,6 +26,8 @@ class WPSEO_Premium_Prominent_Words_Versioning {
 
 	/**
 	 * Renames the meta key for the prominent words version. It was a public meta field and it has to be private.
+	 *
+	 * @return void
 	 */
 	public static function upgrade_4_7() {
 		global $wpdb;
@@ -42,6 +44,8 @@ class WPSEO_Premium_Prominent_Words_Versioning {
 	/**
 	 * Removes the meta key for the prominent words version for the unsupported languages that might have this value
 	 * set.
+	 *
+	 * @return void
 	 */
 	public static function upgrade_4_8() {
 		$supported_languages = [ 'en', 'de', 'nl', 'es', 'fr', 'it', 'pt', 'ru', 'pl', 'sv', 'id' ];

@@ -5,6 +5,8 @@
  * @package WPSEO\CLI
  */
 
+use WP_CLI\Utils;
+
 /**
  * Implementation of the 'redirect create' WP-CLI command.
  */
@@ -59,9 +61,9 @@ final class WPSEO_CLI_Redirect_Update_Command extends WPSEO_CLI_Redirect_Base_Co
 	public function __invoke( $args, $assoc_args ) {
 		list( $origin, $new_origin, $target ) = $args;
 
-		$type   = (int) WP_CLI\Utils\get_flag_value( $assoc_args, 'type', '301' );
-		$format = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'plain' );
-		$force  = WP_CLI\Utils\get_flag_value( $assoc_args, 'force', false );
+		$type   = (int) Utils\get_flag_value( $assoc_args, 'type', '301' );
+		$format = Utils\get_flag_value( $assoc_args, 'format', 'plain' );
+		$force  = Utils\get_flag_value( $assoc_args, 'force', false );
 
 		$exists = $this->has_redirect( $origin );
 

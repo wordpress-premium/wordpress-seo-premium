@@ -19,7 +19,7 @@ class Link_Suggestions_Action {
 	 * The amount of indexables to retrieve in one go
 	 * when generating internal linking suggestions.
 	 */
-	const BATCH_SIZE = 1000;
+	public const BATCH_SIZE = 1000;
 
 	/**
 	 * The repository to retrieve prominent words from.
@@ -87,10 +87,12 @@ class Link_Suggestions_Action {
 	 * @param int    $object_id              The object id for the current indexable.
 	 * @param string $object_type            The object type for the current indexable.
 	 * @param bool   $include_existing_links Optional. Whether or not to include existing links, defaults to true.
+	 * @param array  $post_type              Optional. The list of post types where suggestions may come from.
+	 * @param bool   $only_include_public    Optional. Only include public indexables, defaults to false.
 	 *
 	 * @return array Links for the post that are suggested.
 	 */
-	public function get_suggestions( $words_from_request, $limit, $object_id, $object_type, $include_existing_links = true ) {
+	public function get_suggestions( $words_from_request, $limit, $object_id, $object_type, $include_existing_links = true, $post_type = [], $only_include_public = false ) {
 		$current_indexable_id = null;
 		$current_indexable    = $this->indexable_repository->find_by_id_and_type( $object_id, $object_type );
 		if ( $current_indexable ) {
@@ -101,7 +103,7 @@ class Link_Suggestions_Action {
 		 * Gets best suggestions (returns a sorted array [$indexable_id => score]).
 		 * The indexables are processed in batches of 1000 indexables each.
 		 */
-		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $words_from_request, $limit, self::BATCH_SIZE, $current_indexable_id, $include_existing_links );
+		$suggestions_scores = $this->retrieve_suggested_indexable_ids( $words_from_request, $limit, self::BATCH_SIZE, $current_indexable_id, $include_existing_links, $post_type, $only_include_public );
 
 		$indexable_ids = \array_keys( $suggestions_scores );
 
@@ -116,8 +118,7 @@ class Link_Suggestions_Action {
 		/**
 		 * Filter 'wpseo_link_suggestions_indexables' - Allow filtering link suggestions indexable objects.
 		 *
-		 * @api array An array of suggestion indexables that can be filtered.
-		 *
+		 * @param array  $suggestions An array of suggestion indexables that can be filtered.
 		 * @param int    $object_id   The object id for the current indexable.
 		 * @param string $object_type The object type for the current indexable.
 		 */
@@ -350,17 +351,20 @@ class Link_Suggestions_Action {
 	 * Request prominent words for indexables in the batch (including the iDF of all words) to calculate
 	 * their vector length later.
 	 *
-	 * @param array $stems        The stems in the request.
-	 * @param int   $batch_size   How many indexables to request in one query.
-	 * @param int   $page         The start of the current batch (in pages).
-	 * @param int[] $excluded_ids The indexable IDs to exclude.
+	 * @param array $stems               The stems in the request.
+	 * @param int   $batch_size          How many indexables to request in one query.
+	 * @param int   $page                The start of the current batch (in pages).
+	 * @param int[] $excluded_ids        The indexable IDs to exclude.
+	 * @param array $post_type           The post types that will be searched.
+	 * @param bool  $only_include_public If only public indexables are included.
 	 *
 	 * @return array An array of ProminentWords objects, containing their stem, weight, indexable id,
 	 *               and document frequency.
 	 */
-	protected function get_candidate_words( $stems, $batch_size, $page, $excluded_ids = [] ) {
+	protected function get_candidate_words( $stems, $batch_size, $page, $excluded_ids = [], $post_type = [], $only_include_public = false ) {
+
 		return $this->prominent_words_repository->find_by_list_of_ids(
-			$this->prominent_words_repository->find_ids_by_stems( $stems, $batch_size, $page, $excluded_ids )
+			$this->prominent_words_repository->find_ids_by_stems( $stems, $batch_size, $page, $excluded_ids, $post_type, $only_include_public )
 		);
 	}
 
@@ -374,10 +378,12 @@ class Link_Suggestions_Action {
 	 * @param int      $batch_size             The number of indexables that should be analyzed in every batch.
 	 * @param int|null $current_indexable_id   The id for the current indexable.
 	 * @param bool     $include_existing_links Optional. Whether or not to include existing links, defaults to true.
+	 * @param array    $post_type              Optional. The list of post types where suggestions may come from.
+	 * @param bool     $only_include_public    Optional. Only include public indexables, defaults to false.
 	 *
 	 * @return array An array mapping indexable IDs to scores. Higher scores mean better matches.
 	 */
-	protected function retrieve_suggested_indexable_ids( $request_words, $limit, $batch_size, $current_indexable_id, $include_existing_links = true ) {
+	protected function retrieve_suggested_indexable_ids( $request_words, $limit, $batch_size, $current_indexable_id, $include_existing_links = true, $post_type = [], $only_include_public = false ) {
 		// Combine stems, weights and DFs from request.
 		$request_data = $this->compose_request_data( $request_words );
 
@@ -402,7 +408,7 @@ class Link_Suggestions_Action {
 
 		do {
 			// Retrieve the words of all indexables in this batch that share prominent word stems with request.
-			$candidates_words = $this->get_candidate_words( $request_stems, $batch_size, $page, $excluded_indexable_ids );
+			$candidates_words = $this->get_candidate_words( $request_stems, $batch_size, $page, $excluded_indexable_ids, $post_type, $only_include_public );
 
 			// Transform the prominent words table so that it is indexed by indexable_ids.
 			$candidates_words_by_indexable_ids = $this->group_words_by_indexable_id( $candidates_words );
@@ -456,10 +462,11 @@ class Link_Suggestions_Action {
 		// Sort the indexables by descending score.
 		\uasort(
 			$scores,
-			static function( $score_1, $score_2 ) {
+			static function ( $score_1, $score_2 ) {
 				if ( $score_1 === $score_2 ) {
 					return 0;
 				}
+
 				return ( ( $score_1 < $score_2 ) ? 1 : -1 );
 			}
 		);
@@ -565,11 +572,13 @@ class Link_Suggestions_Action {
 	 *
 	 * @param array  $link_suggestions The link suggestions to sort.
 	 * @param string $field            The field to sort suggestions by.
+	 *
+	 * @return void
 	 */
 	protected function sort_suggestions_by_field( array &$link_suggestions, $field ) {
 		\usort(
 			$link_suggestions,
-			static function( $suggestion_1, $suggestion_2 ) use ( $field ) {
+			static function ( $suggestion_1, $suggestion_2 ) use ( $field ) {
 				if ( $suggestion_1[ $field ] === $suggestion_2[ $field ] ) {
 					return 0;
 				}
@@ -590,7 +599,7 @@ class Link_Suggestions_Action {
 	protected function filter_suggestions( $link_suggestions, $cornerstone ) {
 		return \array_filter(
 			$link_suggestions,
-			static function( $suggestion ) use ( $cornerstone ) {
+			static function ( $suggestion ) use ( $cornerstone ) {
 				return (bool) $suggestion['isCornerstone'] === $cornerstone;
 			}
 		);

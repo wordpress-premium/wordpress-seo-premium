@@ -83,12 +83,15 @@ class WPSEO_Custom_Fields_Plugin implements WPSEO_WordPress_Integration {
 	 * @return WP_Post|array|null Returns a post if found, otherwise returns an empty array.
 	 */
 	protected function get_post() {
-		$post = filter_input( INPUT_GET, 'post' );
-		if ( isset( $post ) && $post !== false ) {
-			$post_id = (int) WPSEO_Utils::validate_int( $post );
-
-			return get_post( $post_id );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reason: We are not controlling the request.
+		if ( isset( $_GET['post'] ) && is_string( $_GET['post'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are casting the unsafe value to an integer.
+			$post_id = (int) wp_unslash( $_GET['post'] );
+			if ( $post_id > 0 ) {
+				return get_post( $post_id );
+			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		if ( isset( $GLOBALS['post'] ) ) {
 			return $GLOBALS['post'];

@@ -8,7 +8,6 @@
 use Yoast\WP\SEO\Integrations\Blocks\Siblings_Block;
 use Yoast\WP\SEO\Integrations\Blocks\Subpages_Block;
 use Yoast\WP\SEO\Premium\Addon_Installer;
-use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
@@ -22,21 +21,21 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	const OPTION_CURRENT_VERSION = 'wpseo_current_version';
+	public const OPTION_CURRENT_VERSION = 'wpseo_current_version';
 
 	/**
 	 * Human readable version of the current version.
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_NAME = '17.9';
+	public const PLUGIN_VERSION_NAME = '22.2';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
 	 *
 	 * @var string
 	 */
-	const PLUGIN_VERSION_CODE = '16';
+	public const PLUGIN_VERSION_CODE = '16';
 
 	/**
 	 * Instance of the WPSEO_Redirect_Page class.
@@ -54,13 +53,15 @@ class WPSEO_Premium {
 
 	/**
 	 * Function that will be executed when plugin is activated.
+	 *
+	 * @return void
 	 */
 	public static function install() {
 		if ( ! Addon_Installer::is_yoast_seo_up_to_date() ) {
 			delete_option( Addon_Installer::OPTION_KEY );
 		}
 		$wpseo_addon_installer = new Addon_Installer( __DIR__ );
-		$wpseo_addon_installer->install_or_load_yoast_seo_from_vendor_directory();
+		$wpseo_addon_installer->install_yoast_seo_from_repository();
 
 		// Load the Redirect File Manager.
 		require_once WPSEO_PREMIUM_PATH . 'classes/redirect/redirect-file-util.php';
@@ -71,12 +72,16 @@ class WPSEO_Premium {
 		// Enable tracking.
 		if ( class_exists( WPSEO_Options::class ) ) {
 			WPSEO_Premium_Option::register_option();
-			WPSEO_Options::set( 'tracking', true );
+			if ( WPSEO_Options::get( 'toggled_tracking' ) !== true ) {
+				WPSEO_Options::set( 'tracking', true );
+			}
 			WPSEO_Options::set( 'should_redirect_after_install', true );
 		}
 
-		\do_action( 'wpseo_register_capabilities_premium' );
-		\WPSEO_Capability_Manager_Factory::get( 'premium' )->add();
+		if ( class_exists( WPSEO_Capability_Manager_Factory::class ) ) {
+			do_action( 'wpseo_register_capabilities_premium' );
+			WPSEO_Capability_Manager_Factory::get( 'premium' )->add();
+		}
 	}
 
 	/**
@@ -85,7 +90,8 @@ class WPSEO_Premium {
 	public function __construct() {
 		$this->integrations = [
 			'premium-metabox'              => new WPSEO_Premium_Metabox(
-				YoastSEOPremium()->classes->get( Prominent_Words_Helper::class )
+				YoastSEOPremium()->helpers->prominent_words,
+				YoastSEOPremium()->helpers->current_page
 			),
 			'premium-assets'               => new WPSEO_Premium_Assets(),
 			'link-suggestions'             => new WPSEO_Metabox_Link_Suggestions(),
@@ -124,11 +130,6 @@ class WPSEO_Premium {
 			// Make sure priority is below registration of other implementations of the beacon in News, Video, etc.
 			add_filter( 'wpseo_helpscout_beacon_settings', [ $this, 'filter_helpscout_beacon' ], 1 );
 
-			// Only register the yoast i18n when the page is a Yoast SEO page.
-			if ( $this->is_yoast_seo_premium_page( filter_input( INPUT_GET, 'page' ) ) ) {
-				$this->register_i18n_promo_class();
-			}
-
 			add_filter( 'wpseo_enable_tracking', '__return_true', 1 );
 
 			// Add Sub Menu page and add redirect page to admin page array.
@@ -137,7 +138,7 @@ class WPSEO_Premium {
 
 			// Add input fields to page meta post types.
 			add_action(
-				'Yoast\WP\SEO\admin_post_types_beforearchive',
+				'Yoast\WP\SEO\admin_post_types_beforearchive_internal',
 				[
 					$this,
 					'admin_page_meta_post_types_checkboxes',
@@ -175,10 +176,6 @@ class WPSEO_Premium {
 		add_action( 'wpseo_premium_indicator_classes', [ $this, 'change_premium_indicator' ] );
 		add_action( 'wpseo_premium_indicator_text', [ $this, 'change_premium_indicator_text' ] );
 
-		// Only initialize the AJAX for all tabs except settings.
-		$facebook_name = new WPSEO_Facebook_Profile();
-		$facebook_name->set_hooks();
-
 		foreach ( $this->integrations as $integration ) {
 			$integration->register_hooks();
 		}
@@ -198,26 +195,6 @@ class WPSEO_Premium {
 	}
 
 	/**
-	 * Registers the promotion class for our GlotPress instance.
-	 *
-	 * @link https://github.com/Yoast/i18n-module
-	 */
-	private function register_i18n_promo_class() {
-		new Yoast_I18n_v3(
-			[
-				'textdomain'     => 'wordpress-seo-premium',
-				'project_slug'   => 'wordpress-seo-premium',
-				'plugin_name'    => 'Yoast SEO premium',
-				'hook'           => 'wpseo_admin_promo_footer',
-				'api_url'        => 'https://translationspress.com/app/api/yoast/wordpress-seo-premium/',
-				'glotpress_name' => 'Yoast Translate',
-				'glotpress_logo' => 'https://yoast.com/app/uploads/yoast/Yoast_Translate.svg',
-				'register_url'   => 'https://yoa.st/translationspress',
-			]
-		);
-	}
-
-	/**
 	 * Sets the autoloader for the redirects and instantiates the redirect page object.
 	 *
 	 * @return void
@@ -231,6 +208,8 @@ class WPSEO_Premium {
 
 	/**
 	 * Initialize the watchers for the posts and the terms
+	 *
+	 * @return void
 	 */
 	public function init_watchers() {
 		// The Post Watcher.
@@ -269,6 +248,8 @@ class WPSEO_Premium {
 
 	/**
 	 * Add 'Create Redirect' option to admin bar menu on 404 pages
+	 *
+	 * @return void
 	 */
 	public function admin_bar_menu() {
 		// Prevent function from running if the page is not a 404 page or the user has not the right capabilities to create redirects.
@@ -295,7 +276,7 @@ class WPSEO_Premium {
 		$node = [
 			'id'    => 'wpseo-premium-create-redirect',
 			'title' => __( 'Create Redirect', 'wordpress-seo-premium' ),
-			'href'  => admin_url( 'admin.php?page=wpseo_redirects&old_url=' . $old_url ),
+			'href'  => wp_nonce_url( admin_url( 'admin.php?page=wpseo_redirects&old_url=' . $old_url ), 'wpseo_redirects-old-url', 'wpseo_premium_redirects_nonce' ),
 		];
 		$wp_admin_bar->add_menu( $node );
 	}
@@ -323,6 +304,8 @@ class WPSEO_Premium {
 	 *
 	 * @param Yoast_Form $yform The Yoast_Form object.
 	 * @param string     $name  The post type name.
+	 *
+	 * @return void
 	 */
 	public function admin_page_meta_post_types_checkboxes( $yform, $name ) {
 		$custom_fields_help_link = new Help_Link_Presenter(
@@ -350,11 +333,6 @@ class WPSEO_Premium {
 	 * @return array
 	 */
 	public function add_submenu_pages( $submenu_pages ) {
-		/**
-		 * Filter: 'wpseo_premium_manage_redirects_role' - Change the minimum rule to access and change the site redirects
-		 *
-		 * @api string wpseo_manage_redirects
-		 */
 		$submenu_pages[] = [
 			'wpseo_dashboard',
 			'',
@@ -399,6 +377,8 @@ class WPSEO_Premium {
 
 	/**
 	 * Register the premium settings
+	 *
+	 * @return void
 	 */
 	public function register_settings() {
 		register_setting( 'yoast_wpseo_redirect_options', 'wpseo_redirect' );
@@ -406,6 +386,8 @@ class WPSEO_Premium {
 
 	/**
 	 * Output admin css in admin head
+	 *
+	 * @return void
 	 */
 	public function admin_css() {
 		echo "<style type='text/css'>#wpseo_content_top{ padding-left: 0; margin-left: 0; }</style>";
@@ -413,6 +395,8 @@ class WPSEO_Premium {
 
 	/**
 	 * Load textdomain
+	 *
+	 * @return void
 	 */
 	private function load_textdomain() {
 		load_plugin_textdomain( 'wordpress-seo-premium', false, dirname( WPSEO_PREMIUM_BASENAME ) . '/languages/' );

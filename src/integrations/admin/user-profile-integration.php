@@ -15,8 +15,8 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
  */
 class User_Profile_Integration implements Integration_Interface {
 
-	const NONCE_FIELD_ACTION = 'show_user_profile';
-	const NONCE_FIELD_NAME   = 'wpseo_premium_user_profile_schema_nonce';
+	public const NONCE_FIELD_ACTION = 'show_user_profile';
+	public const NONCE_FIELD_NAME   = 'wpseo_premium_user_profile_schema_nonce';
 
 	/**
 	 * Holds the schema fields we're adding to the user profile.
@@ -58,6 +58,8 @@ class User_Profile_Integration implements Integration_Interface {
 
 	/**
 	 * Sets the fields and their labels and descriptions.
+	 *
+	 * @return void
 	 */
 	private function set_fields() {
 		$this->fields = [
@@ -172,33 +174,18 @@ class User_Profile_Integration implements Integration_Interface {
 	 * Updates the user metas that (might) have been set on the user profile page.
 	 *
 	 * @param int $user_id User ID of the updated user.
+	 *
+	 * @return void
 	 */
 	public function process_user_option_update( $user_id ) {
-		$nonce_value = \filter_input( \INPUT_POST, self::NONCE_FIELD_NAME, \FILTER_SANITIZE_STRING );
-		if ( empty( $nonce_value ) ) {
+		// I'm keeping this to conform to the original logic.
+		if ( ! isset( $_POST[ self::NONCE_FIELD_NAME ] ) || ! \is_string( $_POST[ self::NONCE_FIELD_NAME ] ) ) {
 			return;
 		}
 
 		\check_admin_referer( self::NONCE_FIELD_ACTION, self::NONCE_FIELD_NAME );
 
 		\update_user_meta( $user_id, 'wpseo_user_schema', $this->get_posted_user_fields() );
-	}
-
-	/**
-	 * Builds the arguments for filter_var_array which makes sure we only get the fields that we've defined above.
-	 *
-	 * @return array Filter arguments.
-	 */
-	private function build_filter_args() {
-		$args = [];
-		foreach ( $this->fields as $key => $field ) {
-			if ( $field['type'] === 'group' ) {
-				continue;
-			}
-			$args[ $key ] = \FILTER_SANITIZE_STRING;
-		}
-
-		return $args;
 	}
 
 	/**
@@ -209,14 +196,12 @@ class User_Profile_Integration implements Integration_Interface {
 	 * @return array The posted user fields, restricted to allowed fields.
 	 */
 	private function get_posted_user_fields() {
-		$args        = [
-			'wpseo_user_schema' => [
-				'filter' => \FILTER_SANITIZE_STRING,
-				'flags'  => \FILTER_FORCE_ARRAY,
-			],
-		];
-		$user_schema = \filter_input_array( \INPUT_POST, $args )['wpseo_user_schema'];
-		$user_schema = \filter_var_array( $user_schema, $this->build_filter_args(), false );
+		$user_schema = [];
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified in process_user_option_update.
+		if ( isset( $_POST['wpseo_user_schema'] ) && \is_array( $_POST['wpseo_user_schema'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified in process_user_option_update.
+			$user_schema = \array_map( 'sanitize_text_field', \wp_unslash( $_POST['wpseo_user_schema'] ) );
+		}
 
 		foreach ( $this->fields as $key => $object ) {
 			switch ( $object['type'] ) {

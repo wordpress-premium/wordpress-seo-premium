@@ -70,7 +70,7 @@ class Plugin_Links_Integration implements Integration_Interface {
 	 * @return string The upgrade link.
 	 */
 	protected function get_upgrade_link() {
-        // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reason: text is originally from Yoast SEO.
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Reason: text is originally from Yoast SEO.
 		return '<a style="font-weight: bold;" href="' . \esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/activate-my-yoast' ) ) . '" target="_blank">' . \__( 'Activate your subscription', 'wordpress-seo' ) . '</a>';
 	}
 }

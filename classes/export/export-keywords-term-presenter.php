@@ -66,22 +66,28 @@ class WPSEO_Export_Keywords_Term_Presenter implements WPSEO_Export_Keywords_Pres
 	 */
 	protected function prepare_column_result( array $result, $column ) {
 		switch ( $column ) {
-			case 'title':
-				$result['title'] = $result['name'];
-				unset( $result['name'] );
-				break;
-			case 'url':
-				$result['url'] = get_term_link( $result['ID'], $result['taxonomy'] );
-				break;
-			case 'readability_score':
-				$content_score               = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'content_score' );
-				$result['readability_score'] = WPSEO_Rank::from_numeric_score( (int) $content_score )->get_label();
-				break;
 			case 'keywords':
 				$result['keywords'] = $this->get_result_keywords( $result );
 				break;
 			case 'keywords_score':
 				$result['keywords_score'] = $this->get_result_keywords_score( $result );
+				break;
+			case 'url':
+				$result['url'] = get_term_link( $result['ID'], $result['taxonomy'] );
+				break;
+			case 'title':
+				$result['title'] = $result['name'];
+				unset( $result['name'] );
+				break;
+			case 'seo_title':
+				$result['seo_title'] = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'title' );
+				break;
+			case 'meta_description':
+				$result['meta_description'] = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'desc' );
+				break;
+			case 'readability_score':
+				$content_score               = WPSEO_Taxonomy_Meta::get_term_meta( $result['ID'], $result['taxonomy'], 'content_score' );
+				$result['readability_score'] = WPSEO_Rank::from_numeric_score( (int) $content_score )->get_label();
 				break;
 		}
 

@@ -21,7 +21,7 @@ class Link_Suggestions_Route implements Route_Interface {
 	 *
 	 * @var string
 	 */
-	const ENDPOINT_QUERY = 'link_suggestions';
+	public const ENDPOINT_QUERY = 'link_suggestions';
 
 	/**
 	 * Instance of the Link_Suggestions_Action.
@@ -53,17 +53,17 @@ class Link_Suggestions_Route implements Route_Interface {
 					'type'        => 'object',
 					'description' => 'Stems of prominent words and their term frequencies we want link suggestions based on',
 				],
-				'object_id' => [
+				'object_id'       => [
 					'required'    => true,
 					'type'        => 'integer',
 					'description' => 'The object id of the current indexable.',
 				],
-				'object_type' => [
+				'object_type'     => [
 					'required'    => true,
 					'type'        => 'string',
 					'description' => 'The object type of the current indexable.',
 				],
-				'limit' => [
+				'limit'           => [
 					'required'    => false,
 					'default'     => 5,
 					'type'        => 'integer',
@@ -88,13 +88,16 @@ class Link_Suggestions_Route implements Route_Interface {
 		$limit           = $request->get_param( 'limit' );
 		$object_id       = $request->get_param( 'object_id' );
 		$object_type     = $request->get_param( 'object_type' );
+		$post_type       = $request->get_param( 'post_type' );
 
 		return new WP_REST_Response(
 			$this->link_suggestions_action->get_suggestions(
 				$prominent_words,
 				$limit,
 				$object_id,
-				$object_type
+				$object_type,
+				true,
+				$post_type
 			)
 		);
 	}
