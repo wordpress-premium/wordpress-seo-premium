@@ -1,10 +1,13 @@
 {
-  "name": "wordpress-seo-premium/wordpress-seo-premium",
-  "license": "GPL-3.0-or-later",
+  "name": "wordpress-premium/wordpress-seo-premium",
+  "description": "Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.",
   "type": "wordpress-plugin",
-  "version": "20.0",
+  "version": "22.2",
+  "license": "GPL-3.0-or-later",
   "require": {
-    "composer/installers": "^1.6"
+    "composer/installers": "~1.6"
   },
-  "description": "Yoast SEO makes sure your site meets the highest technical SEO standards. It also gives you the tools to optimize your content for SEO and overall readability."
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
 }
