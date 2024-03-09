@@ -13,33 +13,33 @@ class WPSEO_Redirect_Option {
 	/**
 	 * The plain redirect option before 3.1.
 	 */
-	const OLD_OPTION_PLAIN = 'wpseo-premium-redirects';
+	public const OLD_OPTION_PLAIN = 'wpseo-premium-redirects';
 
 	/**
 	 * The regex redirect option before 3.1.
 	 */
-	const OLD_OPTION_REGEX = 'wpseo-premium-redirects-regex';
+	public const OLD_OPTION_REGEX = 'wpseo-premium-redirects-regex';
 
 	/**
 	 * The option which contains the redirects base.
 	 *
 	 * @since 3.1
 	 */
-	const OPTION = 'wpseo-premium-redirects-base';
+	public const OPTION = 'wpseo-premium-redirects-base';
 
 	/**
 	 * The option which contains the  plain redirects.
 	 *
 	 * @since 3.1
 	 */
-	const OPTION_PLAIN = 'wpseo-premium-redirects-export-plain';
+	public const OPTION_PLAIN = 'wpseo-premium-redirects-export-plain';
 
 	/**
 	 * The option which contains the regex redirects.
 	 *
 	 * @since 3.1
 	 */
-	const OPTION_REGEX = 'wpseo-premium-redirects-export-regex';
+	public const OPTION_REGEX = 'wpseo-premium-redirects-export-regex';
 
 	/**
 	 * List of redirects.
@@ -169,6 +169,8 @@ class WPSEO_Redirect_Option {
 	 * Saving the redirects.
 	 *
 	 * @param bool $retry_upgrade Whether or not to retry the 3.1 upgrade. Used to prevent infinite recursion.
+	 *
+	 * @return void
 	 */
 	public function save( $retry_upgrade = true ) {
 		$redirects = $this->redirects;
@@ -189,7 +191,7 @@ class WPSEO_Redirect_Option {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array $redirects
+		 * @param array $redirects
 		 */
 		$redirects = apply_filters( 'Yoast\WP\SEO\save_redirects', $redirects );
 
@@ -214,7 +216,7 @@ class WPSEO_Redirect_Option {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array $redirects
+		 * @param array $redirects
 		 */
 		$redirects = apply_filters( 'Yoast\WP\SEO\get_redirects', $redirects );
 
@@ -240,7 +242,7 @@ class WPSEO_Redirect_Option {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api   string $origin The redirect origin.
+		 * @param string $origin The redirect origin.
 		 * @param string $target The redirect target.
 		 * @param int    $type   The redirect type (301, 404, 410, etc).
 		 */
@@ -251,6 +253,8 @@ class WPSEO_Redirect_Option {
 	 * Maps the array values to a redirect object.
 	 *
 	 * @param array $redirect_values The data for the redirect option.
+	 *
+	 * @return void
 	 */
 	private function map_option_to_object( array &$redirect_values ) {
 		$redirect_values = new WPSEO_Redirect( $redirect_values['origin'], $redirect_values['url'], $redirect_values['type'], $redirect_values['format'] );
@@ -260,6 +264,8 @@ class WPSEO_Redirect_Option {
 	 * Maps a redirect object to an array option.
 	 *
 	 * @param WPSEO_Redirect $redirect The redirect to map.
+	 *
+	 * @return void
 	 */
 	private function map_object_to_option( WPSEO_Redirect &$redirect ) {
 		$redirect = [

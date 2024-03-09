@@ -43,9 +43,11 @@ class Keyword_Integration implements Integration_Interface {
 		}
 
 		foreach ( $additional_keywords as $additional_keyword ) {
-			$keyword = $additional_keyword['keyword'];
+			if ( isset( $additional_keyword['keyword'] ) ) {
+				$keyword = $additional_keyword['keyword'];
 
-			$usage[ $keyword ] = WPSEO_Meta::keyword_usage( $keyword, $post_id );
+				$usage[ $keyword ] = WPSEO_Meta::keyword_usage( $keyword, $post_id );
+			}
 		}
 
 		return $usage;

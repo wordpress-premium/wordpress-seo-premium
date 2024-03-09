@@ -40,6 +40,8 @@ class WPSEO_Export_Keywords_CSV {
 
 	/**
 	 * Echoes the CSV headers
+	 *
+	 * @return void
 	 */
 	public function print_headers() {
 		// phpcs:ignore WordPress.Security.EscapeOutput -- Correctly escaped in get_headers() method below.

@@ -69,7 +69,12 @@ $yoast_seo_plugins = [
 		</p>
 		<form action="" method="post" accept-charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
 			<?php wp_nonce_field( 'wpseo-import', '_wpnonce', true ); ?>
-			<label for="htaccess" class="screen-reader-text"><?php esc_html_e( 'Enter redirects to import', 'wordpress-seo-premium' ); ?></label>
+			<label for="htaccess" class="screen-reader-text">
+			<?php
+				/* translators: Hidden accessibility text. */
+				esc_html_e( 'Enter redirects to import', 'wordpress-seo-premium' );
+			?>
+			</label>
 			<textarea name="htaccess" id="htaccess" rows="15" class="large-text code"></textarea><br/>
 			<input type="submit" class="button button-primary" name="import" value="<?php esc_attr_e( 'Import .htaccess', 'wordpress-seo-premium' ); ?>"/>
 		</form>

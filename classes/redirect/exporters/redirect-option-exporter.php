@@ -27,11 +27,25 @@ class WPSEO_Redirect_Option_Exporter implements WPSEO_Redirect_Exporter {
 			$formatted_redirects[ $redirect->get_format() ][ $redirect->get_origin() ] = $this->format( $redirect );
 		}
 
-		// Save the plain redirects. No need to autoload, since the option is fetched straight from the DB.
-		update_option( WPSEO_Redirect_Option::OPTION_PLAIN, $formatted_redirects[ WPSEO_Redirect_Formats::PLAIN ], true );
+		/**
+		 * Filters the parameter to save the redirect options as autoloaded.
+		 *
+		 * Note that the `autoload` value in the database will change only if the option value changes (i.e. a redirect is added, edited or deleted).
+		 * Otherwise you will need to change the `autoload` value directly in the DB.
+		 *
+		 * @since 20.13
+		 *
+		 * @param bool   $autoload            The value of the `autoload` parameter. Default: true.
+		 * @param string $type                The type of redirects, either `plain` or `regex`.
+		 * @param array  $formatted_redirects The redirects to be written in the options, already formatted.
+		 *
+		 * @return bool The filtered value of the `autoload` parameter.
+		 */
+		$autoload_options_plain = apply_filters( 'Yoast\WP\SEO\redirects_options_autoload', true, 'plain', $formatted_redirects );
+		$autoload_options_regex = apply_filters( 'Yoast\WP\SEO\redirects_options_autoload', true, 'regex', $formatted_redirects );
 
-		// Save the regex redirects. No need to autoload, since the option is fetched straight from the DB.
-		update_option( WPSEO_Redirect_Option::OPTION_REGEX, $formatted_redirects[ WPSEO_Redirect_Formats::REGEX ], true );
+		update_option( WPSEO_Redirect_Option::OPTION_PLAIN, $formatted_redirects[ WPSEO_Redirect_Formats::PLAIN ], $autoload_options_plain );
+		update_option( WPSEO_Redirect_Option::OPTION_REGEX, $formatted_redirects[ WPSEO_Redirect_Formats::REGEX ], $autoload_options_regex );
 
 		return true;
 	}

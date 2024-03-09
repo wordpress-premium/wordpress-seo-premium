@@ -5,6 +5,7 @@
  * @package WPSEO\Premium|Classes
  */
 
+use Yoast\WP\SEO\Premium\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
 
@@ -28,20 +29,30 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	protected $prominent_words_helper;
 
 	/**
+	 * Holds the Current_Page_Helper instance.
+	 *
+	 * @var Current_Page_Helper
+	 */
+	private $current_page_helper;
+
+	/**
 	 * Creates the meta box class.
 	 *
 	 * @param Prominent_Words_Helper              $prominent_words_helper The prominent words helper.
+	 * @param Current_Page_Helper                 $current_page_helper    The Current_Page_Helper.
 	 * @param WPSEO_Metabox_Link_Suggestions|null $link_suggestions       The link suggestions meta box.
 	 */
 	public function __construct(
 		Prominent_Words_Helper $prominent_words_helper,
-		WPSEO_Metabox_Link_Suggestions $link_suggestions = null
+		Current_Page_Helper $current_page_helper,
+		?WPSEO_Metabox_Link_Suggestions $link_suggestions = null
 	) {
 		if ( $link_suggestions === null ) {
 			$link_suggestions = new WPSEO_Metabox_Link_Suggestions();
 		}
 
 		$this->prominent_words_helper = $prominent_words_helper;
+		$this->current_page_helper    = $current_page_helper;
 		$this->link_suggestions       = $link_suggestions;
 	}
 
@@ -112,6 +123,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 
 	/**
 	 * Send data to assets by using wp_localize_script.
+	 * Also localizes the Table of Contents heading title to the wp-seo-premium-blocks asset.
 	 *
 	 * @return void
 	 */
@@ -120,25 +132,39 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		$content_analysis = new WPSEO_Metabox_Analysis_Readability();
 		$assets_manager   = new WPSEO_Admin_Asset_Manager();
 
+		/**
+		 * Filters the parameter to disable Table of Content block.
+		 *
+		 * Note: Used to prevent auto-generation of HTML anchors for headings when TOC block is registered.
+		 *
+		 * @since 21.5
+		 *
+		 * @param bool $disable_table_of_content The value of the `autoload` parameter. Default: false.
+		 *
+		 * @return bool The filtered value of the `disable_table_of_content` parameter.
+		 */
+		$disable_table_of_content = apply_filters( 'Yoast\WP\SEO\disable_table_of_content_block', false );
+
 		$data = [
-			'restApi'                         => $this->get_rest_api_config(),
-			'seoAnalysisEnabled'              => $analysis_seo->is_enabled(),
-			'contentAnalysisEnabled'          => $content_analysis->is_enabled(),
-			'licensedURL'                     => WPSEO_Utils::get_home_url(),
-			'settingsPageUrl'                 => admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
-			'integrationsTabURL'              => admin_url( 'admin.php?page=wpseo_integrations' ),
-			'commonsScriptUrl'                => \plugins_url(
+			'restApi'                     => $this->get_rest_api_config(),
+			'seoAnalysisEnabled'          => $analysis_seo->is_enabled(),
+			'contentAnalysisEnabled'      => $content_analysis->is_enabled(),
+			'licensedURL'                 => WPSEO_Utils::get_home_url(),
+			'settingsPageUrl'             => admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
+			'integrationsTabURL'          => admin_url( 'admin.php?page=wpseo_integrations' ),
+			'commonsScriptUrl'            => plugins_url(
 				'assets/js/dist/commons-premium-' . $assets_manager->flatten_version( WPSEO_PREMIUM_VERSION ) . WPSEO_CSSJS_SUFFIX . '.js',
 				WPSEO_PREMIUM_FILE
 			),
-			'premiumAssessmentsScriptUrl'     => \plugins_url(
+			'premiumAssessmentsScriptUrl' => plugins_url(
 				'assets/js/dist/register-premium-assessments-' . $assets_manager->flatten_version( WPSEO_PREMIUM_VERSION ) . WPSEO_CSSJS_SUFFIX . '.js',
 				WPSEO_PREMIUM_FILE
 			),
+			'pluginUrl'                   => plugins_url( '', WPSEO_PREMIUM_FILE ),
 		];
 
-		if ( \defined( 'YOAST_SEO_TEXT_FORMALITY' ) && YOAST_SEO_TEXT_FORMALITY === true ) {
-			$data['textFormalityScriptUrl'] = \plugins_url(
+		if ( defined( 'YOAST_SEO_TEXT_FORMALITY' ) && YOAST_SEO_TEXT_FORMALITY === true ) {
+			$data['textFormalityScriptUrl'] = plugins_url(
 				'assets/js/dist/register-text-formality-' . $assets_manager->flatten_version( WPSEO_PREMIUM_VERSION ) . WPSEO_CSSJS_SUFFIX . '.js',
 				WPSEO_PREMIUM_FILE
 			);
@@ -157,6 +183,18 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 
 		// Use an extra level in the array to preserve booleans. WordPress sanitizes scalar values in the first level of the array.
 		wp_localize_script( 'yoast-seo-premium-metabox', 'wpseoPremiumMetaboxData', [ 'data' => $data ] );
+
+		// Localize the title of the Table of Contents block: the translation needs to be based on the site language instead of the user language.
+		wp_localize_script(
+			'wp-seo-premium-blocks',
+			'wpseoTOCData',
+			[
+				'data' => [
+					'TOCTitle'               => __( 'Table of contents', 'wordpress-seo-premium' ),
+					'disableTableOfContents' => $disable_table_of_content,
+				],
+			]
+		);
 	}
 
 	/**
@@ -172,9 +210,8 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		$prominent_words_support      = new WPSEO_Premium_Prominent_Words_Support();
 		$is_prominent_words_available = $prominent_words_support->is_post_type_supported( $post->post_type );
 
-		$site_locale = \get_locale();
+		$site_locale = get_locale();
 		$language    = WPSEO_Language_Utils::get_language( $site_locale );
-
 
 		return [
 			'currentObjectId'                 => $this->get_post_ID(),
@@ -213,7 +250,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 		$prominent_words_support      = new WPSEO_Premium_Prominent_Words_Support();
 		$is_prominent_words_available = $prominent_words_support->is_taxonomy_supported( $term->taxonomy );
 
-		$site_locale = \get_locale();
+		$site_locale = get_locale();
 		$language    = WPSEO_Language_Utils::get_language( $site_locale );
 
 		return [
@@ -296,71 +333,16 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 	protected function load_metabox( $current_page ) {
 		// When the current page is a term related one.
 		if ( WPSEO_Taxonomy::is_term_edit( $current_page ) || WPSEO_Taxonomy::is_term_overview( $current_page ) ) {
-			return WPSEO_Options::get( 'display-metabox-tax-' . $this->get_current_taxonomy() );
+			return WPSEO_Options::get( 'display-metabox-tax-' . $this->current_page_helper->get_current_taxonomy() );
 		}
 
 		// When the current page isn't a post related one.
 		if ( WPSEO_Metabox::is_post_edit( $current_page ) || WPSEO_Metabox::is_post_overview( $current_page ) ) {
-			return WPSEO_Post_Type::has_metabox_enabled( $this->get_current_post_type() );
+			return WPSEO_Post_Type::has_metabox_enabled( $this->current_page_helper->get_current_post_type() );
 		}
 
 		// Make sure ajax integrations are loaded.
 		return wp_doing_ajax();
-	}
-
-	/**
-	 * Retrieves the current post type.
-	 *
-	 * @codeCoverageIgnore It depends on external request input.
-	 *
-	 * @return string The post type.
-	 */
-	protected function get_current_post_type() {
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-		$post = filter_input( INPUT_GET, 'post', @FILTER_SANITIZE_STRING );
-
-		if ( $post ) {
-			return get_post_type( get_post( $post ) );
-		}
-
-		return filter_input(
-			INPUT_GET,
-			'post_type',
-			@FILTER_SANITIZE_STRING, // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-			[
-				'options' => [
-					'default' => 'post',
-				],
-			]
-		);
-	}
-
-	/**
-	 * Retrieves the current taxonomy.
-	 *
-	 * @codeCoverageIgnore This function depends on external request input.
-	 *
-	 * @return string The taxonomy.
-	 */
-	protected function get_current_taxonomy() {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- doing a strict in_array check should be sufficient.
-		if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || ! in_array( $_SERVER['REQUEST_METHOD'], [ 'GET', 'POST' ], true ) ) {
-			return '';
-		}
-
-		if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-			return (string) filter_input(
-				INPUT_POST,
-				'taxonomy',
-				FILTER_SANITIZE_STRING
-			);
-		}
-
-		return (string) filter_input(
-			INPUT_GET,
-			'taxonomy',
-			FILTER_SANITIZE_STRING
-		);
 	}
 
 	/**

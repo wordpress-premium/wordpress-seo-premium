@@ -147,6 +147,24 @@ class Prominent_Words_Repository {
 	}
 
 	/**
+	 * Deletes all prominent words for an indexable
+	 *
+	 * @param int $indexable_id The id of the indexable which needs to have
+	 *                          some of its prominent words deleted.
+	 *
+	 * @return bool Whether the deletion was successful.
+	 */
+	public function delete_by_indexable_id( $indexable_id ) {
+		if ( ! $indexable_id ) {
+			return false;
+		}
+
+		return $this->query()
+			->where( 'indexable_id', $indexable_id )
+			->delete_many();
+	}
+
+	/**
 	 * Counts the number of documents in which each of the given stems occurs.
 	 *
 	 * @param string[] $stems The stems of the words for which to find the document frequencies.
@@ -172,7 +190,7 @@ class Prominent_Words_Repository {
 
 		// We want to change the raw document frequencies into a map mapping stems to document frequency.
 		$stems = \array_map(
-			static function( $item ) {
+			static function ( $item ) {
 				return $item->stem;
 			},
 			$raw_doc_frequencies

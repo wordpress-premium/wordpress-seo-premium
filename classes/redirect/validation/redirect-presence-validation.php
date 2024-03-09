@@ -21,7 +21,7 @@ class WPSEO_Redirect_Presence_Validation extends WPSEO_Redirect_Abstract_Validat
 	 *
 	 * @return bool
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 		// If redirect type is 410 or 451, the target doesn't have to be filled.
 		if ( $this->allow_empty_target( $redirect->get_type() ) && $redirect->get_origin() !== '' ) {
 			return true;

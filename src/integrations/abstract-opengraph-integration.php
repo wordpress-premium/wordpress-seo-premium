@@ -16,28 +16,28 @@ abstract class Abstract_OpenGraph_Integration implements Integration_Interface {
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_TITLE = '';
+	public const OPTION_TITLES_KEY_TITLE = '';
 
 	/**
 	 * The name or prefix for the social description option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_DESCRIPTION = '';
+	public const OPTION_TITLES_KEY_DESCRIPTION = '';
 
 	/**
 	 * The name or prefix for the social image ID option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE_ID = '';
+	public const OPTION_TITLES_KEY_IMAGE_ID = '';
 
 	/**
 	 * The name or prefix for the social image URL option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE = '';
+	public const OPTION_TITLES_KEY_IMAGE = '';
 
 	/**
 	 * The options helper.

@@ -14,6 +14,8 @@ class Migration_Runner_Premium extends Migration_Runner {
 	 * Runs this initializer.
 	 *
 	 * {@inheritDoc}
+	 *
+	 * @return void
 	 */
 	public function initialize() {
 		$this->run_premium_migrations();

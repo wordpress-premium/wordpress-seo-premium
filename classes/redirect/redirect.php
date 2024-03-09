@@ -216,7 +216,6 @@ class WPSEO_Redirect implements ArrayAccess {
 			return trim( $url_to_sanitize, '/' );
 		}
 
-
 		return $url;
 	}
 

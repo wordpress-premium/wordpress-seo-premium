@@ -26,6 +26,8 @@ class Upgrade_Integration implements Integration_Interface {
 
 	/**
 	 * Run the upgrade for Yoast SEO Premium.
+	 *
+	 * @return void
 	 */
 	public function run_upgrade() {
 		$upgrade_manager = new WPSEO_Upgrade_Manager();

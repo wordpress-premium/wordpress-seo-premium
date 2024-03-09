@@ -19,7 +19,7 @@ class Link_Suggestions_Action {
 	 * The amount of indexables to retrieve in one go
 	 * when generating internal linking suggestions.
 	 */
-	const BATCH_SIZE = 1000;
+	public const BATCH_SIZE = 1000;
 
 	/**
 	 * The repository to retrieve prominent words from.
@@ -118,8 +118,7 @@ class Link_Suggestions_Action {
 		/**
 		 * Filter 'wpseo_link_suggestions_indexables' - Allow filtering link suggestions indexable objects.
 		 *
-		 * @api array An array of suggestion indexables that can be filtered.
-		 *
+		 * @param array  $suggestions An array of suggestion indexables that can be filtered.
 		 * @param int    $object_id   The object id for the current indexable.
 		 * @param string $object_type The object type for the current indexable.
 		 */
@@ -573,6 +572,8 @@ class Link_Suggestions_Action {
 	 *
 	 * @param array  $link_suggestions The link suggestions to sort.
 	 * @param string $field            The field to sort suggestions by.
+	 *
+	 * @return void
 	 */
 	protected function sort_suggestions_by_field( array &$link_suggestions, $field ) {
 		\usort(

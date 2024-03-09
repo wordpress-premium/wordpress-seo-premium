@@ -30,49 +30,49 @@ class Workouts_Route implements Route_Interface {
 	 *
 	 * @var string
 	 */
-	const NOINDEX_ROUTE = '/noindex';
+	public const NOINDEX_ROUTE = '/noindex';
 
 	/**
 	 * Represents a remove and redirect route.
 	 *
 	 * @var string
 	 */
-	const REMOVE_REDIRECT_ROUTE = '/remove_redirect';
+	public const REMOVE_REDIRECT_ROUTE = '/remove_redirect';
 
 	/**
 	 * Represents a link suggestions route.
 	 *
 	 * @var string
 	 */
-	const LINK_SUGGESTIONS_ROUTE = '/link_suggestions';
+	public const LINK_SUGGESTIONS_ROUTE = '/link_suggestions';
 
 	/**
 	 * Represents a cornerstones route.
 	 *
 	 * @var string
 	 */
-	const CORNERSTONE_DATA_ROUTE = '/cornerstone_data';
+	public const CORNERSTONE_DATA_ROUTE = '/cornerstone_data';
 
 	/**
 	 * Represents an enable cornerstone route.
 	 *
 	 * @var string
 	 */
-	const ENABLE_CORNERSTONE = '/enable_cornerstone';
+	public const ENABLE_CORNERSTONE = '/enable_cornerstone';
 
 	/**
 	 * Represents a most linked route.
 	 *
 	 * @var string
 	 */
-	const MOST_LINKED_ROUTE = '/most_linked';
+	public const MOST_LINKED_ROUTE = '/most_linked';
 
 	/**
 	 * Represents a last_updated route.
 	 *
 	 * @var string
 	 */
-	const LAST_UPDATED_ROUTE = '/last_updated';
+	public const LAST_UPDATED_ROUTE = '/last_updated';
 
 	/**
 	 * The indexable repository.
@@ -128,7 +128,7 @@ class Workouts_Route implements Route_Interface {
 	 * @return void
 	 */
 	public function register_routes() {
-		$edit_others_posts = static function() {
+		$edit_others_posts = static function () {
 			return \current_user_can( 'edit_others_posts' );
 		};
 
@@ -254,7 +254,7 @@ class Workouts_Route implements Route_Interface {
 	/**
 	 * Sets noindex on an indexable.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response the configuration of the workouts.
 	 */
@@ -284,7 +284,7 @@ class Workouts_Route implements Route_Interface {
 	/**
 	 * Enables cornerstone on an indexable.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response the configuration of the workouts.
 	 */
@@ -315,7 +315,7 @@ class Workouts_Route implements Route_Interface {
 	/**
 	 * Removes an indexable and redirects it.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response the configuration of the workouts.
 	 */
@@ -352,7 +352,7 @@ class Workouts_Route implements Route_Interface {
 	/**
 	 * Sets noindex on an indexable.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response the configuration of the workouts.
 	 */
@@ -414,7 +414,7 @@ class Workouts_Route implements Route_Interface {
 	/**
 	 * Gets the last updated for a particular post Id.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return WP_REST_Response the configuration of the workouts.
 	 */

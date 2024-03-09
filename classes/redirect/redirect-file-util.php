@@ -32,6 +32,8 @@ class WPSEO_Redirect_File_Util {
 
 	/**
 	 * Function that creates the WPSEO redirect directory
+	 *
+	 * @return void
 	 */
 	public static function create_upload_dir() {
 		$basedir = self::get_dir();

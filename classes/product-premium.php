@@ -17,21 +17,21 @@ if ( class_exists( 'Yoast_Product' ) && ! class_exists( 'WPSEO_Product_Premium',
 		 *
 		 * @var string
 		 */
-		const PLUGIN_AUTHOR = 'Yoast';
+		public const PLUGIN_AUTHOR = 'Yoast';
 
 		/**
 		 * License endpoint.
 		 *
 		 * @var string
 		 */
-		const EDD_STORE_URL = 'http://my.yoast.com';
+		public const EDD_STORE_URL = 'http://my.yoast.com';
 
 		/**
 		 * Product name to use for license checks.
 		 *
 		 * @var string
 		 */
-		const EDD_PLUGIN_NAME = 'Yoast SEO Premium';
+		public const EDD_PLUGIN_NAME = 'Yoast SEO Premium';
 
 		/**
 		 * Construct the Product Premium class

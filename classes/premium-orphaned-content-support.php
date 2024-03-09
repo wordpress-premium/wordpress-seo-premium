@@ -23,7 +23,7 @@ class WPSEO_Premium_Orphaned_Content_Support {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array The accessible post types.
+		 * @param array $post_types The accessible post types.
 		 */
 		$orphaned_post_types = apply_filters( 'Yoast\WP\SEO\orphaned_post_types', WPSEO_Post_Type::get_accessible_post_types() );
 

@@ -12,6 +12,8 @@ class WPSEO_Redirect_Htaccess_Util {
 
 	/**
 	 * Clear the WPSEO added entries added in the .htaccess file
+	 *
+	 * @return void
 	 */
 	public static function clear_htaccess_entries() {
 

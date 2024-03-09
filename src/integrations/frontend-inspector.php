@@ -20,7 +20,7 @@ class Frontend_Inspector implements Integration_Interface {
 	 *
 	 * @var string
 	 */
-	const FRONTEND_INSPECTOR_SUBMENU_IDENTIFIER = 'wpseo-frontend-inspector';
+	public const FRONTEND_INSPECTOR_SUBMENU_IDENTIFIER = 'wpseo-frontend-inspector';
 
 	/**
 	 * Holds the Robots_Helper.
@@ -82,6 +82,8 @@ class Frontend_Inspector implements Integration_Interface {
 
 	/**
 	 * Enqueue the workouts app.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		if ( ! \is_admin_bar_showing() || ! WPSEO_Options::get( 'enable_admin_bar_menu' ) ) {

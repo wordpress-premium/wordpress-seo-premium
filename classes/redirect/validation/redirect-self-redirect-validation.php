@@ -19,7 +19,7 @@ class WPSEO_Redirect_Self_Redirect_Validation extends WPSEO_Redirect_Abstract_Va
 	 *
 	 * @return bool
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 
 		if ( $redirect->get_origin() === $redirect->get_target() ) {
 			$error = __( 'You are attempting to redirect to the same URL as the origin. Please choose a different URL to redirect to.', 'wordpress-seo-premium' );

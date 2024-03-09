@@ -10,8 +10,8 @@
  */
 class WPSEO_Premium_Redirect_Undo_EndPoint implements WPSEO_WordPress_Integration {
 
-	const REST_NAMESPACE = 'yoast/v1';
-	const ENDPOINT_UNDO  = 'redirects/undo-for-object';
+	public const REST_NAMESPACE = 'yoast/v1';
+	public const ENDPOINT_UNDO  = 'redirects/undo-for-object';
 
 	/**
 	 * Instance of the WPSEO_Redirect_Manager class.
@@ -31,6 +31,8 @@ class WPSEO_Premium_Redirect_Undo_EndPoint implements WPSEO_WordPress_Integratio
 
 	/**
 	 * Registers all hooks to WordPress.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		add_action( 'rest_api_init', [ $this, 'register' ] );
@@ -38,6 +40,8 @@ class WPSEO_Premium_Redirect_Undo_EndPoint implements WPSEO_WordPress_Integratio
 
 	/**
 	 * Register the REST endpoint to WordPress.
+	 *
+	 * @return void
 	 */
 	public function register() {
 		register_rest_route(
@@ -116,10 +120,10 @@ class WPSEO_Premium_Redirect_Undo_EndPoint implements WPSEO_WordPress_Integratio
 	 * @return WPSEO_Redirect Redirect instance.
 	 */
 	protected function map_redirect_info_to_redirect( $redirect_info ) {
-		$origin = isset( $redirect_info['origin'] ) ? $redirect_info['origin'] : null;
-		$target = isset( $redirect_info['target'] ) ? $redirect_info['target'] : null;
-		$type   = isset( $redirect_info['type'] ) ? $redirect_info['type'] : null;
-		$format = isset( $redirect_info['format'] ) ? $redirect_info['format'] : null;
+		$origin = ( $redirect_info['origin'] ?? null );
+		$target = ( $redirect_info['target'] ?? null );
+		$type   = ( $redirect_info['type'] ?? null );
+		$format = ( $redirect_info['format'] ?? null );
 
 		return new WPSEO_Redirect( $origin, $target, $type, $format );
 	}

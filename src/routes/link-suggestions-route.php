@@ -21,7 +21,7 @@ class Link_Suggestions_Route implements Route_Interface {
 	 *
 	 * @var string
 	 */
-	const ENDPOINT_QUERY = 'link_suggestions';
+	public const ENDPOINT_QUERY = 'link_suggestions';
 
 	/**
 	 * Instance of the Link_Suggestions_Action.

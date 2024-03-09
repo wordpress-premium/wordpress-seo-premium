@@ -10,11 +10,11 @@
  */
 class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 
-	const REST_NAMESPACE = 'yoast/v1';
-	const ENDPOINT_QUERY = 'redirects';
-	const ENDPOINT_UNDO  = 'redirects/delete';
+	public const REST_NAMESPACE = 'yoast/v1';
+	public const ENDPOINT_QUERY = 'redirects';
+	public const ENDPOINT_UNDO  = 'redirects/delete';
 
-	const CAPABILITY_STORE = 'wpseo_manage_redirects';
+	public const CAPABILITY_STORE = 'wpseo_manage_redirects';
 
 	/**
 	 * Instance of the WPSEO_Premium_Redirect_Service class.
@@ -34,6 +34,8 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 
 	/**
 	 * Registers all hooks to WordPress.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		add_action( 'rest_api_init', [ $this, 'register' ] );
@@ -41,6 +43,8 @@ class WPSEO_Premium_Redirect_EndPoint implements WPSEO_WordPress_Integration {
 
 	/**
 	 * Register the REST endpoint to WordPress.
+	 *
+	 * @return void
 	 */
 	public function register() {
 		$args = [

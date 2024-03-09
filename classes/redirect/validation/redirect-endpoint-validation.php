@@ -28,7 +28,7 @@ class WPSEO_Redirect_Endpoint_Validation extends WPSEO_Redirect_Abstract_Validat
 	 *
 	 * @return bool
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 		$this->redirects = $redirects;
 
 		$origin   = $redirect->get_origin();

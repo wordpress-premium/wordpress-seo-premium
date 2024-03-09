@@ -15,34 +15,17 @@ class WPSEO_Premium_Orphaned_Post_Query {
 	/**
 	 * Returns the total number of orphaned items for the given post types.
 	 *
+	 * @deprecated 21.7
+	 * @codeCoverageIgnore
+	 *
 	 * @param array $post_types The post types to get the counts for.
 	 *
 	 * @return int[] The counts for all post types.
 	 */
 	public static function get_counts( array $post_types ) {
-		global $wpdb;
+		_deprecated_function( __METHOD__, 'Yoast SEO 21.7', 'WPSEO_Premium_Orphaned_Post_Filter::get_post_total' );
 
-		$post_type_counts = array_fill_keys( $post_types, 0 );
-		$subquery         = self::get_orphaned_content_query();
-
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT COUNT( ID ) as total_orphaned, post_type
-					FROM {$wpdb->posts}
-					WHERE
-						ID IN ( " . $subquery . " )
-						AND post_status = 'publish'
-						AND post_type IN ( " . implode( ',', array_fill( 0, count( $post_types ), '%s' ) ) . ' )
-					GROUP BY post_type',
-				$post_types
-			)
-		);
-
-		foreach ( $results as $result ) {
-			$post_type_counts[ $result->post_type ] = (int) $result->total_orphaned;
-		}
-
-		return $post_type_counts;
+		return 0;
 	}
 
 	/**

@@ -12,28 +12,28 @@ class OpenGraph_Term_Archive extends Abstract_OpenGraph_Integration {
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_TITLE = 'social-title-tax-';
+	public const OPTION_TITLES_KEY_TITLE = 'social-title-tax-';
 
 	/**
 	 * The prefix for the social description option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-tax-';
+	public const OPTION_TITLES_KEY_DESCRIPTION = 'social-description-tax-';
 
 	/**
 	 * The prefix for the social image ID option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-tax-';
+	public const OPTION_TITLES_KEY_IMAGE_ID = 'social-image-id-tax-';
 
 	/**
 	 * The prefix for the social image URL option.
 	 *
 	 * @var string
 	 */
-	const OPTION_TITLES_KEY_IMAGE = 'social-image-url-tax-';
+	public const OPTION_TITLES_KEY_IMAGE = 'social-image-url-tax-';
 
 	/**
 	 * Initializes the integration.

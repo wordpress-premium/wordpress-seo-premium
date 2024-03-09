@@ -23,7 +23,7 @@ class WPSEO_Premium_Prominent_Words_Support {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array The accessible post types.
+		 * @param array $post_types The accessible post types.
 		 */
 		$prominent_words_post_types = apply_filters(
 			'Yoast\WP\SEO\prominent_words_post_types',
@@ -79,7 +79,7 @@ class WPSEO_Premium_Prominent_Words_Support {
 		 *
 		 * @since 14.7.0
 		 *
-		 * @api array The accessible taxonomies.
+		 * @param array $taxonomies The accessible taxonomies.
 		 */
 		$prominent_words_taxonomies = apply_filters(
 			'Yoast\WP\SEO\prominent_words_taxonomies',
@@ -92,7 +92,7 @@ class WPSEO_Premium_Prominent_Words_Support {
 
 		$prominent_words_taxonomies = array_filter(
 			$prominent_words_taxonomies,
-			static function( $taxonomy ) {
+			static function ( $taxonomy ) {
 				return (bool) WPSEO_Options::get( 'display-metabox-tax-' . $taxonomy, true );
 			}
 		);

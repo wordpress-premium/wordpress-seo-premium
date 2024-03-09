@@ -90,6 +90,8 @@ class Workouts_Integration implements Integration_Interface {
 
 	/**
 	 * Enqueue the workouts app.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Date is not processed or saved.
@@ -159,6 +161,7 @@ class Workouts_Integration implements Integration_Interface {
 	 *
 	 * @param array $indexable_ids_in_orphaned_workout The orphaned indexable ids.
 	 * @param int   $limit                             The limit.
+	 *
 	 * @return array The orphaned indexables.
 	 */
 	protected function get_orphaned( array $indexable_ids_in_orphaned_workout, $limit = 10 ) {
@@ -166,6 +169,7 @@ class Workouts_Integration implements Integration_Interface {
 			->where_raw( '( incoming_link_count is NULL OR incoming_link_count < 3 )' )
 			->where_raw( '( post_status = \'publish\' OR post_status IS NULL )' )
 			->where_raw( '( is_robots_noindex = FALSE OR is_robots_noindex IS NULL )' )
+			->where_raw( 'NOT ( object_sub_type = \'page\' AND permalink = %s )', [ \home_url( '/' ) ] )
 			->where_in( 'object_sub_type', $this->get_public_sub_types() )
 			->where_in( 'object_type', [ 'post' ] )
 			->where_not_in( 'id', $indexable_ids_in_orphaned_workout )

@@ -27,6 +27,8 @@ class Complete_Action {
 
 	/**
 	 * Sets the indexing state to complete.
+	 *
+	 * @return void
 	 */
 	public function complete() {
 		$this->prominent_words_helper->complete_indexing();

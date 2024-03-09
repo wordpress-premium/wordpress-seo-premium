@@ -6,7 +6,7 @@
  */
 
 ?>
-<img class="yoast-image" src="https://yoast.com/app/uploads/2021/06/premium_assistant_bubble.png" />
+<img class="yoast-image" width="200" height="157" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/premium_assistant_bubble.png" decoding="async" />
 <h1><?php esc_html_e( 'Installation successful!', 'wordpress-seo-premium' ); ?></h1>
 <p class="yoast-whats-next">
 	<?php esc_html_e( 'So, what\'s next?', 'wordpress-seo-premium' ); ?>
@@ -16,10 +16,10 @@
 		<h3>
 			<?php esc_html_e( 'Rank with articles you want to rank with', 'wordpress-seo-premium' ); ?>
 		</h3>
-		<img width="256px" height="196px" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/cornerstone.png" alt="Cornerstone" />
+		<img width="256" height="196" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/cornerstone.png" alt="Cornerstone" decoding="async" />
 		<p>
 			<?php
-			echo sprintf(
+			printf(
 				/* translators: %1$s: <strong>, %2$s: </strong> */
 				esc_html__(
 					'%1$sCornerstone content%2$s is the content on your site that’s most important. You want to rank highest in Google with these articles. Make sure your internal linking structure reflects what pages are most important. Want to know how?',
@@ -38,10 +38,10 @@
 		<h3>
 			<?php esc_html_e( 'Optimize your content further with our smart analysis', 'wordpress-seo-premium' ); ?>
 		</h3>
-		<img width="256px" height="196px" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/analysis.png" alt="Analysis" />
+		<img width="256" height="196" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/analysis.png" alt="Analysis" decoding="async" />
 		<p>
 			<?php
-			echo sprintf(
+			printf(
 				/* translators: %1$s: <strong>, %2$s: </strong> */
 				esc_html__(
 					'Different people search with different search terms. With our %1$spremium analysis%2$s, you are free to use variations and synonyms of your keywords in your content, which will make your writing style far more natural.',
@@ -60,10 +60,10 @@
 		<h3>
 			<?php esc_html_e( 'Keep your site well-organised so people won\'t get lost', 'wordpress-seo-premium' ); ?>
 		</h3>
-		<img width="256px" height="196px" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/redirect-manager.png" alt="redirect-manager" />
+		<img width="256" height="196" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/redirect-manager.png" alt="redirect-manager" decoding="async" />
 		<p>
 			<?php
-			echo sprintf(
+			printf(
 				/* translators: %1$s: Yoast SEO, %2$s: <strong>, %3$s: </strong> */
 				esc_html__(
 					'The %1$s %2$sRedirect Manager%3$s automatically prevents visitors from reaching a dead end whenever you move or delete content. It also makes managing your existing redirects easy.',
@@ -83,10 +83,10 @@
 		<h3>
 			<?php esc_html_e( 'Master vital SEO skills with our online courses', 'wordpress-seo-premium' ); ?>
 		</h3>
-		<img width="256px" height="196px" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/academy.png" alt="Academy" />
+		<img width="256" height="196" src="https://yoast.com/shared-assets/images/wpseo_installation_successful/16-6/academy.png" alt="Academy" decoding="async" />
 		<p>
 			<?php
-			echo sprintf(
+			printf(
 				/* translators: %1$s: Yoast SEO Premium, %2$s: <strong>, %3$s: Yoast SEO, %4$s: </strong> */
 				esc_html__(
 					'%1$s grants you direct access to %2$sall premium %3$s academy courses%4$s. Learn all the ins and outs of holistic SEO from industry experts.',

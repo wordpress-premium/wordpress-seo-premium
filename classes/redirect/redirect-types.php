@@ -10,11 +10,11 @@
  */
 class WPSEO_Redirect_Types {
 
-	const TEMPORARY   = 307;
-	const UNAVAILABLE = 451;
-	const DELETED     = 410;
-	const FOUND       = 302;
-	const PERMANENT   = 301;
+	public const TEMPORARY   = 307;
+	public const UNAVAILABLE = 451;
+	public const DELETED     = 410;
+	public const FOUND       = 302;
+	public const PERMANENT   = 301;
 
 	/**
 	 * Returns the redirect types.
@@ -37,7 +37,7 @@ class WPSEO_Redirect_Types {
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array $redirect_types
+		 * @param array $redirect_types
 		 */
 		return apply_filters( 'Yoast\WP\SEO\redirect_types', $redirect_types );
 	}

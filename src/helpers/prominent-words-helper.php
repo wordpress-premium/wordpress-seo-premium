@@ -66,6 +66,8 @@ class Prominent_Words_Helper {
 
 	/**
 	 * Completes the prominent words indexing.
+	 *
+	 * @return void
 	 */
 	public function complete_indexing() {
 		$this->set_indexing_completed( true );
@@ -76,6 +78,8 @@ class Prominent_Words_Helper {
 	 * Sets the prominent_words_indexing_completed option.
 	 *
 	 * @param bool $indexing_completed Whether or not the prominent words indexing has completed.
+	 *
+	 * @return void
 	 */
 	public function set_indexing_completed( $indexing_completed ) {
 		$this->options_helper->set( 'prominent_words_indexing_completed', $indexing_completed );

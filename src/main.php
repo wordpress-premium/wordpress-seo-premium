@@ -16,8 +16,6 @@ use Yoast\WP\SEO\Surfaces\Classes_Surface;
  */
 class Main extends Abstract_Main {
 
-	// @phpcs:disable Generic.Commenting.DocComment.MissingShort -- Short description is in the inherited comments.
-
 	/**
 	 * @inheritDoc
 	 */

@@ -64,8 +64,24 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 * If in Gutenberg, always load these scripts.
 		 */
 		if ( WPSEO_Metabox::is_post_edit( $current_page ) && wp_script_is( 'wp-editor', 'enqueued' ) ) {
-			wp_enqueue_script( 'wp-seo-premium-redirect-notifications' );
-			wp_enqueue_script( 'wp-seo-premium-redirect-notifications-gutenberg' );
+			/**
+			 * Filter: 'Yoast\WP\SEO\show_post_redirect_slug_change_notification' - Allows to suppress the block editor notification
+			 * about automatic redirect creation when the post slug is changed.
+			 *
+			 * The middleware used to intercept the redirect creation and trigger the notice can interfere with the API
+			 * call since it passes the full response on instead of its content. Using this filter, it can be disabled.
+			 * Notice that this doesn't prevent the actual redirect from being created.
+			 *
+			 * @since 21.9
+			 *
+			 * @param bool $show_notification Determines if the notification should be displayed.
+			 */
+			$show_notification = apply_filters( 'Yoast\WP\SEO\show_post_redirect_slug_change_notification', true );
+
+			if ( $show_notification ) {
+				wp_enqueue_script( 'wp-seo-premium-redirect-notifications' );
+				wp_enqueue_script( 'wp-seo-premium-redirect-notifications-gutenberg' );
+			}
 			return;
 		}
 
@@ -111,10 +127,10 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api bool    Determines if a redirect should be created for this post slug change.
-		 * @api int     The ID of the post.
-		 * @api WP_Post The current post object.
-		 * @api WP_Post The previous post object.
+		 * @param bool    $create_redirect Determines if a redirect should be created for this post slug change.
+		 * @param int     $post_id         The ID of the post.
+		 * @param WP_Post $post            The current post object.
+		 * @param WP_Post $previous_post   The previous post object.
 		 */
 		$create_redirect = apply_filters( 'Yoast\WP\SEO\post_redirect_slug_change', false, $post_id, $post, $post_before );
 
@@ -190,8 +206,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api bool   Determines if a redirect should be created for this post type.
-		 * @api string The post type that is being checked for.
+		 * @param bool   $create_redirect Determines if a redirect should be created for this post type.
+		 * @param string $post_type       The post type that is being checked for.
 		 */
 		$post_type_accessible = apply_filters( 'Yoast\WP\SEO\redirect_post_type', WPSEO_Post_Type::is_post_type_accessible( $post_type ), $post_type );
 
@@ -242,8 +258,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array $published_post_statuses The statuses that'll be treated as published.
-		 * @param object $post The post object we're doing the published check for.
+		 * @param array  $published_post_statuses The statuses that'll be treated as published.
+		 * @param object $post                    The post object we're doing the published check for.
 		 */
 		$public_post_statuses = apply_filters( 'Yoast\WP\SEO\public_post_statuses', $public_post_statuses, $post_id );
 
@@ -254,6 +270,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * Offer to create a redirect from the post that is about to get trashed.
 	 *
 	 * @param int $post_id The current post ID.
+	 *
+	 * @return void
 	 */
 	public function detect_post_trash( $post_id ) {
 
@@ -281,6 +299,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * Offer to create a redirect from the post that is about to get  restored from the trash.
 	 *
 	 * @param int $post_id The current post ID.
+	 *
+	 * @return void
 	 */
 	public function detect_post_untrash( $post_id ) {
 		$redirect = $this->check_if_redirect_needed( $post_id, true );
@@ -307,6 +327,8 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * Offer to create a redirect from the post that is about to get deleted.
 	 *
 	 * @param int $post_id The current post ID.
+	 *
+	 * @return void
 	 */
 	public function detect_post_delete( $post_id ) {
 
@@ -314,7 +336,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		if ( is_nav_menu_item( $post_id ) ) {
 			return;
 		}
-
 
 		// When the post comes from the trash or if the post is a revision then skip further execution.
 		if ( get_post_status( $post_id ) === 'trash' || wp_is_post_revision( $post_id ) ) {
@@ -385,7 +406,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	/**
 	 * Retrieves the post types to create automatic redirects for.
 	 *
-	 * @return array Post types to include to create automatic redirects for.
+	 * @return array<string> Post types to include to create automatic redirects for.
 	 */
 	protected function get_included_automatic_redirection_post_types() {
 		$post_types = WPSEO_Post_Type::get_accessible_post_types();
@@ -398,7 +419,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		 *
 		 * @since 12.9.0
 		 *
-		 * @api array $included_post_types Array with the post type names to include to automatic redirection.
+		 * @param array $included_post_types Array with the post type names to include to automatic redirection.
 		 */
 		$included_post_types = apply_filters( 'Yoast\WP\SEO\automatic_redirection_post_types', $post_types );
 
@@ -526,25 +547,38 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @return bool True when the current page is nested pages.
 	 */
 	protected function is_nested_pages( $current_page ) {
-		return ( $current_page === 'admin.php' && filter_input( INPUT_GET, 'page' ) === 'nestedpages' );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reason: We are not controlling the request.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are strictly comparing only.
+		return ( $current_page === 'admin.php' && isset( $_GET['page'] ) && is_string( $_GET['page'] ) && wp_unslash( $_GET['page'] ) === 'nestedpages' );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended.
 	}
 
 	/**
 	 * Retrieves wpseo_old_post_url field from the post.
 	 *
-	 * @return mixed
+	 * @return string|bool
 	 */
 	protected function get_post_old_post_url() {
-		return filter_input( INPUT_POST, 'wpseo_old_post_url' );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Reason: Seems to be only used in tests.
+		if ( isset( $_POST['wpseo_old_post_url'] ) && is_string( $_POST['wpseo_old_post_url'] ) ) {
+			return sanitize_text_field( wp_unslash( $_POST['wpseo_old_post_url'] ) );
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing.
+		return false;
 	}
 
 	/**
 	 * Retrieves action field from the post.
 	 *
-	 * @return mixed
+	 * @return string|bool
 	 */
 	protected function get_post_action() {
-		return filter_input( INPUT_POST, 'action' );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reason: We are not controlling the request.
+		if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+			return sanitize_text_field( wp_unslash( $_POST['action'] ) );
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended.
+		return false;
 	}
 
 	/**
@@ -553,10 +587,12 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 * @param WPSEO_Redirect $redirect    The old URL to the post.
 	 * @param int            $object_id   The post or term ID.
 	 * @param string         $object_type The object type: post or term.
+	 *
+	 * @return void
 	 */
 	protected function set_undo_slug_notification( WPSEO_Redirect $redirect, $object_id, $object_type ) {
 
-		if ( ! $this->is_rest_request() && ! \wp_doing_ajax() ) {
+		if ( ! $this->is_rest_request() && ! wp_doing_ajax() ) {
 			parent::set_undo_slug_notification( $redirect, $object_id, $object_type );
 
 			return;

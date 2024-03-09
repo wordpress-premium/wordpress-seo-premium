@@ -12,6 +12,8 @@ class WPSEO_Premium_Expose_Shortlinks implements WPSEO_WordPress_Integration {
 
 	/**
 	 * Registers all hooks to WordPress
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		add_filter( 'wpseo_admin_l10n', [ $this, 'expose_shortlinks' ] );

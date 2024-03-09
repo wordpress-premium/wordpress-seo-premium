@@ -19,7 +19,7 @@ class WPSEO_Redirect_Uniqueness_Validation extends WPSEO_Redirect_Abstract_Valid
 	 *
 	 * @return bool
 	 */
-	public function run( WPSEO_Redirect $redirect, WPSEO_Redirect $old_redirect = null, array $redirects = null ) {
+	public function run( WPSEO_Redirect $redirect, ?WPSEO_Redirect $old_redirect = null, ?array $redirects = null ) {
 
 		// Remove uniqueness validation when old origin is the same as the current one.
 		if ( is_a( $old_redirect, 'WPSEO_Redirect' ) && $redirect->get_origin() === $old_redirect->get_origin() ) {

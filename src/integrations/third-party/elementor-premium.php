@@ -19,6 +19,7 @@ use WPSEO_Social_Previews;
 use WPSEO_Utils;
 use Yoast\WP\SEO\Conditionals\Third_Party\Elementor_Edit_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Premium\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Integrations\Admin\Prominent_Words\Indexing_Integration;
 use Yoast\WP\SEO\Premium\Integrations\Admin\Replacement_Variables_Integration;
@@ -33,7 +34,14 @@ class Elementor_Premium implements Integration_Interface {
 	 *
 	 * @var string
 	 */
-	const SCRIPT_HANDLE = 'elementor-premium';
+	public const SCRIPT_HANDLE = 'elementor-premium';
+
+	/**
+	 * Holds the Current_Page_Helper.
+	 *
+	 * @var Current_Page_Helper
+	 */
+	protected $current_page_helper;
 
 	/**
 	 * Represents the post.
@@ -69,10 +77,12 @@ class Elementor_Premium implements Integration_Interface {
 	 * Constructs the class.
 	 *
 	 * @param Prominent_Words_Helper $prominent_words_helper The prominent words helper.
+	 * @param Current_Page_Helper    $current_page_helper    The Current_Page_Helper.
 	 */
-	public function __construct( Prominent_Words_Helper $prominent_words_helper ) {
+	public function __construct( Prominent_Words_Helper $prominent_words_helper, Current_Page_Helper $current_page_helper ) {
 		$this->prominent_words_helper = $prominent_words_helper;
 		$this->post_watcher           = new WPSEO_Post_Watcher();
+		$this->current_page_helper    = $current_page_helper;
 	}
 
 	/**
@@ -147,19 +157,20 @@ class Elementor_Premium implements Integration_Interface {
 		$assets_manager = new WPSEO_Admin_Asset_Manager();
 
 		$data = [
-			'restApi'                         => $this->get_rest_api_config(),
-			'seoAnalysisEnabled'              => $analysis_seo->is_enabled(),
-			'licensedURL'                     => WPSEO_Utils::get_home_url(),
-			'settingsPageUrl'                 => \admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
-			'integrationsTabURL'              => \admin_url( 'admin.php?page=wpseo_integrations' ),
-			'commonsScriptUrl'                => \plugins_url(
+			'restApi'                     => $this->get_rest_api_config(),
+			'seoAnalysisEnabled'          => $analysis_seo->is_enabled(),
+			'licensedURL'                 => WPSEO_Utils::get_home_url(),
+			'settingsPageUrl'             => \admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
+			'integrationsTabURL'          => \admin_url( 'admin.php?page=wpseo_integrations' ),
+			'commonsScriptUrl'            => \plugins_url(
 				'assets/js/dist/commons-premium-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
 				\WPSEO_PREMIUM_FILE
 			),
-			'premiumAssessmentsScriptUrl'     => \plugins_url(
+			'premiumAssessmentsScriptUrl' => \plugins_url(
 				'assets/js/dist/register-premium-assessments-' . $assets_manager->flatten_version( \WPSEO_PREMIUM_VERSION ) . \WPSEO_CSSJS_SUFFIX . '.js',
 				\WPSEO_PREMIUM_FILE
 			),
+			'pluginUrl'                   => \plugins_url( '', \WPSEO_PREMIUM_FILE ),
 		];
 		if ( \defined( 'YOAST_SEO_TEXT_FORMALITY' ) && \YOAST_SEO_TEXT_FORMALITY === true ) {
 			$data['textFormalityScriptUrl'] = \plugins_url(
@@ -190,7 +201,6 @@ class Elementor_Premium implements Integration_Interface {
 
 		$site_locale = \get_locale();
 		$language    = WPSEO_Language_Utils::get_language( $site_locale );
-
 
 		return [
 			'currentObjectId'                 => $this->get_metabox_post()->ID,
@@ -242,9 +252,9 @@ class Elementor_Premium implements Integration_Interface {
 			return $this->post;
 		}
 
-		$post = \filter_input( \INPUT_GET, 'post' );
-		if ( ! empty( $post ) ) {
-			$post_id = (int) WPSEO_Utils::validate_int( $post );
+		$post_id = $this->current_page_helper->get_current_post_id();
+
+		if ( $post_id ) {
 
 			$this->post = \get_post( $post_id );
 
@@ -268,38 +278,11 @@ class Elementor_Premium implements Integration_Interface {
 	protected function load_metabox() {
 		// When the current page isn't a post related one.
 		if ( WPSEO_Metabox::is_post_edit( $this->get_current_page() ) ) {
-			return WPSEO_Post_Type::has_metabox_enabled( $this->get_current_post_type() );
+			return WPSEO_Post_Type::has_metabox_enabled( $this->current_page_helper->get_current_post_type() );
 		}
 
 		// Make sure ajax integrations are loaded.
 		return \wp_doing_ajax();
-	}
-
-	/**
-	 * Retrieves the current post type.
-	 *
-	 * @codeCoverageIgnore It depends on external request input.
-	 *
-	 * @return string The post type.
-	 */
-	protected function get_current_post_type() {
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-		$post = \filter_input( \INPUT_GET, 'post', @\FILTER_SANITIZE_STRING );
-
-		if ( $post ) {
-			return \get_post_type( \get_post( $post ) );
-		}
-
-		return \filter_input(
-			\INPUT_GET,
-			'post_type',
-			@\FILTER_SANITIZE_STRING, // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-			[
-				'options' => [
-					'default' => 'post',
-				],
-			]
-		);
 	}
 
 	/**

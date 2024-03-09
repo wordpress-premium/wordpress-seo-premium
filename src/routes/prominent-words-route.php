@@ -28,49 +28,49 @@ class Prominent_Words_Route extends Abstract_Indexation_Route {
 	 *
 	 * @var string
 	 */
-	const FEATURE_NAMESPACE = 'prominent_words';
+	public const FEATURE_NAMESPACE = 'prominent_words';
 
 	/**
 	 * The get content route constant.
 	 *
 	 * @var string
 	 */
-	const GET_CONTENT_ROUTE = self::FEATURE_NAMESPACE . '/get_content';
+	public const GET_CONTENT_ROUTE = self::FEATURE_NAMESPACE . '/get_content';
 
 	/**
 	 * The full content route constant.
 	 *
 	 * @var string
 	 */
-	const FULL_GET_CONTENT_ROUTE = Main::API_V1_NAMESPACE . '/' . self::GET_CONTENT_ROUTE;
+	public const FULL_GET_CONTENT_ROUTE = Main::API_V1_NAMESPACE . '/' . self::GET_CONTENT_ROUTE;
 
 	/**
 	 * The route for saving the prominent words.
 	 *
 	 * @var string
 	 */
-	const SAVE_ROUTE = self::FEATURE_NAMESPACE . '/save';
+	public const SAVE_ROUTE = self::FEATURE_NAMESPACE . '/save';
 
 	/**
 	 * The full namespaced route for saving the prominent words.
 	 *
 	 * @var string
 	 */
-	const FULL_SAVE_ROUTE = Main::API_V1_NAMESPACE . '/' . self::SAVE_ROUTE;
+	public const FULL_SAVE_ROUTE = Main::API_V1_NAMESPACE . '/' . self::SAVE_ROUTE;
 
 	/**
 	 * The posts data route constant.
 	 *
 	 * @var string
 	 */
-	const COMPLETE_ROUTE = self::FEATURE_NAMESPACE . '/complete';
+	public const COMPLETE_ROUTE = self::FEATURE_NAMESPACE . '/complete';
 
 	/**
 	 * The full post data route constant.
 	 *
 	 * @var string
 	 */
-	const FULL_COMPLETE_ROUTE = Main::API_V1_NAMESPACE . '/' . self::COMPLETE_ROUTE;
+	public const FULL_COMPLETE_ROUTE = Main::API_V1_NAMESPACE . '/' . self::COMPLETE_ROUTE;
 
 	/**
 	 * Represents that action that retrieves the content to index.

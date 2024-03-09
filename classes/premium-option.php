@@ -26,14 +26,17 @@ class WPSEO_Premium_Option extends WPSEO_Option {
 	 */
 	protected $defaults = [
 		// Form fields.
-		'prominent_words_indexing_completed' => null,
-		'workouts'                           => [ 'cornerstone' => [ 'finishedSteps' => [] ] ],
-		'should_redirect_after_install'      => false,
-		'activation_redirect_timestamp'      => 0,
+		'prominent_words_indexing_completed'  => null,
+		'workouts'                            => [ 'cornerstone' => [ 'finishedSteps' => [] ] ],
+		'should_redirect_after_install'       => false,
+		'activation_redirect_timestamp'       => 0,
+		'dismiss_update_premium_notification' => '0',
 	];
 
 	/**
 	 * Registers the option to the WPSEO Options framework.
+	 *
+	 * @return void
 	 */
 	public static function register_option() {
 		WPSEO_Options::register_option( static::get_instance() );
@@ -83,6 +86,11 @@ class WPSEO_Premium_Option extends WPSEO_Option {
 					break;
 				case 'activation_redirect_timestamp':
 					if ( isset( $dirty[ $key ] ) && is_int( $dirty[ $key ] ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
+					break;
+				case 'dismiss_update_premium_notification':
+					if ( isset( $dirty[ $key ] ) && is_string( $dirty[ $key ] ) ) {
 						$clean[ $key ] = $dirty[ $key ];
 					}
 					break;

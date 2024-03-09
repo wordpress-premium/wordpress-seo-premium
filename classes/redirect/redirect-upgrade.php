@@ -22,6 +22,8 @@ class WPSEO_Redirect_Upgrade {
 
 	/**
 	 * Upgrade routine from Yoast SEO premium 1.2.0.
+	 *
+	 * @return void
 	 */
 	public static function upgrade_1_2_0() {
 		$redirect_option = self::get_redirect_option();
@@ -45,6 +47,8 @@ class WPSEO_Redirect_Upgrade {
 	 * Check if redirects should be imported from the free version.
 	 *
 	 * @since 2.3
+	 *
+	 * @return void
 	 */
 	public static function import_redirects_2_3() {
 		// phpcs:ignore WordPress.DB.SlowDBQuery -- Upgrade routine, so rarely used, therefore not an issue.
@@ -71,6 +75,8 @@ class WPSEO_Redirect_Upgrade {
 
 	/**
 	 * Upgrade routine to merge plain and regex redirects in a single option.
+	 *
+	 * @return void
 	 */
 	public static function upgrade_3_1() {
 		$redirects = [];
@@ -92,6 +98,8 @@ class WPSEO_Redirect_Upgrade {
 
 	/**
 	 * Exports the redirects to htaccess or nginx file if needed.
+	 *
+	 * @return void
 	 */
 	public static function upgrade_13_0() {
 		$redirect_manager = new WPSEO_Redirect_Manager();
@@ -103,6 +111,8 @@ class WPSEO_Redirect_Upgrade {
 	 *
 	 * @param WPSEO_Redirect[]               $redirects The redirects.
 	 * @param WPSEO_Redirect_Exporter[]|null $exporters The exporters.
+	 *
+	 * @return void
 	 */
 	private static function import_redirects( $redirects, $exporters = null ) {
 		if ( empty( $redirects ) ) {

@@ -162,7 +162,7 @@ class Index_Now_Ping implements Integration_Interface {
 		];
 
 		$request = new WPSEO_Remote_Request( $this->endpoint, $request_args );
-		// phpcs:ignore Yoast.Yoast.AlternativeFunctions.json_encode_wp_json_encode -- This is being sent to an API, not displayed.
+		// phpcs:ignore Yoast.Yoast.JsonEncodeAlternative.Found -- This is being sent to an API, not displayed.
 		$request->set_body( \wp_json_encode( $content ) );
 		$request->send();
 

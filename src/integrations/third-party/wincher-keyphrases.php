@@ -44,6 +44,7 @@ class Wincher_Keyphrases implements Integration_Interface {
 	 */
 	public function add_additional_keyphrases_from_post( $keyphrases, $post_id ) {
 		$additional_keywords = \json_decode( WPSEO_Meta::get_value( 'focuskeywords', $post_id ), true );
+
 		return \array_merge( $keyphrases, $additional_keywords );
 	}
 
@@ -58,15 +59,22 @@ class Wincher_Keyphrases implements Integration_Interface {
 		global $wpdb;
 		$meta_key = WPSEO_Meta::$meta_prefix . 'focuskeywords';
 
-		$query = "
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 				SELECT meta_value
-				FROM $wpdb->postmeta
-				JOIN $wpdb->posts ON {$wpdb->posts}.id = {$wpdb->postmeta}.post_id
-				WHERE meta_key = '$meta_key' AND post_status != 'trash'
-			";
-
-		// phpcs:ignore -- ignoring since it's complaining about not using prepare when it's perfectly safe here.
-		$results = $wpdb->get_results( $query );
+				FROM %i pm
+				JOIN %i p ON p.id = pm.post_id
+				WHERE %i = %s AND %i != 'trash'
+			",
+				$wpdb->postmeta,
+				$wpdb->posts,
+				'meta_key',
+				$meta_key,
+				'post_status'
+			)
+		);
 
 		if ( $results ) {
 			foreach ( $results as $row ) {
@@ -77,6 +85,7 @@ class Wincher_Keyphrases implements Integration_Interface {
 				}
 			}
 		}
+
 		return $keyphrases;
 	}
 }

@@ -76,14 +76,14 @@ if ( ! empty( $yoast_seo_redirect_file ) ) {
 <?php echo '<h2>' . esc_html__( 'Redirects settings', 'wordpress-seo-premium' ) . '</h2>'; ?>
 
 <?php
-	$yoast_seo_disable_toggles = ( ( WPSEO_Options::get( 'disable_php_redirect' ) === 'off' ) && \is_multisite() );
+	$yoast_seo_disable_toggles = ( ( WPSEO_Options::get( 'disable_php_redirect' ) === 'off' ) && is_multisite() );
 
 if ( $yoast_seo_disable_toggles ) {
 		$yoast_seo_disable_htaccess_message = esc_html__( 'Since this site is a multisite, web server redirect methods have been disabled to prevent issues.', 'wordpress-seo-premium' )
 		. '&nbsp;<a href="https://yoa.st/4k9 ">'
 		. esc_html__( 'Read more about why web server redirect methods have been disabled on a multisite.', 'wordpress-seo-premium' )
 		. '</a>';
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in Alert_Presenter.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output escaped in Alert_Presenter.
 		echo new Alert_Presenter( $yoast_seo_disable_htaccess_message, 'info' );
 }
 ?>

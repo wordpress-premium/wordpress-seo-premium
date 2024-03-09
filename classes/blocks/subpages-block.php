@@ -1,6 +1,5 @@
 <?php
 
-// phpcs:ignore Yoast.NamingConventions.NamespaceName.Invalid
 namespace Yoast\WP\SEO\Integrations\Blocks;
 
 use Yoast\WP\SEO\Models\Indexable;
@@ -52,8 +51,8 @@ class Subpages_Block extends Dynamic_Block {
 	public function present( $attributes ) {
 		$indexables = $this->indexable_repository->get_subpages_by_post_parent( \get_the_ID() );
 
-		$links = array_map(
-			static function( Indexable $indexable ) {
+		$links = \array_map(
+			static function ( Indexable $indexable ) {
 				return [
 					'title'     => $indexable->breadcrumb_title,
 					'permalink' => $indexable->permalink,

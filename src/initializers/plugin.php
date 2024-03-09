@@ -48,6 +48,8 @@ class Plugin implements Initializer_Interface {
 
 	/**
 	 * The premium setup
+	 *
+	 * @return void
 	 */
 	public function load() {
 		new WPSEO_Premium();
@@ -61,7 +63,8 @@ class Plugin implements Initializer_Interface {
 	public function wpseo_premium_deactivate() {
 		\do_action( 'wpseo_register_capabilities_premium' );
 		WPSEO_Capability_Manager_Factory::get( 'premium' )->remove();
-
-		$this->options_helper->set( 'tracking', false );
+		if ( $this->options_helper->get( 'toggled_tracking' ) !== true ) {
+			$this->options_helper->set( 'tracking', false );
+		}
 	}
 }

@@ -28,7 +28,7 @@ class Indexing_Integration implements Integration_Interface {
 	 *
 	 * @var int
 	 */
-	const PER_INDEXABLE_LIMIT = 20;
+	public const PER_INDEXABLE_LIMIT = 20;
 
 	/**
 	 * Number of prominent words to index per indexable
@@ -36,7 +36,7 @@ class Indexing_Integration implements Integration_Interface {
 	 *
 	 * @var int
 	 */
-	const PER_INDEXABLE_LIMIT_NO_FUNCTION_WORD_SUPPORT = 30;
+	public const PER_INDEXABLE_LIMIT_NO_FUNCTION_WORD_SUPPORT = 30;
 
 	/**
 	 * All indexing actions.

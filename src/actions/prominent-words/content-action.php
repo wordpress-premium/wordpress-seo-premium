@@ -18,7 +18,7 @@ use Yoast\WP\SEO\Repositories\Indexable_Repository;
  */
 class Content_Action implements Indexation_Action_Interface {
 
-	const TRANSIENT_CACHE_KEY = 'total_unindexed_prominent_words';
+	public const TRANSIENT_CACHE_KEY = 'total_unindexed_prominent_words';
 
 	/**
 	 * An instance of the WPSEO_Premium_Prominent_Words_Support.
@@ -85,7 +85,7 @@ class Content_Action implements Indexation_Action_Interface {
 		/**
 		 * Filter 'wpseo_prominent_words_indexation_limit' - Allow filtering the amount of indexables indexed during each indexing pass.
 		 *
-		 * @api int The maximum number of indexables indexed.
+		 * @param int $max The maximum number of indexables indexed.
 		 */
 		$limit = \apply_filters( 'wpseo_prominent_words_indexation_limit', 25 );
 

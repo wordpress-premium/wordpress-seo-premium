@@ -32,6 +32,8 @@ class Replacement_Variables_Integration implements Integration_Interface {
 
 	/**
 	 * Enqueue the replacement variables styles and component.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 
@@ -48,12 +50,21 @@ class Replacement_Variables_Integration implements Integration_Interface {
 			return;
 		}
 
-		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-		$get_action = \filter_input( \INPUT_GET, 'action', \FILTER_SANITIZE_STRING );
-		$get_page   = \filter_input( \INPUT_GET, 'page', \FILTER_SANITIZE_STRING );
-		// phpcs:enable
+		$is_elementor_action = false;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are not processing form information.
+		if ( isset( $_GET['action'] ) && \is_string( $_GET['action'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are not processing form information, We are only strictly comparing.
+			$is_elementor_action = ( \wp_unslash( $_GET['action'] ) === 'elementor' );
+		}
 
-		if ( $get_page !== 'wpseo_titles' && $get_page !== 'wpseo_page_settings' && $get_action !== 'elementor' && ! $this->load_metabox( $this->get_current_page() ) ) {
+		$is_settings_page = false;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are not processing form information.
+		if ( isset( $_GET['page'] ) && \is_string( $_GET['page'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are not processing form information, We are only strictly comparing.
+			$is_settings_page = ( \wp_unslash( $_GET['page'] ) === 'wpseo_page_settings' );
+		}
+
+		if ( ! $is_settings_page && ! $is_elementor_action && ! $this->load_metabox( $this->get_current_page() ) ) {
 			return;
 		}
 

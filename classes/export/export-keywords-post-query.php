@@ -6,18 +6,11 @@
  */
 
 /**
- * Class WPSEO_Export_Keywords_Query
+ * Class WPSEO_Export_Keywords_Post_Query
  *
  * Creates an SQL query to gather all post data for a keywords export.
  */
 class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
-
-	/**
-	 * The WordPress database object.
-	 *
-	 * @var wpdb
-	 */
-	protected $wpdb;
 
 	/**
 	 * The columns to query for.
@@ -60,26 +53,26 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 	 * Supported values for columns are 'title', 'url', 'keywords', 'readability_score' and 'keywords_score'.
 	 * Requesting 'keywords_score' will always also return 'keywords'.
 	 *
-	 * @param wpdb  $wpdb      A WordPress Database object.
 	 * @param array $columns   List of columns that need to be retrieved.
 	 * @param int   $page_size Number of items to retrieve.
 	 */
-	public function __construct( $wpdb, array $columns, $page_size = 1000 ) {
-		$this->wpdb      = $wpdb;
+	public function __construct( array $columns, $page_size = 1000 ) {
 		$this->page_size = max( 1, (int) $page_size );
 
 		$this->set_columns( $columns );
 	}
 
 	/**
-	 * Constructs the query and executes it, returning an array of objects containing the columns this object was constructed with.
-	 * Every object will always contain the ID column.
+	 * Constructs the query and executes it, returning an array of objects containing the columns this object was
+	 * constructed with. Every object will always contain the ID column.
 	 *
 	 * @param int $page Paginated page to retrieve.
 	 *
 	 * @return array An array of associative arrays containing the keys as requested in the constructor.
 	 */
 	public function get_data( $page = 1 ) {
+		global $wpdb;
+
 		if ( $this->columns === [] ) {
 			return [];
 		}
@@ -92,28 +85,36 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 		// Pages have a starting index of 1, we need to convert to a 0 based offset.
 		$offset_multiplier = max( 0, ( $page - 1 ) );
 
-		$replacements   = $post_types;
+		$replacements   = [];
+		$replacements[] = $wpdb->posts;
+		$replacements[] = 'post_status';
+		$replacements[] = 'post_type';
+		$replacements   = array_merge( $replacements, $post_types );
 		$replacements[] = $this->page_size;
 		$replacements[] = ( $offset_multiplier * $this->page_size );
 
-		// Construct the query.
-		$query = $this->wpdb->prepare(
-			'SELECT ' . implode( ', ', $this->selects )
-				. ' FROM ' . $this->wpdb->prefix . 'posts AS posts '
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Already prepared, and no cache applicable.
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT ' . implode( ', ', $this->selects )
+				. ' FROM %i AS posts '
 				. implode( ' ', $this->joins )
-				. ' WHERE posts.post_status = "publish" AND posts.post_type IN ('
+				. ' WHERE posts.%i = "publish" AND posts.%i IN ('
 				. implode( ',', array_fill( 0, count( $post_types ), '%s' ) ) . ')'
 				. ' LIMIT %d OFFSET %d',
-			$replacements
+				$replacements
+			),
+			ARRAY_A
 		);
-
-		return $this->wpdb->get_results( $query, ARRAY_A );
+		// phpcs:enable
 	}
 
 	/**
 	 * Prepares the necessary selects and joins to get all data in a single query.
 	 *
 	 * @param array $columns The columns we want our query to return.
+	 *
+	 * @return void
 	 */
 	public function set_columns( array $columns ) {
 		$this->columns = $columns;
@@ -166,14 +167,17 @@ class WPSEO_Export_Keywords_Post_Query implements WPSEO_Export_Keywords_Query {
 	 *
 	 * @param string $alias The alias to use in our query output.
 	 * @param string $key   The meta_key to select.
+	 *
+	 * @return void
 	 */
 	protected function add_meta_join( $alias, $key ) {
+		global $wpdb;
 		$alias = preg_replace( '/[^\w\d]/', '', $alias );
 		$key   = preg_replace( '/[^\w\d]/', '', $key );
 
 		$this->selects[] = $alias . '_join.meta_value AS ' . $alias;
-		$this->joins[]   = 'LEFT OUTER JOIN ' . $this->wpdb->prefix . 'postmeta AS ' . $alias . '_join '
-			. 'ON ' . $alias . '_join.post_id = posts.ID '
-			. 'AND ' . $alias . '_join.meta_key = "' . $key . '"';
+		$this->joins[]   = 'LEFT OUTER JOIN ' . $wpdb->prefix . 'postmeta AS ' . $alias . '_join '
+		. 'ON ' . $alias . '_join.post_id = posts.ID '
+		. 'AND ' . $alias . '_join.meta_key = "' . $key . '"';
 	}
 }

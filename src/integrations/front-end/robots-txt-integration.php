@@ -20,7 +20,7 @@ class Robots_Txt_Integration implements Integration_Interface {
 	protected $options_helper;
 
 	/**
-	 * Sets the helpers.
+	 * Instantiates the `robots.txt` integration.
 	 *
 	 * @param Options_Helper $options_helper Options helper.
 	 */
@@ -45,35 +45,51 @@ class Robots_Txt_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( $this->options_helper->get( 'deny_search_crawling' ) && ! \is_multisite() ) {
-			\add_action( 'Yoast\WP\SEO\register_robots_rules', [ $this, 'add_disallow_search_to_robots' ], 10, 1 );
+		if ( \is_multisite() ) {
+			return;
 		}
-		if ( $this->options_helper->get( 'deny_wp_json_crawling' ) && ! \is_multisite() ) {
-			\add_action( 'Yoast\WP\SEO\register_robots_rules', [ $this, 'add_disallow_wp_json_to_robots' ], 10, 1 );
+
+		if ( $this->options_helper->get( 'deny_ccbot_crawling' ) ) {
+			\add_action( 'Yoast\WP\SEO\register_robots_rules', [ $this, 'add_disallow_ccbot' ], 10, 1 );
+		}
+		if ( $this->options_helper->get( 'deny_google_extended_crawling' ) ) {
+			\add_action( 'Yoast\WP\SEO\register_robots_rules', [ $this, 'add_disallow_google_extended_bot' ], 10, 1 );
+		}
+		if ( $this->options_helper->get( 'deny_gptbot_crawling' ) ) {
+			\add_action( 'Yoast\WP\SEO\register_robots_rules', [ $this, 'add_disallow_gptbot' ], 10, 1 );
 		}
 	}
 
 	/**
-	 * Add a disallow rule for search to robots.txt.
+	 * Add a disallow rule for Common Crawl CCBot agents to `robots.txt`.
 	 *
-	 * @param Robots_Txt_Helper $robots_txt_helper The robots txt helper.
+	 * @param Robots_Txt_Helper $robots_txt_helper The Robots_Txt_Helper.
 	 *
 	 * @return void
 	 */
-	public function add_disallow_search_to_robots( Robots_Txt_Helper $robots_txt_helper ) {
-		$robots_txt_helper->add_disallow( '*', '/?s=' );
-		$robots_txt_helper->add_disallow( '*', '/search/' );
+	public function add_disallow_ccbot( Robots_Txt_Helper $robots_txt_helper ) {
+		$robots_txt_helper->add_disallow( 'CCBot', '/' );
 	}
 
 	/**
-	 * Add a disallow rule for /wp-json/ to robots.txt.
+	 * Add a disallow rule for Google-Extended agents to `robots.txt`.
 	 *
-	 * @param Robots_Txt_Helper $robots_txt_helper The robots txt helper.
+	 * @param Robots_Txt_Helper $robots_txt_helper The Robots_Txt_Helper.
 	 *
 	 * @return void
 	 */
-	public function add_disallow_wp_json_to_robots( Robots_Txt_Helper $robots_txt_helper ) {
-		$robots_txt_helper->add_disallow( '*', '/wp-json/' );
-		$robots_txt_helper->add_disallow( '*', '/?rest_route=' );
+	public function add_disallow_google_extended_bot( Robots_Txt_Helper $robots_txt_helper ) {
+		$robots_txt_helper->add_disallow( 'Google-Extended', '/' );
+	}
+
+	/**
+	 * Add a disallow rule for OpenAI GPTBot agents to `robots.txt`.
+	 *
+	 * @param Robots_Txt_Helper $robots_txt_helper The Robots_Txt_Helper.
+	 *
+	 * @return void
+	 */
+	public function add_disallow_gptbot( Robots_Txt_Helper $robots_txt_helper ) {
+		$robots_txt_helper->add_disallow( 'GPTBot', '/' );
 	}
 }

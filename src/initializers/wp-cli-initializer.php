@@ -32,6 +32,8 @@ class Wp_Cli_Initializer implements Initializer_Interface {
 	 * The WP-CLI integration needs PHP 5.3 support, which should be automatically
 	 * enforced by the check for the WP_CLI constant. As WP-CLI itself only runs
 	 * on PHP 5.3+, the constant should only be set when requirements are met.
+	 *
+	 * @return void
 	 */
 	public function wpseo_cli_init() {
 		WP_CLI::add_command(

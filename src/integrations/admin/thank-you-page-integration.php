@@ -89,6 +89,8 @@ class Thank_You_Page_Integration implements Integration_Interface {
 
 	/**
 	 * Enqueue assets on the Thank you page.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Date is not processed or saved.
@@ -103,6 +105,8 @@ class Thank_You_Page_Integration implements Integration_Interface {
 
 	/**
 	 * Renders the thank you page.
+	 *
+	 * @return void
 	 */
 	public function render_page() {
 		require \WPSEO_PREMIUM_PATH . 'classes/views/thank-you.php';
