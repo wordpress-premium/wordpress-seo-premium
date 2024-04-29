@@ -42,13 +42,22 @@ class Ai_Editor_Conditional implements Conditional {
 	 * @return bool `true` when the AI editor integration should be active.
 	 */
 	public function is_met() {
-		return $this->post_conditional->is_met() || $this->is_elementor_editor();
+		return $this->post_conditional->is_met() || $this->is_term() || $this->is_elementor_editor();
 	}
 
 	/**
-	 * Returns `true` when the page is the elementor editor.
+	 * Returns `true` when the page is a term page.
 	 *
-	 * @return bool `true` when the page is the elementor editor.
+	 * @return bool `true` when the page is a term page.
+	 */
+	private function is_term() {
+		return $this->current_page_helper->get_current_admin_page() === 'term.php';
+	}
+
+	/**
+	 * Returns `true` when the page is the Elementor editor.
+	 *
+	 * @return bool `true` when the page is the Elementor editor.
 	 */
 	private function is_elementor_editor() {
 		if ( $this->current_page_helper->get_current_admin_page() !== 'post.php' ) {

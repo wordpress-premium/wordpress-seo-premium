@@ -28,7 +28,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	public const PLUGIN_VERSION_NAME = '22.2';
+	public const PLUGIN_VERSION_NAME = '22.5';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -146,19 +146,18 @@ class WPSEO_Premium {
 				10,
 				2
 			);
-
-			// Add page analysis fields to variable array key patterns.
-			add_filter(
-				'wpseo_option_titles_variable_array_key_patterns',
-				[ $this, 'add_variable_array_key_pattern' ]
-			);
-
 			// Settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
 			// Add Premium imports.
 			$this->integrations[] = new WPSEO_Premium_Import_Manager();
 		}
+
+		// Add page analysis fields to variable array key patterns.
+		add_filter(
+			'wpseo_option_titles_variable_array_key_patterns',
+			[ $this, 'add_variable_array_key_pattern' ]
+		);
 
 		// Only activate post and term watcher if permalink structure is enabled.
 		if ( get_option( 'permalink_structure' ) ) {

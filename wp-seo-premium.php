@@ -10,7 +10,7 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     22.2
+ * Version:     22.5
  * Plugin URI:  https://yoa.st/2jc
  * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
  * Author:      Team Yoast
@@ -22,7 +22,7 @@
  * Requires PHP: 7.2.5
  *
  * WC requires at least: 7.1
- * WC tested up to: 8.6
+ * WC tested up to: 8.7
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,38 @@ if ( ! defined( 'WPSEO_PREMIUM_FILE' ) ) {
 	define( 'WPSEO_PREMIUM_FILE', __FILE__ );
 }
 
+// Check if there are no subscriptions and delete transients if condition is true
+if ( isset( $site_information->subscriptions ) && count( $site_information->subscriptions ) == 0 ) {
+    delete_transient( 'wpseo_site_information' );
+    delete_transient( 'wpseo_site_information_quick' );
+}
+
+// Add a filter to modify the HTTP request before it is made
+add_filter('pre_http_request', function ($pre, $parsed_args, $url) {
+    // Define site information with subscriptions
+    $site_information = (object) [
+        'subscriptions' => [
+            (object) ['product' => (object) ['slug' => 'yoast-seo-wordpress-premium'], 'expiryDate' => '+5 years'],
+            (object) ['product' => (object) ['slug' => 'yoast-seo-news'], 'expiryDate' => '+5 years'],
+            (object) ['product' => (object) ['slug' => 'yoast-seo-woocommerce'], 'expiryDate' => '+5 years'],
+            (object) ['product' => (object) ['slug' => 'yoast-seo-video'], 'expiryDate' => '+5 years'],
+            (object) ['product' => (object) ['slug' => 'yoast-seo-local'], 'expiryDate' => '+5 years']
+        ],
+    ];
+
+    // Check if the request URL matches a specific pattern
+    if (strpos($url, 'https://my.yoast.com/api/sites/current') !== false) {
+        // Modify and return the response for the matching URL
+        return [
+            'response' => ['code' => 200, 'message' => 'OK'],
+            'body' => json_encode($site_information)
+        ];
+    } else {
+        // Return the original request parameters for non-matching URLs
+        return $pre;
+    }
+}, 10, 3);
+
 if ( ! defined( 'WPSEO_PREMIUM_PATH' ) ) {
 	define( 'WPSEO_PREMIUM_PATH', plugin_dir_path( WPSEO_PREMIUM_FILE ) );
 }
@@ -56,7 +88,7 @@ if ( ! defined( 'WPSEO_PREMIUM_BASENAME' ) ) {
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_PREMIUM_VERSION', '22.2' );
+define( 'WPSEO_PREMIUM_VERSION', '22.5' );
 
 // Initialize Premium autoloader.
 $wpseo_premium_dir               = WPSEO_PREMIUM_PATH;
