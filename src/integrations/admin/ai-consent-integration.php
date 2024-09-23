@@ -113,8 +113,7 @@ class Ai_Consent_Integration implements Integration_Interface {
 			'wpseoPremiumManageAiConsentButton',
 			[
 				'hasConsent'            => $this->user_helper->get_meta( $user_id, '_yoast_wpseo_ai_consent', true ),
-				// Note: this is passing the Free plugin URL! As the image is located in there.
-				'pluginUrl'             => \plugins_url( '', \WPSEO_FILE ),
+				'pluginUrl'             => \plugins_url( '', \WPSEO_PREMIUM_FILE ),
 				'wistiaEmbedPermission' => $this->wistia_embed_permission_repository->get_value_for_user( $user_id ),
 			]
 		);

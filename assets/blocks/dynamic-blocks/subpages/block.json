@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "23.0",
+  "name": "yoast-seo/subpages",
+  "title": "Yoast Subpages",
+  "description": "Adds a list of internal links to subpages of this page.",
+  "category": "yoast-internal-linking-blocks",
+  "icon": "editor-ul",
+  "keywords": [
+    "SEO",
+    "subpages",
+    "childpages",
+    "children",
+    "internal linking",
+    "site structure"
+  ],
+  "textdomain": "wordpress-seo-premium",
+  "attributes": {},
+  "example": {
+    "attributes": {}
+  }
+}

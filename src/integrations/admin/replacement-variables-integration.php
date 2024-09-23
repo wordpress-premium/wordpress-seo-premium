@@ -82,7 +82,6 @@ class Replacement_Variables_Integration implements Integration_Interface {
 			'yoast-seo-premium-draft-js-plugins-external',
 			$draft_js_external_script_location,
 			[
-				'yoast-seo-premium-commons',
 				WPSEO_Admin_Asset_Manager::PREFIX . 'search-metadata-previews',
 			],
 			\WPSEO_PREMIUM_VERSION,

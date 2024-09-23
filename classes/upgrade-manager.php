@@ -128,6 +128,10 @@ class WPSEO_Upgrade_Manager {
 		if ( version_compare( $version_number, '21.6-RC0', '<' ) ) {
 			add_action( 'init', [ $this, 'upgrade_21_6' ], 12 );
 		}
+
+		if ( version_compare( $version_number, '22.6-RC0', '<' ) ) {
+			add_action( 'init', [ $this, 'upgrade_22_6' ], 12 );
+		}
 	}
 
 	/**
@@ -361,5 +365,23 @@ class WPSEO_Upgrade_Manager {
 	 */
 	private function update_current_version_code() {
 		update_site_option( WPSEO_Premium::OPTION_CURRENT_VERSION, WPSEO_Premium::PLUGIN_VERSION_CODE );
+	}
+
+	/**
+	 * Performs the 22.6 upgrade routine.
+	 * Schedules another cleanup scheduled action, but starting from the last cleanup action we just added (if there aren't any running cleanups already).
+	 *
+	 * @return void
+	 */
+	public function upgrade_22_6() {
+		// If Yoast SEO hasn't been upgraded to 17.2 the cleanup integration has not been implemented in the current way.
+		if ( ! class_exists( Cleanup_Integration::class ) ) {
+			return;
+		}
+
+		if ( get_option( Cleanup_Integration::CURRENT_TASK_OPTION ) === false ) {
+			$cleanup_integration = YoastSEO()->classes->get( Cleanup_Integration::class );
+			$cleanup_integration->start_cron_job( 'clean_selected_empty_usermeta' );
+		}
 	}
 }

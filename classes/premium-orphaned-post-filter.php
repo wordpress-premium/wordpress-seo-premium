@@ -184,7 +184,6 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 
 			$expiry = ( wp_using_ext_object_cache() && wp_cache_supports( 'flush_group' ) ) ? DAY_IN_SECONDS : MINUTE_IN_SECONDS;
 			wp_cache_set( $cache_key, $count, 'orphaned_counts', $expiry );
-
 		}
 
 		// phpcs:enable

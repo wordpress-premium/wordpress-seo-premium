@@ -2,14 +2,14 @@
 
 namespace Yoast\WP\SEO\Premium\Integrations\Blocks;
 
-use Yoast\WP\SEO\Integrations\Blocks\Dynamic_Block;
+use Yoast\WP\SEO\Integrations\Blocks\Dynamic_Block_V3;
 
 /**
  * Estimated_Reading_Time_Block class.
  *
  * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
-class Estimated_Reading_Time_Block extends Dynamic_Block {
+class Estimated_Reading_Time_Block extends Dynamic_Block_V3 {
 
 	/**
 	 * The name of the block.
@@ -33,47 +33,17 @@ class Estimated_Reading_Time_Block extends Dynamic_Block {
 	protected $script = 'wp-seo-premium-dynamic-blocks';
 
 	/**
-	 * Registers the block.
-	 *
-	 * @return void
+	 * The constructor.
 	 */
-	public function register_block() {
-		\register_block_type(
-			'yoast-seo/' . $this->block_name,
-			[
-				'editor_script'   => $this->script,
-				'render_callback' => [ $this, 'present' ],
-				'attributes'      => [
-					'className'            => [
-						'default' => '',
-						'type'    => 'string',
-					],
-					'estimatedReadingTime' => [
-						'type'    => 'number',
-						'default' => 0,
-					],
-					'descriptiveText'      => [
-						'type'    => 'string',
-						'default' => \__( 'Estimated reading time:', 'wordpress-seo-premium' ) . ' ',
-					],
-					'showDescriptiveText'  => [
-						'type'    => 'boolean',
-						'default' => true,
-					],
-					'showIcon'             => [
-						'type'    => 'boolean',
-						'default' => true,
-					],
-				],
-			]
-		);
+	public function __construct() {
+		$this->base_path = \WPSEO_PREMIUM_PATH . 'assets/blocks/dynamic-blocks/';
 	}
 
 	/**
 	 * Presents the block output.
 	 *
-	 * @param array  $attributes The block attributes.
-	 * @param string $content    The content.
+	 * @param array<string, bool|string|int|array> $attributes The block attributes.
+	 * @param string                               $content    The content.
 	 *
 	 * @return string The block output.
 	 */

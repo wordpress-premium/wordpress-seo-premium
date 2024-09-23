@@ -125,7 +125,6 @@ class WPSEO_Redirect_Page {
 			'jquery-ui-dialog',
 			'wp-util',
 			'underscore',
-			'yoast-seo-premium-commons',
 			'wp-api',
 			'wp-api-fetch',
 		];

@@ -51,7 +51,6 @@ class Mastodon implements Integration_Interface {
 		\add_filter( 'wpseo_person_social_profile_fields', [ $this, 'add_mastodon_to_person_social_profile_fields' ], 11, 1 );
 		\add_filter( 'wpseo_organization_social_profile_fields', [ $this, 'add_mastodon_to_organization_social_profile_fields' ], 11, 1 );
 		\add_filter( 'wpseo_schema_person_social_profiles', [ $this, 'add_mastodon_to_person_schema' ], 10 );
-		\add_filter( 'user_contactmethods', [ $this, 'add_mastodon_to_user_contactmethods' ], 10 );
 		\add_filter( 'wpseo_mastodon_active', [ $this, 'check_mastodon_active' ], 10 );
 	}
 
@@ -130,11 +129,16 @@ class Mastodon implements Integration_Interface {
 	/**
 	 * Adds Mastodon to the list of contact methods for persons.
 	 *
+	 * @deprecated 22.6
+	 * @codeCoverageIgnore
+	 *
 	 * @param array $contactmethods Currently set contactmethods.
 	 *
 	 * @return array
 	 */
 	public function add_mastodon_to_user_contactmethods( $contactmethods ) {
+		\_deprecated_function( __METHOD__, 'Yoast SEO 22.6' );
+
 		// Bail out early if something's wrong with the contact methods, let's not add any more confusion there.
 		if ( ! \is_array( $contactmethods ) ) {
 			return $contactmethods;

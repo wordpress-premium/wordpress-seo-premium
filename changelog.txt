@@ -1,10 +1,11 @@
 *** Yoast SEO premium Changelog ***
 
 
-2024-04-16 - version 22.5
-* fix -  Fixes a bug where the _Yoast Table of Contents_ block would throw a validation error when changing its title's heading level.
-* fix -  Fixes a bug where the `Add custom fields to page analysis` setting would sometimes be wiped out after being saved.
-* fix -  Fixes a bug where some feedback strings in the content analysis would no longer be translated.
-* update -  Renames all Twitter references to X.
-* update -  Bumps the minimum required version of Yoast SEO to 22.5.
+2024-09-03 - version 23.4
+* add -  Enables the _AI Optimize_ feature for the _keyphrase in introduction_ assessment when the introduction is part of a Classic block.
+* add -  Prevents showing the "not enough content" error message when _AI Generate_ is used before the content is fully loaded.
+* add -  Disables the highlighting buttons whenever _AI Optimize_ is used.
+* add -  Improves the success rate of _AI Optimize_ suggestions for a post that contains list blocks.
+* fix -  Fixes a bug where a full stop would be added at the end of a previous sentence instead of the newly suggested sentence when using _AI Optimize_.
+* update -  Bumps the minimum required version of Yoast SEO to 23.4.
 

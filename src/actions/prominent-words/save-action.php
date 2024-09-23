@@ -4,6 +4,7 @@ namespace Yoast\WP\SEO\Premium\Actions\Prominent_Words;
 
 use Exception;
 use WPSEO_Premium_Prominent_Words_Versioning;
+use Yoast\WP\SEO\Helpers\Indexable_Helper;
 use Yoast\WP\SEO\Models\Prominent_Words;
 use Yoast\WP\SEO\Premium\Helpers\Prominent_Words_Helper;
 use Yoast\WP\SEO\Premium\Repositories\Prominent_Words_Repository;
@@ -32,6 +33,13 @@ class Save_Action {
 	protected $indexable_repository;
 
 	/**
+	 * The indexable helper.
+	 *
+	 * @var Indexable_Helper
+	 */
+	private $indexable_helper;
+
+	/**
 	 * Contains helper function for prominent words.
 	 * For e.g. computing vector lengths and tf-idf scores.
 	 *
@@ -46,15 +54,20 @@ class Save_Action {
 	 *                                                               prominent words from.
 	 * @param Indexable_Repository       $indexable_repository       The repository to read, update and delete
 	 *                                                               indexables from.
+	 *
+	 * @param Indexable_Helper           $indexable_helper           The indexable helper.
+	 *
 	 * @param Prominent_Words_Helper     $prominent_words_helper     The prominent words helper.
 	 */
 	public function __construct(
 		Prominent_Words_Repository $prominent_words_repository,
 		Indexable_Repository $indexable_repository,
+		Indexable_Helper $indexable_helper,
 		Prominent_Words_Helper $prominent_words_helper
 	) {
 		$this->prominent_words_repository = $prominent_words_repository;
 		$this->indexable_repository       = $indexable_repository;
+		$this->indexable_helper           = $indexable_helper;
 		$this->prominent_words_helper     = $prominent_words_helper;
 	}
 
@@ -89,7 +102,7 @@ class Save_Action {
 	public function link( $object_type, $object_id, $words ) {
 		$indexable = $this->indexable_repository->find_by_id_and_type( $object_id, $object_type );
 
-		if ( $indexable ) {
+		if ( $indexable && $this->indexable_helper->should_index_indexable( $indexable ) ) {
 			// Set the prominent words version number on the indexable.
 			$indexable->prominent_words_version = WPSEO_Premium_Prominent_Words_Versioning::get_version_number();
 
@@ -98,7 +111,7 @@ class Save_Action {
 			 * find_by_id_and_type (in the above 'save' function) will have auto-created an indexable object
 			 * with the correct data. So we are not saving an incomplete indexable.
 			 */
-			$indexable->save();
+			$this->indexable_helper->save_indexable( $indexable );
 
 			// Find the prominent words that were already associated with this indexable.
 			$old_words = $this->prominent_words_repository->find_by_indexable_id( $indexable->id );

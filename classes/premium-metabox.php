@@ -152,10 +152,6 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 			'licensedURL'                 => WPSEO_Utils::get_home_url(),
 			'settingsPageUrl'             => admin_url( 'admin.php?page=wpseo_page_settings#/site-features#card-wpseo-enable_link_suggestions' ),
 			'integrationsTabURL'          => admin_url( 'admin.php?page=wpseo_integrations' ),
-			'commonsScriptUrl'            => plugins_url(
-				'assets/js/dist/commons-premium-' . $assets_manager->flatten_version( WPSEO_PREMIUM_VERSION ) . WPSEO_CSSJS_SUFFIX . '.js',
-				WPSEO_PREMIUM_FILE
-			),
 			'premiumAssessmentsScriptUrl' => plugins_url(
 				'assets/js/dist/register-premium-assessments-' . $assets_manager->flatten_version( WPSEO_PREMIUM_VERSION ) . WPSEO_CSSJS_SUFFIX . '.js',
 				WPSEO_PREMIUM_FILE
@@ -190,7 +186,6 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 			'wpseoTOCData',
 			[
 				'data' => [
-					'TOCTitle'               => __( 'Table of contents', 'wordpress-seo-premium' ),
 					'disableTableOfContents' => $disable_table_of_content,
 				],
 			]

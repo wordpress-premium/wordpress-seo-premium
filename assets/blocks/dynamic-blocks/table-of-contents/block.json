@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "23.1",
+  "name": "yoast-seo/table-of-contents",
+  "title": "Yoast Table of Contents",
+  "description": "Adds a table of contents to this page.",
+  "category": "yoast-internal-linking-blocks",
+  "icon": "editor-ul",
+  "keywords": [
+    "SEO",
+    "links",
+    "toc",
+    "site structure"
+  ],
+  "textdomain": "wordpress-seo-premium",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "source": "html",
+      "selector": "h1,h2,h3,h4,h5,h6",
+      "default": "Table of contents"
+    },
+    "level": {
+      "type": "number",
+      "default": 2
+    },
+    "maxHeadingLevel": {
+      "type": "number",
+      "default": 3
+    },
+    "headings": {
+      "type": "array",
+      "source": "query",
+      "selector": "a",
+      "query": {
+        "content": {
+          "type": "string",
+          "source": "html"
+        },
+        "href": {
+          "type": "string",
+          "source": "attribute",
+          "attribute": "href"
+        },
+        "level": {
+          "type": "string",
+          "source": "attribute",
+          "attribute": "data-level"
+        }
+      }
+    }
+  },
+  "example": {
+    "attributes": {
+      "headings": [
+        {
+          "content": "Heading 1",
+          "href": "#heading-1",
+          "level": "2"
+        },
+        {
+          "content": "Subheading 1",
+          "href": "#subheading-1",
+          "level": "3"
+        },
+        {
+          "content": "Subheading 2",
+          "href": "#subheading-2",
+          "level": "3"
+        },
+        {
+          "content": "Heading 2",
+          "href": "#heading-2",
+          "level": "2"
+        }
+      ]
+    }
+  }
+}

@@ -125,9 +125,12 @@ class WPSEO_Redirect_Ajax {
 		if ( $validator->validate( $redirect, $current_redirect ) === true ) {
 			return;
 		}
-
-		$ignore_warning = filter_input( INPUT_POST, 'ignore_warning' );
-
+		$ignore_warning = 'false';
+		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are not processing form information and only comparing the variable in a condition.
+		if ( isset( $_POST['ignore_warning'] ) ) {
+			$ignore_warning = wp_unslash( $_POST['ignore_warning'] );
+		}
+		// phpcs:enable
 		$error = $validator->get_error();
 
 		if ( $error->get_type() === 'error' || ( $error->get_type() === 'warning' && $ignore_warning === 'false' ) ) {

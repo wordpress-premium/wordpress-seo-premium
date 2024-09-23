@@ -94,7 +94,9 @@ class AI_Generator_Action {
 	public function token_request( WP_User $user ): void {
 		// Ensure the user has given consent.
 		if ( $this->user_helper->get_meta( $user->ID, '_yoast_wpseo_ai_consent', true ) !== '1' ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.
 			throw $this->handle_consent_revoked( $user->ID );
+			// phpcs:enable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		// Generate a verification code and store it in the database.
@@ -204,7 +206,7 @@ class AI_Generator_Action {
 	 * @param string  $platform              The platform the post is intended for.
 	 * @param bool    $retry_on_unauthorized Whether to retry when unauthorized (mechanism to retry once).
 	 *
-	 * @return array The suggestions.
+	 * @return string[] The suggestions.
 	 *
 	 * @throws Bad_Request_Exception Bad_Request_Exception.
 	 * @throws Forbidden_Exception Forbidden_Exception.
@@ -257,10 +259,84 @@ class AI_Generator_Action {
 			return $this->get_suggestions( $user, $suggestion_type, $prompt_content, $focus_keyphrase, $language, $platform, false );
 		} catch ( Forbidden_Exception $exception ) {
 			// Follow the API in the consent being revoked (Use case: user sent an e-mail to revoke?).
+			// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.
 			throw $this->handle_consent_revoked( $user->ID, $exception->getCode() );
+			// phpcs:enable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		return $this->ai_generator_helper->build_suggestions_array( $response );
+	}
+
+	/**
+	 * Action used to generate improved copy through AI, that scores better on our content analysis' assessments.
+	 *
+	 * @param WP_User $user                  The WP user.
+	 * @param string  $assessment            The assessment to improve.
+	 * @param string  $prompt_content        The excerpt taken from the post.
+	 * @param string  $focus_keyphrase       The focus keyphrase associated to the post.
+	 * @param string  $synonyms              Synonyms for the focus keyphrase.
+	 * @param string  $language              The language of the post.
+	 * @param bool    $retry_on_unauthorized Whether to retry when unauthorized (mechanism to retry once).
+	 *
+	 * @return string The AI-generated content.
+	 *
+	 * @throws Bad_Request_Exception Bad_Request_Exception.
+	 * @throws Forbidden_Exception Forbidden_Exception.
+	 * @throws Internal_Server_Error_Exception Internal_Server_Error_Exception.
+	 * @throws Not_Found_Exception Not_Found_Exception.
+	 * @throws Payment_Required_Exception Payment_Required_Exception.
+	 * @throws Request_Timeout_Exception Request_Timeout_Exception.
+	 * @throws Service_Unavailable_Exception Service_Unavailable_Exception.
+	 * @throws Too_Many_Requests_Exception Too_Many_Requests_Exception.
+	 * @throws Unauthorized_Exception Unauthorized_Exception.
+	 * @throws RuntimeException Unable to retrieve the access token.
+	 */
+	public function fix_assessments(
+		WP_User $user,
+		string $assessment,
+		string $prompt_content,
+		string $focus_keyphrase,
+		string $synonyms,
+		string $language,
+		bool $retry_on_unauthorized = true
+	): string {
+		$token = $this->get_or_request_access_token( $user );
+
+		// We are not sending the synonyms for now, as these are not used in the current prompts.
+		$request_body    = [
+			'service' => 'openai',
+			'user_id' => (string) $user->ID,
+			'subject' => [
+				'content'         => $prompt_content,
+				'focus_keyphrase' => $focus_keyphrase,
+				'language'        => $language,
+			],
+		];
+		$request_headers = [
+			'Authorization' => "Bearer $token",
+		];
+
+		try {
+			$response = $this->ai_generator_helper->request( "/fix/assessments/seo-$assessment", $request_body, $request_headers );
+		} catch ( Unauthorized_Exception $exception ) {
+			// Delete the stored JWT tokens, as they appear to be no longer valid.
+			$this->user_helper->delete_meta( $user->ID, '_yoast_wpseo_ai_generator_access_jwt' );
+			$this->user_helper->delete_meta( $user->ID, '_yoast_wpseo_ai_generator_refresh_jwt' );
+
+			if ( ! $retry_on_unauthorized ) {
+				throw $exception;
+			}
+
+			// Try again once more by fetching a new set of tokens and trying the suggestions endpoint again.
+			return $this->fix_assessments( $user, $assessment, $prompt_content, $focus_keyphrase, $synonyms, $language, false );
+		} catch ( Forbidden_Exception $exception ) {
+			// Follow the API in the consent being revoked (Use case: user sent an e-mail to revoke?).
+			// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.
+			throw $this->handle_consent_revoked( $user->ID, $exception->getCode() );
+			// phpcs:enable WordPress.Security.EscapeOutput.ExceptionNotEscaped
+		}
+
+		return $this->ai_generator_helper->build_fixes_response( $prompt_content, $response );
 	}
 
 	// phpcs:enable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
@@ -335,7 +411,9 @@ class AI_Generator_Action {
 				$this->token_request( $user );
 			} catch ( Forbidden_Exception $exception ) {
 				// Follow the API in the consent being revoked (Use case: user sent an e-mail to revoke?).
+				// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.
 				throw $this->handle_consent_revoked( $user->ID, $exception->getCode() );
+				// phpcs:enable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 			}
 			$access_jwt = $this->ai_generator_helper->get_access_token( $user->ID );
 		}
@@ -383,6 +461,38 @@ class AI_Generator_Action {
 		// Delete the stored JWT tokens.
 		$this->user_helper->delete_meta( $user_id, '_yoast_wpseo_ai_generator_access_jwt' );
 		$this->user_helper->delete_meta( $user_id, '_yoast_wpseo_ai_generator_refresh_jwt' );
+	}
+
+	/**
+	 * Action used to retrieve how much usage of the AI API has the current user had so far this month.
+	 *
+	 * @param WP_User $user The WP user.
+	 *
+	 * @return object<string, object<string>> The AI-generated content.
+	 *
+	 * @throws Bad_Request_Exception Bad_Request_Exception.
+	 * @throws Forbidden_Exception Forbidden_Exception.
+	 * @throws Internal_Server_Error_Exception Internal_Server_Error_Exception.
+	 * @throws Not_Found_Exception Not_Found_Exception.
+	 * @throws Payment_Required_Exception Payment_Required_Exception.
+	 * @throws Request_Timeout_Exception Request_Timeout_Exception.
+	 * @throws Service_Unavailable_Exception Service_Unavailable_Exception.
+	 * @throws Too_Many_Requests_Exception Too_Many_Requests_Exception.
+	 * @throws Unauthorized_Exception Unauthorized_Exception.
+	 * @throws RuntimeException Unable to retrieve the access token.
+	 */
+	public function get_usage(
+		WP_User $user
+	) {
+		$token           = $this->get_or_request_access_token( $user );
+		$request_headers = [
+			'Authorization' => "Bearer $token",
+		];
+
+		$response = $this->ai_generator_helper->request( '/usage/' . \gmdate( 'Y-m' ), [], $request_headers, false );
+		$json     = \json_decode( $response->body );
+
+		return $json;
 	}
 
 	/**

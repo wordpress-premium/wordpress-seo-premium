@@ -9,8 +9,9 @@ use Yoast\WP\SEO\Helpers\User_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Introductions\Infrastructure\Introductions_Seen_Repository;
 use Yoast\WP\SEO\Premium\Conditionals\Ai_Editor_Conditional;
+use Yoast\WP\SEO\Premium\Helpers\AI_Generator_Helper;
 use Yoast\WP\SEO\Premium\Helpers\Current_Page_Helper;
-use Yoast\WP\SEO\Premium\Introductions\Application\Ai_Generate_Titles_And_Descriptions_Introduction;
+use Yoast\WP\SEO\Premium\Introductions\Application\Ai_Fix_Assessments_Introduction;
 
 /**
  * Ai_Generator_Integration class.
@@ -30,6 +31,13 @@ class Ai_Generator_Integration implements Integration_Interface {
 	 * @var WPSEO_Addon_Manager
 	 */
 	private $addon_manager;
+
+	/**
+	 * Represents the AI generator helper.
+	 *
+	 * @var AI_Generator_Helper
+	 */
+	private $ai_generator_helper;
 
 	/**
 	 * Represents the current page helper.
@@ -73,6 +81,7 @@ class Ai_Generator_Integration implements Integration_Interface {
 	 *
 	 * @param WPSEO_Admin_Asset_Manager     $asset_manager                 The admin asset manager.
 	 * @param WPSEO_Addon_Manager           $addon_manager                 The addon manager.
+	 * @param AI_Generator_Helper           $ai_generator_helper           The AI generator helper.
 	 * @param Current_Page_Helper           $current_page_helper           The current page helper.
 	 * @param Options_Helper                $options_helper                The options helper.
 	 * @param User_Helper                   $user_helper                   The user helper.
@@ -81,6 +90,7 @@ class Ai_Generator_Integration implements Integration_Interface {
 	public function __construct(
 		WPSEO_Admin_Asset_Manager $asset_manager,
 		WPSEO_Addon_Manager $addon_manager,
+		AI_Generator_Helper $ai_generator_helper,
 		Current_Page_Helper $current_page_helper,
 		Options_Helper $options_helper,
 		User_Helper $user_helper,
@@ -88,6 +98,7 @@ class Ai_Generator_Integration implements Integration_Interface {
 	) {
 		$this->asset_manager                 = $asset_manager;
 		$this->addon_manager                 = $addon_manager;
+		$this->ai_generator_helper           = $ai_generator_helper;
 		$this->current_page_helper           = $current_page_helper;
 		$this->options_helper                = $options_helper;
 		$this->user_helper                   = $user_helper;
@@ -139,10 +150,11 @@ class Ai_Generator_Integration implements Integration_Interface {
 				'adminUrl'             => \admin_url( 'admin.php' ),
 				'hasConsent'           => $this->user_helper->get_meta( $user_id, '_yoast_wpseo_ai_consent', true ),
 				'productSubscriptions' => $this->get_product_subscriptions(),
-				'hasSeenIntroduction'  => $this->introductions_seen_repository->is_introduction_seen( $user_id, Ai_Generate_Titles_And_Descriptions_Introduction::ID ),
+				'hasSeenIntroduction'  => $this->introductions_seen_repository->is_introduction_seen( $user_id, Ai_Fix_Assessments_Introduction::ID ),
 				'pluginUrl'            => \plugins_url( '', \WPSEO_PREMIUM_FILE ),
 				'postType'             => $this->get_post_type(),
 				'contentType'          => $this->get_content_type(),
+				'requestTimeout'       => $this->ai_generator_helper->get_request_timeout(),
 			]
 		);
 		$this->asset_manager->enqueue_style( 'premium-ai-generator' );

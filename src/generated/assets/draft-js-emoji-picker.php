@@ -1,0 +1,1 @@
+<?php return array('draft-js-emoji-picker.min.js' => array('dependencies' => array('lodash', 'react', 'wp-polyfill', 'yoast-seo-draft-js-package', 'yoast-seo-prop-types-package'), 'version' => 'b38d454ededf6f6b306d'));

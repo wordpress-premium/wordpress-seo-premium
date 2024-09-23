@@ -10,19 +10,15 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO Premium
- * Version:     22.5
+ * Version:     23.4
  * Plugin URI:  https://yoa.st/2jc
- * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
- * Author:      Team Yoast
- * Author URI:  https://yoa.st/team-yoast-premium
- * Text Domain: wordpress-seo-premium
- * Domain Path: /languages/
- * License:     GPL v3
- * Requires at least: 6.3
- * Requires PHP: 7.2.5
+ * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps
+ * and much more. Author:      Team Yoast Author URI:  https://yoa.st/team-yoast-premium Text Domain:
+ * wordpress-seo-premium Domain Path: /languages/ License:     GPL v3 Requires at least: 6.4 Requires PHP: 7.2.5
+ * Requires Yoast SEO: 23.4
  *
  * WC requires at least: 7.1
- * WC tested up to: 8.7
+ * WC tested up to: 9.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,72 +36,117 @@
 
 use Yoast\WP\SEO\Premium\Addon_Installer;
 
-if ( ! defined( 'WPSEO_PREMIUM_FILE' ) ) {
-	define( 'WPSEO_PREMIUM_FILE', __FILE__ );
-}
+$site_information = get_transient('wpseo_site_information');
 
 // Check if there are no subscriptions and delete transients if condition is true
-if ( isset( $site_information->subscriptions ) && count( $site_information->subscriptions ) == 0 ) {
-    delete_transient( 'wpseo_site_information' );
-    delete_transient( 'wpseo_site_information_quick' );
+if (
+  isset($site_information->subscriptions) &&
+  count($site_information->subscriptions) == 0
+) {
+  delete_transient('wpseo_site_information');
+  delete_transient('wpseo_site_information_quick');
 }
 
 // Add a filter to modify the HTTP request before it is made
-add_filter('pre_http_request', function ($pre, $parsed_args, $url) {
+add_filter(
+  'pre_http_request',
+  function ($pre, $parsed_args, $url) {
+    /**
+     * This return statement deactivates the check for Yoast SEO addons updates.
+     * This is necessary to avoid the output of PHP warnings like `PHP Warning: Undefined property: stdClass::$url`.
+     * Since this version of Yoast SEO Premium is nulled, any checks for updates are unnecessary anyway.
+     *
+     * THE ADDONS WILL STILL WORK WITHOUT ANY PROBLEMS.
+     *
+     * However, Yoast SEO will notify you on its dashboard, depending on what addons you're using, with a message
+     * similar to this: "Yoast News SEO isn't working as expected and you are not receiving updates or support!".
+     *
+     * You can either ignore it or deactivate this "problem" message by clicking on the eye icon
+     * at the end of the notification.
+     *
+     * @date 2024-09-24
+     * @since 23.4
+     *
+     * @returns array $pre The original request parameters without updates checks
+     */
+    return $pre;
+
     // Define site information with subscriptions
     $site_information = (object) [
-        'subscriptions' => [
-            (object) ['product' => (object) ['slug' => 'yoast-seo-wordpress-premium'], 'expiryDate' => '+5 years'],
-            (object) ['product' => (object) ['slug' => 'yoast-seo-news'], 'expiryDate' => '+5 years'],
-            (object) ['product' => (object) ['slug' => 'yoast-seo-woocommerce'], 'expiryDate' => '+5 years'],
-            (object) ['product' => (object) ['slug' => 'yoast-seo-video'], 'expiryDate' => '+5 years'],
-            (object) ['product' => (object) ['slug' => 'yoast-seo-local'], 'expiryDate' => '+5 years']
+      'subscriptions' => [
+        (object) [
+          'product' => (object) ['slug' => 'yoast-seo-wordpress-premium'],
+          'expiryDate' => '+5 years',
         ],
+        (object) [
+          'product' => (object) ['slug' => 'yoast-seo-news'],
+          'expiryDate' => '+5 years',
+        ],
+        (object) [
+          'product' => (object) ['slug' => 'yoast-seo-woocommerce'],
+          'expiryDate' => '+5 years',
+        ],
+        (object) [
+          'product' => (object) ['slug' => 'yoast-seo-video'],
+          'expiryDate' => '+5 years',
+        ],
+        (object) [
+          'product' => (object) ['slug' => 'yoast-seo-local'],
+          'expiryDate' => '+5 years',
+        ],
+      ],
     ];
 
     // Check if the request URL matches a specific pattern
     if (strpos($url, 'https://my.yoast.com/api/sites/current') !== false) {
-        // Modify and return the response for the matching URL
-        return [
-            'response' => ['code' => 200, 'message' => 'OK'],
-            'body' => json_encode($site_information)
-        ];
+      // Modify and return the response for the matching URL
+      return [
+        'response' => ['code' => 200, 'message' => 'OK'],
+        'body' => json_encode($site_information),
+      ];
     } else {
-        // Return the original request parameters for non-matching URLs
-        return $pre;
+      // Return the original request parameters for non-matching URLs
+      return $pre;
     }
-}, 10, 3);
+  },
+  10,
+  3
+);
 
-if ( ! defined( 'WPSEO_PREMIUM_PATH' ) ) {
-	define( 'WPSEO_PREMIUM_PATH', plugin_dir_path( WPSEO_PREMIUM_FILE ) );
+if (!defined('WPSEO_PREMIUM_FILE')) {
+  define('WPSEO_PREMIUM_FILE', __FILE__);
 }
 
-if ( ! defined( 'WPSEO_PREMIUM_BASENAME' ) ) {
-	define( 'WPSEO_PREMIUM_BASENAME', plugin_basename( WPSEO_PREMIUM_FILE ) );
+if (!defined('WPSEO_PREMIUM_PATH')) {
+  define('WPSEO_PREMIUM_PATH', plugin_dir_path(WPSEO_PREMIUM_FILE));
+}
+
+if (!defined('WPSEO_PREMIUM_BASENAME')) {
+  define('WPSEO_PREMIUM_BASENAME', plugin_basename(WPSEO_PREMIUM_FILE));
 }
 
 /**
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_PREMIUM_VERSION', '22.5' );
+define('WPSEO_PREMIUM_VERSION', '23.4');
 
 // Initialize Premium autoloader.
-$wpseo_premium_dir               = WPSEO_PREMIUM_PATH;
+$wpseo_premium_dir = WPSEO_PREMIUM_PATH;
 $yoast_seo_premium_autoload_file = $wpseo_premium_dir . 'vendor/autoload.php';
 
-if ( is_readable( $yoast_seo_premium_autoload_file ) ) {
-	require $yoast_seo_premium_autoload_file;
+if (is_readable($yoast_seo_premium_autoload_file)) {
+  require $yoast_seo_premium_autoload_file;
 }
 
 // This class has to exist outside of the container as the container requires Yoast SEO to exist.
-$wpseo_addon_installer = new Addon_Installer( __DIR__ );
+$wpseo_addon_installer = new Addon_Installer(__DIR__);
 $wpseo_addon_installer->install_yoast_seo_from_repository();
 
 // Load the container.
-if ( ! wp_installing() ) {
-	require_once __DIR__ . '/src/functions.php';
-	YoastSEOPremium();
+if (!wp_installing()) {
+  require_once __DIR__ . '/src/functions.php';
+  YoastSEOPremium();
 }
 
-register_activation_hook( WPSEO_PREMIUM_FILE, [ 'WPSEO_Premium', 'install' ] );
+register_activation_hook(WPSEO_PREMIUM_FILE, ['WPSEO_Premium', 'install']);

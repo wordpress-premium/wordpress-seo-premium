@@ -20,6 +20,7 @@ class Related_Links_Block implements Integration_Interface {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\register_block_type( 'yoast-seo/related-links', [ 'editor_script' => 'wp-seo-premium-blocks' ] );
+		$base_path = \WPSEO_PREMIUM_PATH . 'assets/blocks/dynamic-blocks/';
+		\register_block_type( $base_path . 'related-links-block/block.json', [ 'editor_script_handles' => [ 'wp-seo-premium-blocks' ] ] );
 	}
 }

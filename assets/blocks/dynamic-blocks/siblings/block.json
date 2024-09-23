@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "23.0",
+  "name": "yoast-seo/siblings",
+  "title": "Yoast Siblings",
+  "description": "Adds a list of internal links to sibling pages which share the same parent.",
+  "category": "yoast-internal-linking-blocks",
+  "icon": "editor-ul",
+  "keywords": [
+    "SEO",
+    "siblings",
+    "siblings pages",
+    "internal linking",
+    "site structure"
+  ],
+  "textdomain": "wordpress-seo-premium",
+  "attributes": {},
+  "example": {
+    "attributes": {}
+  }
+}

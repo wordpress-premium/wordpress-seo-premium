@@ -118,13 +118,13 @@ class WPSEO_Premium_Keyword_Export_Manager implements WPSEO_WordPress_Integratio
 	 */
 	protected function get_csv_contents() {
 		$columns = [ 'keywords' ];
-
-		$post_wpseo = filter_input( INPUT_POST, 'wpseo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-
-		if ( is_array( $post_wpseo ) ) {
-			$columns = array_merge( $columns, $this->get_export_columns( $post_wpseo ) );
+		// phpcs:disable WordPress.Security.NonceVerification -- Reason: Nonce is checked in export.
+		if ( isset( $_POST['wpseo'] ) && is_array( $_POST['wpseo'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: It will be sanitized after via an array map so that each individual value gets sanitized.
+			$post_wpseo = wp_unslash( $_POST['wpseo'] );
+			$post_wpseo = array_map( [ 'WPSEO_Utils', 'sanitize_text_field' ], $post_wpseo );
+			$columns    = array_merge( $columns, $this->get_export_columns( $post_wpseo ) );
 		}
-
 		$builder = new WPSEO_Export_Keywords_CSV( $columns );
 		$builder->print_headers();
 		$this->prepare_export( $builder, $columns );

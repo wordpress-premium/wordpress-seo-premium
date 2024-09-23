@@ -10,6 +10,7 @@ use WPSEO_Redirect_Manager;
 use WPSEO_Taxonomy_Meta;
 use Yoast\WP\SEO\Builders\Indexable_Term_Builder;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
+use Yoast\WP\SEO\Helpers\Indexable_Helper;
 use Yoast\WP\SEO\Helpers\Post_Type_Helper;
 use Yoast\WP\SEO\Main;
 use Yoast\WP\SEO\Models\Indexable;
@@ -96,6 +97,13 @@ class Workouts_Route implements Route_Interface {
 	private $indexable_term_builder;
 
 	/**
+	 * The indexable helper.
+	 *
+	 * @var Indexable_Helper
+	 */
+	private $indexable_helper;
+
+	/**
 	 * The post type helper.
 	 *
 	 * @var Post_Type_Helper
@@ -108,17 +116,20 @@ class Workouts_Route implements Route_Interface {
 	 * @param Indexable_Repository    $indexable_repository    The indexable repository.
 	 * @param Link_Suggestions_Action $link_suggestions_action The link suggestions action.
 	 * @param Indexable_Term_Builder  $indexable_term_builder  The indexable term builder.
+	 * @param Indexable_Helper        $indexable_helper        The indexable helper.
 	 * @param Post_Type_Helper        $post_type_helper        The post type helper.
 	 */
 	public function __construct(
 		Indexable_Repository $indexable_repository,
 		Link_Suggestions_Action $link_suggestions_action,
 		Indexable_Term_Builder $indexable_term_builder,
+		Indexable_Helper $indexable_helper,
 		Post_Type_Helper $post_type_helper
 	) {
 		$this->indexable_repository    = $indexable_repository;
 		$this->link_suggestions_action = $link_suggestions_action;
 		$this->indexable_term_builder  = $indexable_term_builder;
+		$this->indexable_helper        = $indexable_helper;
 		$this->post_type_helper        = $post_type_helper;
 	}
 
@@ -262,19 +273,6 @@ class Workouts_Route implements Route_Interface {
 		if ( $request['object_type'] === 'post' ) {
 			WPSEO_Meta::set_value( 'meta-robots-noindex', 1, $request['object_id'] );
 		}
-		elseif ( $request['object_type'] === 'term' ) {
-			WPSEO_Taxonomy_Meta::set_value( $request['object_id'], $request['object_sub_type'], 'noindex', 'noindex' );
-			// Rebuild the indexable as WPSEO_Taxonomy_Meta does not trigger any actions on which term indexables are rebuild.
-			$indexable = $this->indexable_term_builder->build( $request['object_id'], $this->indexable_repository->find_by_id_and_type( $request['object_id'], $request['object_type'] ) );
-			if ( \is_a( $indexable, Indexable::class ) ) {
-				$indexable->save();
-			}
-			else {
-				return new WP_REST_Response(
-					[ 'json' => false ]
-				);
-			}
-		}
 
 		return new WP_REST_Response(
 			[ 'json' => true ]
@@ -298,7 +296,7 @@ class Workouts_Route implements Route_Interface {
 			// Rebuild the indexable as WPSEO_Taxonomy_Meta does not trigger any actions on which term indexables are rebuild.
 			$indexable = $this->indexable_term_builder->build( $request['object_id'], $this->indexable_repository->find_by_id_and_type( $request['object_id'], $request['object_type'] ) );
 			if ( \is_a( $indexable, Indexable::class ) ) {
-				$indexable->save();
+				$this->indexable_helper->save_indexable( $indexable );
 			}
 			else {
 				return new WP_REST_Response(

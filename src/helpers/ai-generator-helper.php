@@ -9,6 +9,9 @@ use WPSEO_Utils;
 use Yoast\WP\SEO\Helpers\Date_Helper;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
+use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Application\AI_Suggestions_Unifier;
+use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Application\Suggestion_Processor;
+use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Domain\Suggestion;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Bad_Request_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Forbidden_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Internal_Server_Error_Exception;
@@ -18,6 +21,7 @@ use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Request_Timeout_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Service_Unavailable_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Too_Many_Requests_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Unauthorized_Exception;
+use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\WP_Request_Exception;
 
 /**
  * Class AI_Generator_Helper
@@ -34,6 +38,20 @@ class AI_Generator_Helper {
 	 * @var string
 	 */
 	protected $base_url = 'https://ai.yoa.st/api/v1';
+
+	/**
+	 * The AI suggestion helper.
+	 *
+	 * @var AI_Suggestions_Unifier
+	 */
+	private $ai_suggestions_unifier;
+
+	/**
+	 * The suggestion processor.
+	 *
+	 * @var Suggestion_Processor
+	 */
+	private $suggestion_processor;
 
 	/**
 	 * The options helper.
@@ -61,14 +79,18 @@ class AI_Generator_Helper {
 	 *
 	 * @codeCoverageIgnore It only sets dependencies.
 	 *
-	 * @param Options_Helper $options     The options helper.
-	 * @param User_Helper    $user_helper The User helper.
-	 * @param Date_Helper    $date_helper The date helper.
+	 * @param AI_Suggestions_Unifier $ai_suggestions_unifier The AI suggestion unifier.
+	 * @param Suggestion_Processor   $suggestion_processor   The suggestion processor.
+	 * @param Options_Helper         $options                The options helper.
+	 * @param User_Helper            $user_helper            The User helper.
+	 * @param Date_Helper            $date_helper            The date helper.
 	 */
-	public function __construct( Options_Helper $options, User_Helper $user_helper, Date_Helper $date_helper ) {
-		$this->options_helper = $options;
-		$this->user_helper    = $user_helper;
-		$this->date_helper    = $date_helper;
+	public function __construct( AI_Suggestions_Unifier $ai_suggestions_unifier, Suggestion_Processor $suggestion_processor, Options_Helper $options, User_Helper $user_helper, Date_Helper $date_helper ) {
+		$this->ai_suggestions_unifier = $ai_suggestions_unifier;
+		$this->suggestion_processor   = $suggestion_processor;
+		$this->options_helper         = $options;
+		$this->user_helper            = $user_helper;
+		$this->date_helper            = $date_helper;
 	}
 
 	/**
@@ -151,6 +173,25 @@ class AI_Generator_Helper {
 	}
 
 	/**
+	 * Gets the timeout of the suggestion requests in seconds.
+	 *
+	 * @return int The timeout of the suggestion requests in seconds.
+	 */
+	public function get_request_timeout() {
+		/**
+		 * Filter: 'Yoast\WP\SEO\ai_suggestions_timeout' - Replaces the default timeout with a custom one, for testing purposes.
+		 *
+		 * Note: This is a Premium plugin-only hook.
+		 *
+		 * @since 22.7
+		 * @internal
+		 *
+		 * @param int $timeout The default timeout in seconds.
+		 */
+		return \apply_filters( 'Yoast\WP\SEO\ai_suggestions_timeout', 60 );
+	}
+
+	/**
 	 * Gets the callback URL to be used by the API to send back the access token, refresh token and code challenge.
 	 *
 	 * @return string The callbacks URL.
@@ -171,9 +212,10 @@ class AI_Generator_Helper {
 	/**
 	 * Performs the request using WordPress internals.
 	 *
-	 * @param string   $action_path     The path to the desired action.
-	 * @param array    $request_body    The request body.
-	 * @param string[] $request_headers The request headers.
+	 * @param string        $action_path     The path to the desired action.
+	 * @param array<string> $request_body    The request body.
+	 * @param array<string> $request_headers The request headers.
+	 * @param bool          $is_post         Whether it's a POST request.
 	 *
 	 * @return object The response object.
 	 *
@@ -186,17 +228,21 @@ class AI_Generator_Helper {
 	 * @throws Service_Unavailable_Exception When the response code is 503.
 	 * @throws Too_Many_Requests_Exception When the response code is 429.
 	 * @throws Unauthorized_Exception When the response code is 401.
+	 * @throws WP_Request_Exception When the wp_remote_post() returns an error.
 	 */
-	public function request( $action_path, $request_body = [], $request_headers = [] ) {
+	public function request( $action_path, $request_body = [], $request_headers = [], $is_post = true ) {
 		// Our API expects JSON.
 		// The request times out after 30 seconds.
 		$request_headers   = \array_merge( $request_headers, [ 'Content-Type' => 'application/json' ] );
 		$request_arguments = [
-			'timeout' => 30,
-			// phpcs:ignore Yoast.Yoast.JsonEncodeAlternative.Found -- Reason: We don't want the debug/pretty possibility.
-			'body'    => \wp_json_encode( $request_body ),
+			'timeout' => $this->get_request_timeout(),
 			'headers' => $request_headers,
 		];
+
+		if ( $is_post ) {
+			// phpcs:ignore Yoast.Yoast.JsonEncodeAlternative.Found -- Reason: We don't want the debug/pretty possibility.
+			$request_arguments['body'] = \wp_json_encode( $request_body );
+		}
 
 		/**
 		 * Filter: 'Yoast\WP\SEO\ai_api_url' - Replaces the default URL for the AI API with a custom one.
@@ -209,11 +255,11 @@ class AI_Generator_Helper {
 		 * @param string $url The default URL for the AI API.
 		 */
 		$api_url  = \apply_filters( 'Yoast\WP\SEO\ai_api_url', $this->base_url );
-		$response = \wp_remote_post( $api_url . $action_path, $request_arguments );
+		$response = ( $is_post ) ? \wp_remote_post( $api_url . $action_path, $request_arguments ) : \wp_remote_get( $api_url . $action_path, $request_arguments );
 
 		if ( \is_wp_error( $response ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.
-			throw new Bad_Request_Exception( $response->get_error_message(), $response->get_error_code() );
+			throw new WP_Request_Exception( $response->get_error_message() );
 		}
 
 		[ $response_code, $response_message, $error_code, $missing_licenses ] = $this->parse_response( $response );
@@ -265,9 +311,42 @@ class AI_Generator_Helper {
 	}
 
 	/**
+	 * Builds a response for the AI assessment fixes route by comparing the response to the input.
+	 * The differences are marked with `<ins>` and `<del>` tags.
+	 *
+	 * @param string $original The original text.
+	 * @param object $response The response from the API.
+	 *
+	 * @return string The HTML containing the suggested content.
+	 *
+	 * @throws Bad_Request_Exception Bad_Request_Exception.
+	 */
+	public function build_fixes_response( string $original, object $response ): string {
+		$raw_fixes = $this->suggestion_processor->get_suggestion_from_ai_response( $response->body );
+		if ( $raw_fixes === '' ) {
+			return '';
+		}
+
+		// We output the diff as an HTML string and will parse this string on the JavaScript side.
+		$diff = $this->suggestion_processor->calculate_diff( $original, $raw_fixes );
+
+		$diff = $this->suggestion_processor->remove_html_from_suggestion( $diff );
+
+		$diff = $this->suggestion_processor->keep_nbsp_in_suggestions( $diff );
+
+		// If we end up with no suggestions, we have to show an error to the user.
+		if ( \strpos( $diff, 'yst-diff' ) === false ) {
+			throw new Bad_Request_Exception();
+		}
+		$suggestion = new Suggestion();
+		$suggestion->set_content( $diff );
+		return $this->ai_suggestions_unifier->unify_diffs( $suggestion );
+	}
+
+	/**
 	 * Parses the response from the API.
 	 *
-	 * @param array|WP_Error $response The response from the API.
+	 * @param array<string>|WP_Error $response The response from the API.
 	 *
 	 * @return (string|int)[] The response code and message.
 	 */
@@ -281,7 +360,7 @@ class AI_Generator_Helper {
 			$json_body = \json_decode( \wp_remote_retrieve_body( $response ) );
 			if ( $json_body !== null ) {
 				$response_message = ( $json_body->message ?? $response_message );
-				$error_code       = ( $json_body->error_code ?? $this->map_message_to_code( $json_body->message ) );
+				$error_code       = ( $json_body->error_code ?? $this->map_message_to_code( $response_message ) );
 				if ( $response_code === 402 ) {
 					$missing_licenses = isset( $json_body->missing_licenses ) ? (array) $json_body->missing_licenses : [];
 				}

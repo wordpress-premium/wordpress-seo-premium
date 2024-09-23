@@ -57,7 +57,21 @@ class AI_Generator_Route implements Route_Interface {
 	public const GET_SUGGESTIONS_ROUTE = self::ROUTE_PREFIX . '/get_suggestions';
 
 	/**
-	 * The get_suggestions route constant.
+	 * The fix_assessments route constant.
+	 *
+	 * @var string
+	 */
+	public const FIX_ASSESSMENTS_ROUTE = self::ROUTE_PREFIX . '/fix_assessments';
+
+	/**
+	 * The get_usage route constant.
+	 *
+	 * @var string
+	 */
+	public const GET_USAGE_ROUTE = self::ROUTE_PREFIX . '/get_usage';
+
+	/**
+	 * The consent route constant.
 	 *
 	 * @var string
 	 */
@@ -205,6 +219,59 @@ class AI_Generator_Route implements Route_Interface {
 
 		\register_rest_route(
 			Main::API_V1_NAMESPACE,
+			self::FIX_ASSESSMENTS_ROUTE,
+			[
+				'methods'             => 'POST',
+				'args'                => [
+					'assessment'      => [
+						'required'    => true,
+						'type'        => 'string',
+						'enum'        => [
+							'keyphrase-introduction',
+							'keyphrase-density',
+							'keyphrase-distribution',
+							'keyphrase-subheadings',
+						],
+						'description' => 'The assessment.',
+					],
+					'prompt_content'  => [
+						'required'    => true,
+						'type'        => 'string',
+						'description' => 'The content needed by the prompt to ask for suggestions.',
+					],
+					'focus_keyphrase' => [
+						'required'    => true,
+						'type'        => 'string',
+						'description' => 'The focus keyphrase associated to the post.',
+					],
+					'synonyms' => [
+						'required'    => false,
+						'type'        => 'string',
+						'description' => 'The synonyms for the focus keyphrase.',
+					],
+					'language'        => [
+						'required'    => true,
+						'type'        => 'string',
+						'description' => 'The language the post is written in.',
+					],
+				],
+				'callback'            => [ $this, 'fix_assessments' ],
+				'permission_callback' => [ $this, 'check_permissions' ],
+			]
+		);
+
+		\register_rest_route(
+			Main::API_V1_NAMESPACE,
+			self::GET_USAGE_ROUTE,
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'get_usage' ],
+				'permission_callback' => [ $this, 'check_permissions' ],
+			]
+		);
+
+		\register_rest_route(
+			Main::API_V1_NAMESPACE,
 			self::BUST_SUBSCRIPTION_CACHE_ROUTE,
 			[
 				'methods'             => 'POST',
@@ -238,7 +305,7 @@ class AI_Generator_Route implements Route_Interface {
 	}
 
 	/**
-	 * Runs the callback to get ai-generated suggestions.
+	 * Runs the callback to get AI-generated suggestions.
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 *
@@ -268,6 +335,36 @@ class AI_Generator_Route implements Route_Interface {
 	}
 
 	/**
+	 * Runs the callback to improve assessment results through AI.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 *
+	 * @return WP_REST_Response The response of the assess action.
+	 */
+	public function fix_assessments( WP_REST_Request $request ) {
+		try {
+			$user = \wp_get_current_user();
+			$data = $this->ai_generator_action->fix_assessments( $user, $request['assessment'], $request['prompt_content'], $request['focus_keyphrase'], $request['synonyms'], $request['language'] );
+		} catch ( Remote_Request_Exception $e ) {
+			$message = [
+				'message'         => $e->getMessage(),
+				'errorIdentifier' => $e->get_error_identifier(),
+			];
+			if ( $e instanceof Payment_Required_Exception ) {
+				$message['missingLicenses'] = $e->get_missing_licenses();
+			}
+			return new WP_REST_Response(
+				$message,
+				$e->getCode()
+			);
+		} catch ( RuntimeException $e ) {
+			return new WP_REST_Response( 'Failed to retrieve text improvements.', 500 );
+		}
+
+		return new WP_REST_Response( $data );
+	}
+
+	/**
 	 * Runs the callback to store the consent given by the user to use AI-based services.
 	 *
 	 * @param WP_REST_Request $request The request object.
@@ -285,6 +382,26 @@ class AI_Generator_Route implements Route_Interface {
 		}
 
 		return new WP_REST_Response( ( $consent ) ? 'Consent successfully stored.' : 'Consent successfully revoked.' );
+	}
+
+	/**
+	 * Runs the callback that gets the monthly usage of the user.
+	 *
+	 * @return WP_REST_Response The response of the callback action.
+	 */
+	public function get_usage() {
+		$user = \wp_get_current_user();
+
+		try {
+			$data = $this->ai_generator_action->get_usage( $user );
+		} catch ( Remote_Request_Exception $e ) {
+			return new WP_REST_Response(
+				'Failed to get usage: ' . $e->getMessage(),
+				$e->getCode()
+			);
+		}
+
+		return new WP_REST_Response( $data );
 	}
 
 	/**

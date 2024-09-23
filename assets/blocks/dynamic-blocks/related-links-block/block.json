@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "23.0",
+  "name": "yoast-seo/related-links",
+  "title": "Yoast Related Links",
+  "description": "Adds a list of links related to this page.",
+  "category": "yoast-internal-linking-blocks",
+  "icon": "editor-ul",
+  "keywords": [
+    "SEO",
+    "internal linking",
+    "site structure",
+    "related posts",
+    "related pages"
+  ],
+  "textdomain": "wordpress-seo-premium",
+  "attributes": {
+    "status": {
+      "type": "string",
+      "default": "loading"
+    },
+    "values": {
+      "type": "string",
+      "source": "html",
+      "selector": "ul",
+      "multiline": "li",
+      "default": ""
+    }
+  },
+  "example": {
+    "attributes": {
+      "status": "loaded",
+      "values": "<li><a href='https://example.org'>Related link 1</a></li> <li><a href='https://example.org'>Related link 2</a></li> <li><a href='https://example.org'>Related link 3</a></li>"
+    }
+  }
+}
