@@ -15,6 +15,7 @@ use Yoast\WP\SEO\Premium\DOM_Manager\Application\Node_Processor;
  * Class implementing the processing elements used on the AI suggestions.
  */
 class Suggestion_Processor {
+	// Class name for the diff elements.
 	public const YST_DIFF_CLASS = 'yst-diff';
 
 	/**
@@ -202,12 +203,13 @@ class Suggestion_Processor {
 	 * Get the Yoast diff nodes from the DOM
 	 *
 	 * @param DOMDocument $dom       The DOM to get the diff nodes from.
-	 * @param string|null $node_type The type of node to get.
+	 * @param string|null $node_type The type of node to get. If null the method will get both ins and del nodes.
 	 *
 	 * @return DOMNodeList The diff nodes
 	 */
 	public function get_diff_nodes( DOMDocument $dom, ?string $node_type = null ): DOMNodeList {
-		$xpath            = new DOMXPath( $dom );
+		$xpath = new DOMXPath( $dom );
+		// If the node type is null, we get both ins and del nodes; if it's not, we get the specified node type.
 		$local_name_query = \is_null( $node_type ) ? '//*[local-name()="ins" or local-name()="del"]' : \sprintf( "//*[local-name()='%s']", $node_type );
 		$diff_nodes_query = \sprintf( "%s[contains(concat(' ', normalize-space(@class), ' '), '%s')]", $local_name_query, self::YST_DIFF_CLASS );
 		return $xpath->query( $diff_nodes_query );
@@ -245,14 +247,17 @@ class Suggestion_Processor {
 		$diff_nodes = $this->get_diff_nodes( $dom );
 
 		foreach ( $diff_nodes as $node ) {
+			// Build the text node content based on the diff node nodeName and nodeValue attributes.
 			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$text      = \sprintf( '[%s-yst-tag]%s[/%s-yst-tag]', $node->nodeName, $node->nodeValue, $node->nodeName );
 			$text_node = $dom->createTextNode( $text );
 			$parent    = $node->parentNode;
+			// If the node has no parent, we insert the new  text node before the diff node and remove the diff node.
 			if ( \is_null( $parent ) ) {
 				$dom->insertBefore( $node, $text_node );
 				$dom->removeChild( $node );
 			}
+			// If the node has a parent, we replace the diff node with the new text node.
 			else {
 				$parent->replaceChild( $text_node, $node );
 			}
@@ -278,7 +283,7 @@ class Suggestion_Processor {
 	}
 
 	/**
-	 * Unify the suggestion
+	 * Additional unification step to join contiguous diff nodes with the same tag.
 	 *
 	 * @param DOMDocument $dom The DOM to unify.
 	 *
@@ -288,15 +293,19 @@ class Suggestion_Processor {
 		$diff_nodes = $this->get_diff_nodes( $dom );
 
 		foreach ( $diff_nodes as $diff_node ) {
+			// If this diff node has no next sibling, we continue to the next diff node.
 			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$next_sibling = $diff_node->nextSibling;
 			if ( \is_null( $next_sibling ) ) {
 				continue;
 			}
+			// If the next sibling is the same kind of the current node, we proceed to join them.
 			if ( $next_sibling->nodeName === $diff_node->nodeName ) {
+				// we encode the HTML entities in the diff node value, create a text node out of it and prepend it to the next sibling's content.
 				$encoded_diff_node_value = \htmlentities( $diff_node->nodeValue, \ENT_QUOTES, \get_bloginfo( 'charset' ) );
 				$text_diff_node          = $dom->createTextNode( $encoded_diff_node_value );
 				$next_sibling->insertBefore( $text_diff_node, $next_sibling->firstChild );
+				// We remove the diff node.
 				( $diff_node->parentNode )->removeChild( $diff_node );
 			}
 			// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase

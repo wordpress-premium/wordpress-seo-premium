@@ -1,11 +1,9 @@
 *** Yoast SEO premium Changelog ***
 
 
-2024-09-03 - version 23.4
-* add -  Enables the _AI Optimize_ feature for the _keyphrase in introduction_ assessment when the introduction is part of a Classic block.
-* add -  Prevents showing the "not enough content" error message when _AI Generate_ is used before the content is fully loaded.
-* add -  Disables the highlighting buttons whenever _AI Optimize_ is used.
-* add -  Improves the success rate of _AI Optimize_ suggestions for a post that contains list blocks.
-* fix -  Fixes a bug where a full stop would be added at the end of a previous sentence instead of the newly suggested sentence when using _AI Optimize_.
-* update -  Bumps the minimum required version of Yoast SEO to 23.4.
+2024-09-24 - version 23.5
+* add -  Improves the text of error messages that are shown when there is a problem with using the AI features.
+* fix -  Fixes a bug where two sentences in the internal linking suggestions would not be translated.
+* fix -  Fixes a bug where the toast notification would appear in the wrong position when using the AI generator with little or no content. 
+* update -  Bumps the minimum required version of Yoast SEO to 23.5.
 
