@@ -6,7 +6,7 @@
 
 ## Usage
 
-This is the **fully activated premium version** of the plugin, provided by [wordpress-premium.org](https://www.wordpress-premium.org). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
+This is the **fully activated premium version** of the plugin, provided by [wordpress-premium.net](https://www.wordpress-premium.net). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
 
 **Important:** Unlicensed ("nulled") usage may violate the developer's terms and will not include official updates or support.
 
@@ -23,7 +23,7 @@ To access these features, simply activate the plugin and navigate to the **Yoast
 
 ## Donate
 
-If [WordPress Premium](https://www.wordpress-premium.org/) helps you access premium plugins safely, consider [supporting us via PayPal](https://www.paypal.com/paypalme/thaikolja) to keep the service running.
+If [WordPress Premium](https://www.wordpress-premium.net/) helps you access premium plugins safely, consider [supporting us via PayPal](https://www.paypal.com/paypalme/thaikolja) to keep the service running.
 
 ---
 
