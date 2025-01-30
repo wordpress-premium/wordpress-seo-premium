@@ -118,6 +118,6 @@ class Index_Now_Key implements Initializer_Interface {
 		for ( $i = 0; $i < 100; $i++ ) {
 			$this->key .= \substr( $chars, \wp_rand( 0, ( \strlen( $chars ) - 1 ) ), 1 );
 		}
-		$this->options_helper->set( 'index_now_key', $this->key );
+		$this->options_helper->set( 'index_now_key', $this->key, 'wpseo' );
 	}
 }

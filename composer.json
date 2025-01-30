@@ -1,196 +1,77 @@
 {
-	"name": "wordpress-premium/wordpress-seo-premium",
-	"description": "Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.",
-	"license": "GPL-2.0-or-later",
-	"type": "wordpress-plugin",
-	"keywords": [
-		"wordpress",
-		"seo"
-	],
-	"authors": [
-		{
-			"name": "Team Yoast",
-			"email": "support@yoast.com",
-			"homepage": "https://yoa.st/1--"
-		}
-	],
-	"homepage": "https://yoa.st/1ui",
-	"support": {
-		"issues": "https://github.com/Yoast/wordpress-seo/issues",
-		"forum": "https://wordpress.org/support/plugin/wordpress-seo",
-		"wiki": "https://github.com/Yoast/wordpress-seo/wiki",
-		"source": "https://github.com/Yoast/wordpress-seo",
-		"security": "https://yoast.com/security-program/"
-	},
-	"require": {
-		"php": "^7.2.5 || ^8.0",
-		"ext-filter": "*",
-		"composer/installers": "^1.12 || ^2.0"
-	},
-	"require-dev": {
-		"guzzlehttp/guzzle": "7.8.1",
-		"humbug/php-scoper": "^0.13.4",
-		"league/oauth2-client": "2.7.0",
-		"psr/container": "1.0.0",
-		"psr/log": "^1.0",
-		"symfony/config": "^3.4",
-		"symfony/dependency-injection": "^3.4",
-		"wordproof/wordpress-sdk": "1.3.5",
-		"yoast/wp-test-utils": "^1.2",
-		"yoast/yoastcs": "^3.0"
-	},
-	"suggest": {
-		"ext-bcmath": "For more accurate calculations",
-		"ext-dom": "Improves image sitemap",
-		"ext-libxml": "Improves image sitemap",
-		"ext-mbstring": "For cyrillic support"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"autoload": {
-		"classmap": [
-			"admin/",
-			"inc/",
-			"vendor_prefixed/",
-			"src/",
-			"lib/"
-		]
-	},
-	"autoload-dev": {
-		"classmap": [
-			"config/"
-		],
-		"psr-4": {
-			"Yoast\\WP\\SEO\\Tests\\": "tests/"
-		}
-	},
-	"config": {
-		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"composer/package-versions-deprecated": true,
-			"composer/installers": true
-		},
-		"platform": {
-			"php": "7.2.5"
-		}
-	},
-	"scripts": {
-		"lint": [
-			"@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --show-deprecated --exclude vendor --exclude node_modules --exclude .git"
-		],
-		"lint-files": [
-			"@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint -e php --show-deprecated"
-		],
-		"lint-branch": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::lint_branch"
-		],
-		"lint-staged": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::lint_staged"
-		],
-		"cs": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::check_coding_standards"
-		],
-		"check-cs-thresholds": [
-			"@putenv YOASTCS_THRESHOLD_ERRORS=2571",
-			"@putenv YOASTCS_THRESHOLD_WARNINGS=267",
-			"Yoast\\WP\\SEO\\Composer\\Actions::check_cs_thresholds"
-		],
-		"check-cs": [
-			"@check-cs-warnings -n"
-		],
-		"check-cs-errors": [
-			"echo You can now just use check-cs, running that command now.",
-			"composer check-cs"
-		],
-		"check-cs-warnings": [
-			"@php ./vendor/squizlabs/php_codesniffer/bin/phpcs"
-		],
-		"check-staged-cs": [
-			"@check-cs-warnings --filter=GitStaged"
-		],
-		"check-branch-cs": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::check_branch_cs"
-		],
-		"fix-cs": [
-			"@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
-		],
-		"test": [
-			"@php ./vendor/phpunit/phpunit/phpunit --no-coverage"
-		],
-		"coverage": [
-			"@php ./vendor/phpunit/phpunit/phpunit"
-		],
-		"test-wp": [
-			"@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist --no-coverage"
-		],
-		"coverage-wp": [
-			"@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist"
-		],
-		"integration-test": [
-			"@test-wp"
-		],
-		"integration-coverage": [
-			"@coverage-wp"
-		],
-		"prefix-dependencies": [
-			"composer prefix-oauth2-client",
-			"composer prefix-symfony",
-			"composer prefix-wordproof"
-		],
-		"prefix-oauth2-client": [
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/symfony/deprecation-contracts --config=config/php-scoper/deprecation-contracts.inc.php --force --quiet",
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/league/oauth2-client --config=config/php-scoper/oauth2-client.inc.php --force --quiet",
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/guzzlehttp --config=config/php-scoper/guzzlehttp.inc.php --force --quiet",
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/psr --config=config/php-scoper/psr.inc.php --force --quiet"
-		],
-		"prefix-symfony": [
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/symfony/dependency-injection --config=config/php-scoper/dependency-injection.inc.php --force --quiet"
-		],
-		"prefix-wordproof": [
-			"@php ./vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=YoastSEO_Vendor --output-dir=./vendor_prefixed/wordproof/wordpress-sdk --config=config/php-scoper/wordproof.inc.php --force --quiet"
-		],
-		"compile-di": [
-			"rm -f ./src/generated/container.php",
-			"rm -f ./src/generated/container.php.meta",
-			"composer du --no-scripts",
-			"Yoast\\WP\\SEO\\Composer\\Actions::compile_dependency_injection_container"
-		],
-		"generate-migration": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::generate_migration"
-		],
-		"generate-unit-test": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::generate_unit_test"
-		],
-		"post-autoload-dump": [
-			"Yoast\\WP\\SEO\\Composer\\Actions::prefix_dependencies",
-			"composer compile-di"
-		]
-	},
-	"scripts-descriptions": {
-		"lint": "Check the PHP files for parse errors.",
-		"lint-files": "Internal use.",
-		"lint-branch": "Check the PHP files changed in the current branch for parse errors.",
-		"lint-staged": "Check the staged PHP files for parse errors.",
-		"cs": "See a menu with the code style checking script options.",
-		"check-cs-thresholds": "Check the PHP files for code style violations and best practices and verify the number of issues does not exceed predefined thresholds.",
-		"check-cs": "Check the PHP files for code style violations and best practices, ignoring warnings.",
-		"check-cs-errors": "Alias for check-cs command",
-		"check-cs-warnings": "Check the PHP files for code style violations and best practices, including warnings.",
-		"check-staged-cs": "Check the staged PHP files for code style violations and best practices.",
-		"check-branch-cs": "Check the PHP files changed in the current branch for code style violations and best practices.",
-		"fix-cs": "Auto-fix code style violations in the PHP files.",
-		"test": "Run the unit tests without code coverage.",
-		"coverage": "Run the unit tests with code coverage.",
-		"test-wp": "Run the WP unit tests without code coverage.",
-		"coverage-wp": "Run the WP unit tests with code coverage.",
-		"integration-test": "Deprecated. Alias for the \"test-wp\" script.",
-		"integration-coverage": "Deprecated. Alias for the \"coverage-wp\" script.",
-		"prefix-dependencies": "Create the vendor_prefixed directory.",
-		"prefix-oauth2-client": "Prefix the OAuth2 Client dependencies and place them in the vendor_prefixed directory.",
-		"prefix-symfony": "Prefix the Symfony dependencies and place them in the vendor_prefixed directory.",
-		"prefix-wordproof": "Prefix the WordProof dependencies and place them in the vendor_prefixed directory.",
-		"compile-di": "Compile the dependency injection layer.",
-		"generate-migration": "Generate a migration.",
-		"generate-unit-test": "Generates a unit test template for the fully qualified class provided as a CLI arg."
-	}
+  "name": "wordpress-premium/wordpress-seo-premium",
+  "description": "Yoast SEO Premium - The most comprehensive WordPress SEO plugin. Includes advanced features like redirect management and internal linking suggestions.",
+  "license": "GPL-3.0-or-later",
+  "type": "wordpress-plugin",
+  "keywords": ["wordpress", "seo", "premium", "yoast"],
+  "authors": [
+    {
+      "name": "Team Yoast",
+      "email": "support@yoast.com",
+      "homepage": "https://yoast.com"
+    },
+    {
+      "name": "WordPress Premium",
+      "homepage": "https://www.wordpress-premium.net"
+    }
+  ],
+  "homepage": "https://www.wordpress-premium.org/plugins/yoast-seo-premium",
+  "support": {
+    "email": "support@wordpress-premium.org",
+    "forum": "https://community.wordpress-premium.org",
+    "security": "https://www.wordpress-premium.org/security"
+  },
+  "require": {
+    "php": "^7.2.5 || ^8.0",
+    "ext-filter": "*",
+    "ext-json": "*",
+    "composer/installers": "^2.0",
+    "yoast/yoastseo": "24.3"
+  },
+  "require-dev": {
+    "yoast/wp-test-utils": "^1.2",
+    "yoast/yoastcs": "^3.0",
+    "phpunit/phpunit": "^9.5",
+    "humbug/php-scoper": "^0.17.2"
+  },
+  "suggest": {
+    "ext-bcmath": "For advanced content analysis calculations",
+    "ext-dom": "Required for XML sitemap functionality",
+    "ext-libxml": "Enhances sitemap generation performance",
+    "ext-mbstring": "Essential for non-ASCII character support"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "autoload": {
+    "classmap": ["src/", "admin/", "inc/", "lib/", "vendor_prefixed/"],
+    "files": ["premium.php"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Yoast\\WP\\SEO\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "platform": {
+      "php": "7.2.5"
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "lint": "phpcs --standard=phpcs.xml",
+    "test": "phpunit --configuration phpunit.xml",
+    "prefix-dependencies": ["@prefix-oauth2-client", "@prefix-symfony"],
+    "post-autoload-dump": [
+      "Yoast\\WP\\SEO\\Composer\\Actions::prefix_dependencies"
+    ]
+  },
+  "scripts-descriptions": {
+    "lint": "Check code against WordPress coding standards",
+    "test": "Run unit tests",
+    "prefix-dependencies": "Namespace external dependencies"
+  }
 }

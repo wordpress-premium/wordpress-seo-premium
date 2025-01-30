@@ -52,8 +52,7 @@ class Subpages_Block extends Dynamic_Block_V3 {
 	 */
 	public function present( $attributes ) {
 		$indexables = $this->indexable_repository->get_subpages_by_post_parent( \get_the_ID() );
-
-		$links = \array_map(
+		$links      = \array_map(
 			static function ( Indexable $indexable ) {
 				return [
 					'title'     => $indexable->breadcrumb_title,
@@ -72,7 +71,7 @@ class Subpages_Block extends Dynamic_Block_V3 {
 			$class_name .= ' ' . \esc_attr( $attributes['className'] );
 		}
 
-		$presenter = new Url_List_Presenter( $links, $class_name );
+		$presenter = new Url_List_Presenter( $links, $class_name, $this->should_link_target_blank() );
 
 		return $presenter->present();
 	}

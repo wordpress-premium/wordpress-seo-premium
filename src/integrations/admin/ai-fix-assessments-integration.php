@@ -109,7 +109,7 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 			return;
 		}
 
-		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		\add_action( 'enqueue_block_assets', [ $this, 'enqueue_assets' ] );
 		\add_action( 'admin_head', [ $this, 'render_react_container' ] );
 	}
 
@@ -144,10 +144,6 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! WP_Screen::get()->is_block_editor() ) {
-			return;
-		}
-
 		$user_id = $this->user_helper->get_current_user_id();
 
 		\wp_enqueue_script( 'wp-seo-premium-ai-fix-assessments' );

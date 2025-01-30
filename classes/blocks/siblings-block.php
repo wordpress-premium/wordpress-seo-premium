@@ -79,7 +79,7 @@ class Siblings_Block extends Dynamic_Block_V3 {
 			$class_name .= ' ' . \esc_attr( $attributes['className'] );
 		}
 
-		$presenter = new Url_List_Presenter( $links, $class_name );
+		$presenter = new Url_List_Presenter( $links, $class_name, $this->should_link_target_blank() );
 
 		return $presenter->present();
 	}

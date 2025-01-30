@@ -7,7 +7,6 @@ use WPSEO_Remote_Request;
 use Yoast\WP\SEO\Conditionals\No_Conditionals;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\Post_Type_Helper;
-use Yoast\WP\SEO\Helpers\Request_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
@@ -23,13 +22,6 @@ class Index_Now_Ping implements Integration_Interface {
 	 * @var Options_Helper
 	 */
 	private $options_helper;
-
-	/**
-	 * The request helper.
-	 *
-	 * @var Request_Helper
-	 */
-	private $request_helper;
 
 	/**
 	 * The post type helper.
@@ -49,16 +41,13 @@ class Index_Now_Ping implements Integration_Interface {
 	 * Index_Now_Ping integration constructor.
 	 *
 	 * @param Options_Helper   $options_helper   The option helper.
-	 * @param Request_Helper   $request_helper   The request helper.
 	 * @param Post_Type_Helper $post_type_helper The post type helper.
 	 */
 	public function __construct(
 		Options_Helper $options_helper,
-		Request_Helper $request_helper,
 		Post_Type_Helper $post_type_helper
 	) {
 		$this->options_helper   = $options_helper;
-		$this->request_helper   = $request_helper;
 		$this->post_type_helper = $post_type_helper;
 
 		/**
@@ -111,7 +100,7 @@ class Index_Now_Ping implements Integration_Interface {
 		}
 
 		// The block editor saves published posts twice, we want to ping only on the first request.
-		if ( $new_status === 'publish' && $this->request_helper->is_rest_request() ) {
+		if ( $new_status === 'publish' && \wp_is_serving_rest_request() ) {
 			return;
 		}
 

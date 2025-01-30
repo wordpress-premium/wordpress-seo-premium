@@ -28,7 +28,7 @@ class WPSEO_Premium {
 	 *
 	 * @var string
 	 */
-	public const PLUGIN_VERSION_NAME = '23.5';
+	public const PLUGIN_VERSION_NAME = '24.3';
 
 	/**
 	 * Machine readable version for determining whether an upgrade is needed.
@@ -106,7 +106,7 @@ class WPSEO_Premium {
 			'subpages-block'               => new Subpages_Block( YoastSEO()->classes->get( Indexable_Repository::class ) ),
 		];
 
-		if ( WPSEO_Options::get( 'enable_cornerstone_content' ) ) {
+		if ( WPSEO_Options::get( 'enable_cornerstone_content', null, [ 'wpseo' ] ) ) {
 			$this->integrations['stale-cornerstone-content-filter'] = new WPSEO_Premium_Stale_Cornerstone_Content_Filter();
 		}
 

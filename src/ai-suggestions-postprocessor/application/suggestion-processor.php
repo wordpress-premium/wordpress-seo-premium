@@ -130,6 +130,30 @@ class Suggestion_Processor {
 	}
 
 	/**
+	 * In the paragraph length assessment, we introduce new paragraphs. We mark these with a special class.
+	 *
+	 * @param string $diff The suggestion that potentially includes newly introduced paragraphs.
+	 *
+	 * @return string The suggestion with the newly introduced paragraphs marked by the class `yst-paragraph`.
+	 */
+	public function mark_new_paragraphs_in_suggestions( string $diff ): string {
+		// Find the paragraph breaks introduced by the AI -- these are inserts containing comments, indicating Gutenberg blocks.
+		// Yes, we are using a regex to parse HTML. We are aware of the risks, see also above.
+		$introduced_blocks = \sprintf( '/<ins class="%s">&lt;\/.*?&gt;&lt;!--.*?--&gt;&lt;.*?&gt;<\/ins>/', self::YST_DIFF_CLASS );
+		$replacement       = static function () {
+			// translators: The text to show when a paragraph break is suggested through AI Optimize.
+			$paragraph_break_text = \__( 'Paragraph break', 'wordpress-seo-premium' );
+			return '<ins class="yst-paragraph">--- ' . $paragraph_break_text . ' ---</ins>';
+		};
+		// Keep replacing until there are no more tags left.
+		while ( \preg_match( $introduced_blocks, $diff ) ) {
+			$diff = \preg_replace_callback( $introduced_blocks, $replacement, $diff );
+		}
+
+		return $diff;
+	}
+
+	/**
 	 * Retains any replacements of non-breaking spaces in suggestions.
 	 *
 	 * @param string $diff The diff to keep its non-breaking spaces.

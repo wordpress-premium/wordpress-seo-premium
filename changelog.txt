@@ -1,9 +1,8 @@
 *** Yoast SEO premium Changelog ***
 
 
-2024-09-24 - version 23.5
-* add -  Improves the text of error messages that are shown when there is a problem with using the AI features.
-* fix -  Fixes a bug where two sentences in the internal linking suggestions would not be translated.
-* fix -  Fixes a bug where the toast notification would appear in the wrong position when using the AI generator with little or no content. 
-* update -  Bumps the minimum required version of Yoast SEO to 23.5.
+2025-01-21 - version 24.3
+* add -  Adds the Yoast AI Optimize feature to _sentence length_ and _paragraph length_ assessments.
+* add -  Adds the Yoast AI Optimize feature to _sentence length_ and _paragraph length_ assessments.
+* update -  Bumps the minimum required version of Yoast SEO to 24.3.
 

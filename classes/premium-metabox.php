@@ -157,6 +157,7 @@ class WPSEO_Premium_Metabox implements WPSEO_WordPress_Integration {
 				WPSEO_PREMIUM_FILE
 			),
 			'pluginUrl'                   => plugins_url( '', WPSEO_PREMIUM_FILE ),
+			'isAiFeatureEnabled'          => WPSEO_Options::get( 'enable_ai_generator' ),
 		];
 
 		if ( defined( 'YOAST_SEO_TEXT_FORMALITY' ) && YOAST_SEO_TEXT_FORMALITY === true ) {

@@ -9,9 +9,6 @@ use WPSEO_Utils;
 use Yoast\WP\SEO\Helpers\Date_Helper;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
-use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Application\AI_Suggestions_Unifier;
-use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Application\Suggestion_Processor;
-use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Domain\Suggestion;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Bad_Request_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Forbidden_Exception;
 use Yoast\WP\SEO\Premium\Exceptions\Remote_Request\Internal_Server_Error_Exception;
@@ -40,20 +37,6 @@ class AI_Generator_Helper {
 	protected $base_url = 'https://ai.yoa.st/api/v1';
 
 	/**
-	 * The AI suggestion helper.
-	 *
-	 * @var AI_Suggestions_Unifier
-	 */
-	private $ai_suggestions_unifier;
-
-	/**
-	 * The suggestion processor.
-	 *
-	 * @var Suggestion_Processor
-	 */
-	private $suggestion_processor;
-
-	/**
 	 * The options helper.
 	 *
 	 * @var Options_Helper
@@ -79,18 +62,14 @@ class AI_Generator_Helper {
 	 *
 	 * @codeCoverageIgnore It only sets dependencies.
 	 *
-	 * @param AI_Suggestions_Unifier $ai_suggestions_unifier The AI suggestion unifier.
-	 * @param Suggestion_Processor   $suggestion_processor   The suggestion processor.
-	 * @param Options_Helper         $options                The options helper.
-	 * @param User_Helper            $user_helper            The User helper.
-	 * @param Date_Helper            $date_helper            The date helper.
+	 * @param Options_Helper $options     The options helper.
+	 * @param User_Helper    $user_helper The User helper.
+	 * @param Date_Helper    $date_helper The date helper.
 	 */
-	public function __construct( AI_Suggestions_Unifier $ai_suggestions_unifier, Suggestion_Processor $suggestion_processor, Options_Helper $options, User_Helper $user_helper, Date_Helper $date_helper ) {
-		$this->ai_suggestions_unifier = $ai_suggestions_unifier;
-		$this->suggestion_processor   = $suggestion_processor;
-		$this->options_helper         = $options;
-		$this->user_helper            = $user_helper;
-		$this->date_helper            = $date_helper;
+	public function __construct( Options_Helper $options, User_Helper $user_helper, Date_Helper $date_helper ) {
+		$this->options_helper = $options;
+		$this->user_helper    = $user_helper;
+		$this->date_helper    = $date_helper;
 	}
 
 	/**
@@ -308,39 +287,6 @@ class AI_Generator_Helper {
 		}
 
 		return $suggestions;
-	}
-
-	/**
-	 * Builds a response for the AI assessment fixes route by comparing the response to the input.
-	 * The differences are marked with `<ins>` and `<del>` tags.
-	 *
-	 * @param string $original The original text.
-	 * @param object $response The response from the API.
-	 *
-	 * @return string The HTML containing the suggested content.
-	 *
-	 * @throws Bad_Request_Exception Bad_Request_Exception.
-	 */
-	public function build_fixes_response( string $original, object $response ): string {
-		$raw_fixes = $this->suggestion_processor->get_suggestion_from_ai_response( $response->body );
-		if ( $raw_fixes === '' ) {
-			return '';
-		}
-
-		// We output the diff as an HTML string and will parse this string on the JavaScript side.
-		$diff = $this->suggestion_processor->calculate_diff( $original, $raw_fixes );
-
-		$diff = $this->suggestion_processor->remove_html_from_suggestion( $diff );
-
-		$diff = $this->suggestion_processor->keep_nbsp_in_suggestions( $diff );
-
-		// If we end up with no suggestions, we have to show an error to the user.
-		if ( \strpos( $diff, 'yst-diff' ) === false ) {
-			throw new Bad_Request_Exception();
-		}
-		$suggestion = new Suggestion();
-		$suggestion->set_content( $diff );
-		return $this->ai_suggestions_unifier->unify_diffs( $suggestion );
 	}
 
 	/**

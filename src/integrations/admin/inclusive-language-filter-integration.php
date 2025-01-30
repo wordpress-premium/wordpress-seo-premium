@@ -8,6 +8,7 @@ use Yoast\WP\SEO\Conditionals\Admin\Posts_Overview_Or_Ajax_Conditional;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Conditionals\Inclusive_Language_Enabled_Conditional;
+use Yoast\WP\SEO\Premium\Conditionals\Not_Woo_Order_Conditional;
 
 /**
  * Inclusive_Language_Filter_Integration class.
@@ -17,18 +18,25 @@ use Yoast\WP\SEO\Premium\Conditionals\Inclusive_Language_Enabled_Conditional;
 class Inclusive_Language_Filter_Integration implements Integration_Interface {
 
 	/**
-	 * {@inheritDoc}
+	 * Retrieves the conditionals that determine when this integration should be executed.
+	 *
+	 * @return array An array of conditional class names.
 	 */
 	public static function get_conditionals() {
 		return [
 			Admin_Conditional::class,
 			Posts_Overview_Or_Ajax_Conditional::class,
+			Not_Woo_Order_Conditional::class,
 			Inclusive_Language_Enabled_Conditional::class,
 		];
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Initializes the integration.
+	 *
+	 * This is the place to register hooks and filters.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		// Creates the inclusive language score filter dropdown -- with priority 20 to fire after the SEO/readability filter.

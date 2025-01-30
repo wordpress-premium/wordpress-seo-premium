@@ -13,6 +13,7 @@ use Yoast\WP\SEO\Helpers\Score_Icon_Helper;
 use Yoast\WP\SEO\Integrations\Admin\Admin_Columns_Cache_Integration;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Premium\Conditionals\Inclusive_Language_Enabled_Conditional;
+use Yoast\WP\SEO\Premium\Conditionals\Not_Woo_Order_Conditional;
 
 /**
  * Inclusive_Language_Column_Integration class.
@@ -57,12 +58,15 @@ class Inclusive_Language_Column_Integration implements Integration_Interface {
 	protected $admin_columns_cache;
 
 	/**
-	 * {@inheritDoc}
+	 * Retrieves the conditionals that determine when this integration should be executed.
+	 *
+	 * @return array An array of conditional class names.
 	 */
 	public static function get_conditionals() {
 		return [
 			Admin_Conditional::class,
 			Posts_Overview_Or_Ajax_Conditional::class,
+			Not_Woo_Order_Conditional::class,
 			Inclusive_Language_Enabled_Conditional::class,
 		];
 	}
@@ -90,7 +94,11 @@ class Inclusive_Language_Column_Integration implements Integration_Interface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Initializes the integration.
+	 *
+	 * This is the place to register hooks and filters.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		\add_filter( 'posts_clauses', [ $this, 'order_by_inclusive_language_score' ], 1, 2 );

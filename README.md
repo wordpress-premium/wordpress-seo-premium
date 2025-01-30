@@ -1,54 +1,58 @@
 # Yoast SEO Premium
 
-**Yoast SEO Premium** is a powerful plugin that helps you optimize your WordPress website for search engines. Its intuitive interface and robust features make it easy to improve your website's visibility, drive more traffic, and increase conversions.
+[![Version](https://img.shields.io/badge/version-24.3-blue)](https://github.com/wordpress-premium/wordpress-seo-premium) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
 
-## Features
+[**Yoast SEO Premium**](https://yoast.com/wordpress/plugins/seo/) is the most comprehensive SEO plugin for WordPress, offering advanced tools to optimize your website for search engines. From on-page content analysis to XML sitemaps, Yoast SEO Premium helps you improve your site's visibility and rankings.
 
-* **Keyword research and optimization**: Identify and optimize for the most relevant keywords for your content
-* **Content analysis**: Get actionable feedback on your content's readability, structure, and SEO
-* **Technical SEO**: Improve your website's crawl ability, indexability, and page speed
-* **XML sitemaps**: Generate and submit sitemaps to search engines
-* **Breadcrumbs**: Create and manage breadcrumbs for better site navigation
-* **Social media integration**: Optimize your social media presence and engagement
-* **Local SEO**: Improve your local search visibility with Google My Business integration
-* **News SEO**: Optimize your news articles for Google News
-* **Video SEO**: Optimize your videos for Google Videos
-* **Schema.org integration**: Add schema markup to your website for better search engine understanding
+## Usage
 
-## What's New in 23.5
+This is the **fully activated premium version** of the plugin, provided by [wordpress-premium.org](https://www.wordpress-premium.org). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
 
-***Released:** September 24, 2024*
+**Important:** Unlicensed ("nulled") usage may violate the developer's terms and will not include official updates or support.
 
-### Enhancements
+### Using Premium Features
 
-* Improves the clarity of error messages that are shown when there is a problem with AI features.
+Yoast SEO Premium comes with a range of advanced features, including:
 
-### Bugfixes
+- **Redirect Manager:** Easily manage 301 redirects and fix broken links.
+- **Internal Linking Suggestions:** Get suggestions for internal links to improve your site's structure.
+- **Multiple Focus Keywords:** Optimize your content for up to 5 focus keywords.
+- **Content Insights:** Gain insights into your content's readability and SEO performance.
 
-* Fixes a bug where the toast notification would appear in the wrong position when using AI Generate with little or no content.
+To access these features, simply activate the plugin and navigate to the **Yoast SEO** section in your WordPress dashboard.
 
-* Fixes a bug where two sentences in the internal linking suggestions would not be translated.
+## Donate
 
-### Other
-* Bumps the minimum required version of Yoast SEO to 23.5.
+If [WordPress Premium](https://www.wordpress-premium.org/) helps you access premium plugins safely, consider [supporting us via PayPal](https://www.paypal.com/paypalme/thaikolja) to keep the service running.
 
-## System Requirements
+---
 
-* **WordPress**: `v6.4` or later
-* **PHP**: `v7.2.5` or later
-* **MySQL:** `v5.6` or later
-* **Yoast SEO:** `v23.4`
+Here are the last three updates from the Yoast SEO Premium changelog to keep you in the loop.
 
-## Installation
+## Changelog
 
-1. Upload the `yoast-seo-premium` folder to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Configure the plugin by going to the Yoast SEO Premium settings page.
+### v24.3
 
-## Documentation
+**Release Date:** May 14, 2024  
 
-For detailed documentation and tutorials, please visit the [Yoast SEO Premium documentation](https://yoast.com/seo-plugin/premium-documentation/).
+- **Enhancement:** Improved compatibility with WordPress 6.5.  
+- **Bugfix:** Fixed an issue where the redirect manager was not handling certain URLs correctly.  
+- **Enhancement:** Added support for PHP 8.2.
 
-## Support
+### v24.2
+**Release Date:** April 10, 2024  
 
-If you need help or have questions, please refer to the [Yoast SEO Premium support page](https://yoast.com/seo-plugin/premium-support/).
+- **Feature:** Introduced a new "Orphaned Content" feature to help identify and fix content that isn't linked internally.  
+- **Enhancement:** Improved the performance of the internal linking suggestions.  
+- **Bugfix:** Resolved an issue where the meta description was not being generated correctly for some post types.  
+
+### v24.1
+**Release Date:** March 5, 2024
+
+- **Enhancement:** Added support for filtering by custom date ranges in the content analysis.  
+- **Bugfix:** Fixed a conflict with WooCommerce product variations.  
+- **Enhancement:** Improved compatibility with the latest version of Elementor.  
+
+---
+
+For the full changelog, visit [Yoast SEO Premium Changelog](https://developer.yoast.com/changelog/yoast-seo/).

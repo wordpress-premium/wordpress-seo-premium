@@ -23,7 +23,7 @@ class Addon_Installer {
 	/**
 	 * The minimum Yoast SEO version required.
 	 */
-	public const MINIMUM_YOAST_SEO_VERSION = '23.5';
+	public const MINIMUM_YOAST_SEO_VERSION = '24.3';
 
 	/**
 	 * The base directory for the installer.
@@ -137,20 +137,29 @@ class Addon_Installer {
 		}
 
 		echo (
-			'<div class="error">'
-				. '<p>'
+			'<div class="error yoast-migrated-notice">'
+				. '<h4 class="yoast-notice-migrated-header">'
 					. \sprintf(
-						/* translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required, %3$s: Yoast SEO Premium. */
-						\esc_html__( '%1$s %2$s must be installed and activated in order to use %3$s.', 'wordpress-seo-premium' ),
-						'Yoast SEO',
-						\esc_html( self::MINIMUM_YOAST_SEO_VERSION ),
-						'Yoast SEO Premium'
+						/* translators: %1$s: Yoast SEO */
+						\esc_html__( 'Install latest %1$s', 'wordpress-seo-premium' ),
+						'Yoast SEO'
 					)
-				. '</p>'
-				. '<p>'
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped above.
-					. $action
-				. '</p>'
+				. '</h4>'
+				. '<div class="notice-yoast-content">'
+					. '<p>'
+						. \sprintf(
+							/* translators: %1$s: Yoast SEO, %2$s: The minimum Yoast SEO version required, %3$s: Yoast SEO Premium. */
+							\esc_html__( '%1$s %2$s must be installed and activated in order to use %3$s.', 'wordpress-seo-premium' ),
+							'Yoast SEO',
+							\esc_html( self::MINIMUM_YOAST_SEO_VERSION ),
+							'Yoast SEO Premium'
+						)
+					. '</p>'
+					. '<p>'
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped above.
+						. $action
+					. '</p>'
+				. '</div>'
 			. '</div>'
 		);
 	}

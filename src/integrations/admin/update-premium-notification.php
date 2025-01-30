@@ -138,9 +138,8 @@ class Update_Premium_Notification implements Integration_Interface {
                     'action': 'dismiss_update_premium_notification',
                     };
 
-                    jQuery.post( ajaxurl, data, function( response ) {
-                        jQuery( '#yoast-update-premium-notification' ).hide();
-                    });
+                    jQuery( '#yoast-update-premium-notification' ).hide();
+                    jQuery.post( ajaxurl, data, function( response ) {});
                 }
 
                 jQuery( document ).ready( function() {

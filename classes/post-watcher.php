@@ -30,7 +30,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 		add_action( 'admin_enqueue_scripts', [ $this, 'page_scripts' ] );
 
 		// Only set the hooks for the page where they are needed.
-		if ( ! $this->is_rest_request() && ! $this->post_redirect_can_be_made( $pagenow ) ) {
+		if ( ! wp_is_serving_rest_request() && ! $this->post_redirect_can_be_made( $pagenow ) ) {
 			return;
 		}
 
@@ -471,15 +471,6 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	}
 
 	/**
-	 * Determines whether we're dealing with a REST request or not.
-	 *
-	 * @return bool Whether or not the current request is a REST request.
-	 */
-	private function is_rest_request() {
-		return defined( 'REST_REQUEST' ) && REST_REQUEST === true;
-	}
-
-	/**
 	 * Returns the undo message for the post.
 	 *
 	 * @return string
@@ -589,7 +580,7 @@ class WPSEO_Post_Watcher extends WPSEO_Watcher implements WPSEO_WordPress_Integr
 	 */
 	protected function set_undo_slug_notification( WPSEO_Redirect $redirect, $object_id, $object_type ) {
 
-		if ( ! $this->is_rest_request() && ! wp_doing_ajax() ) {
+		if ( ! wp_is_serving_rest_request() && ! wp_doing_ajax() ) {
 			parent::set_undo_slug_notification( $redirect, $object_id, $object_type );
 
 			return;
