@@ -111,7 +111,7 @@ class Index_Now_Ping implements Integration_Interface {
 		}
 
 		// The block editor saves published posts twice, we want to ping only on the first request.
-		if ( $new_status === 'publish' && $this->request_helper->is_rest_request() ) {
+		if ( $new_status === 'publish' && wp_is_serving_rest_request() ) {
 			return;
 		}
 
