@@ -1,8 +1,6 @@
 *** Yoast SEO premium Changelog ***
 
 
-2025-01-21 - version 24.3
-* add -  Adds the Yoast AI Optimize feature to _sentence length_ and _paragraph length_ assessments.
-* add -  Adds the Yoast AI Optimize feature to _sentence length_ and _paragraph length_ assessments.
-* update -  Bumps the minimum required version of Yoast SEO to 24.3.
+2025-03-18 - version 24.7
+* fix -  Fixes a bug where the help beacon would be displayed over table pagination on Yoast admin pages.
 

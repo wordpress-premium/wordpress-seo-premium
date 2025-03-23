@@ -30,6 +30,7 @@ class AI_Generator_Action extends AI_Base_Action {
 	 * @param string  $focus_keyphrase       The focus keyphrase associated to the post.
 	 * @param string  $language              The language of the post.
 	 * @param string  $platform              The platform the post is intended for.
+	 * @param string  $editor                The current editor.
 	 * @param bool    $retry_on_unauthorized Whether to retry when unauthorized (mechanism to retry once).
 	 *
 	 * @return string[] The suggestions.
@@ -52,6 +53,7 @@ class AI_Generator_Action extends AI_Base_Action {
 		string $focus_keyphrase,
 		string $language,
 		string $platform,
+		string $editor,
 		bool $retry_on_unauthorized = true
 	): array {
 		$token = $this->get_or_request_access_token( $user );
@@ -68,6 +70,7 @@ class AI_Generator_Action extends AI_Base_Action {
 		];
 		$request_headers = [
 			'Authorization' => "Bearer $token",
+			'X-Yst-Cohort'  => $editor,
 		];
 
 		try {
@@ -82,7 +85,7 @@ class AI_Generator_Action extends AI_Base_Action {
 			}
 
 			// Try again once more by fetching a new set of tokens and trying the suggestions endpoint again.
-			return $this->get_suggestions( $user, $suggestion_type, $prompt_content, $focus_keyphrase, $language, $platform, false );
+			return $this->get_suggestions( $user, $suggestion_type, $prompt_content, $focus_keyphrase, $language, $platform, $editor, false );
 		} catch ( Forbidden_Exception $exception ) {
 			// Follow the API in the consent being revoked (Use case: user sent an e-mail to revoke?).
 			// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false positive.

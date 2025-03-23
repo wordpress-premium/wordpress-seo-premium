@@ -206,6 +206,16 @@ class AI_Generator_Route implements Route_Interface {
 						],
 						'description' => 'The platform the post is intended for.',
 					],
+					'editor' => [
+						'required'    => true,
+						'type'        => 'string',
+						'enum'        => [
+							'classic',
+							'elementor',
+							'gutenberg',
+						],
+						'description' => 'The current editor.',
+					],
 				],
 				'callback'            => [ $this, 'get_suggestions' ],
 				'permission_callback' => [ $this, 'check_permissions' ],
@@ -266,7 +276,7 @@ class AI_Generator_Route implements Route_Interface {
 	public function get_suggestions( WP_REST_Request $request ) {
 		try {
 			$user = \wp_get_current_user();
-			$data = $this->ai_generator_action->get_suggestions( $user, $request['type'], $request['prompt_content'], $request['focus_keyphrase'], $request['language'], $request['platform'] );
+			$data = $this->ai_generator_action->get_suggestions( $user, $request['type'], $request['prompt_content'], $request['focus_keyphrase'], $request['language'], $request['platform'], $request['editor'] );
 		} catch ( Remote_Request_Exception $e ) {
 			$message = [
 				'message'         => $e->getMessage(),

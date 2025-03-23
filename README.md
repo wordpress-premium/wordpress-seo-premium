@@ -4,9 +4,13 @@
 
 [**Yoast SEO Premium**](https://yoast.com/wordpress/plugins/seo/) is the most comprehensive SEO plugin for WordPress, offering advanced tools to optimize your website for search engines. From on-page content analysis to XML sitemaps, Yoast SEO Premium helps you improve your site's visibility and rankings.
 
+## Download
+
+[Click here to download Yoast SEO Premium](https://github.com/wordpress-premium/wordpress-seo-premium/archive/refs/heads/main.zip) as a `.zip` file. Follow [SiteGround's detailed description](https://www.siteground.com/tutorials/wordpress/install-plugins/#How_to_Upload_a_WordPress_Plugin_from_a_File) to upload it to your dashboard, or do it via (S)FTP.
+
 ## Usage
 
-This is the **fully activated premium version** of the plugin, provided by [wordpress-premium.net](https://www.wordpress-premium.net). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
+This is the **fully activated premium version** of the plugin provided by [wordpress-premium.net](https://www.wordpress-premium.net). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
 
 **Important:** Unlicensed ("nulled") usage may violate the developer's terms and will not include official updates or support.
 
@@ -27,41 +31,24 @@ If [WordPress Premium](https://www.wordpress-premium.net/) helps you access prem
 
 ---
 
-Here are the last three updates from the Yoast SEO Premium changelog to keep you in the loop.
-
 ## Changelog
 
-### v24.3
+Here is the last update from the Yoast SEO Premium changelog to keep you in the loop.
 
-**Release Date:** January 21, 2025  
+**Released:** March 18, 2025
 
-- **Enhancement:** Introduces more robust HTML processing and highlighting for the sentence length and paragraph length assessments.  
-- **Bugfix:** Fixes a bug where the Semrush request would be executed twice when opening the related keyphrases modal.  
-- **Bugfix:** Fixes a bug where the text color in the search on our settings page would not change correctly when active, resulting in bad contrast.  
-- **Bugfix:** Fixes a bug where the View button label in the Yoast dashboard would not be available for translation.  
-- **Other:** Improves contrast in the related keyphrase suggestions table.  
-- **Other:** Improves contrast in the RSS supported variables explainer table.  
+### Enhancements
 
-### v24.2
+*   Improves the accuracy of assessments measuring character count for Japanese texts by removing common punctuation from the count.
 
-**Release Date:** January 7, 2025  
+### Bugfixes
 
-- **Enhancement:** Improves the tooltips accessibility in the related keyphrase suggestions modal.  
-- **Bugfix:** Fixes a bug where a deprecation message would appear in PHP 8+ when saving a post containing images with invalid sources. Props to kkmuffme.  
-- **Bugfix:** Fixes a bug where a TypeError would occur when checking for capabilities of SEO Manager user role when the roles were not passed as an array. Props to kfeinUI.  
-- **Bugfix:** Fixes a bug where styles on buttons, intent badge and modal links would not adjust the direction when on RTL view.  
-- **Other:** Changes the title text on the Yoast installation success page.  
-- **Other:** Fixes a console warning about ReactDOM.render being no longer supported in React 18.  
+*   Fixes a bug where the help beacon would be displayed over table pagination on the bulk editor page.
 
-### v24.1
+### Other
 
-**Release Date:** December 18, 2024  
-
-- **Enhancement:** Introduces the Yoast Dashboard, a place where site administrators can check the SEO and Readability performance of the site's posts.  
-- **Enhancement:** Adds Not analyzed as an option in the readability filter in the posts page.  
-- **Enhancement:** Enhances the existing Needs improvement option in the readability filter in the posts page, to include posts that don't have enough content as well.  
-- **Bugfix:** Fixes a bug where posts that have been set to explicitly not be noindexed and had no keyword set would not appear in the relevant SEO filter in the posts page.  
-- **Other:** Improves the translatability of feedback for the paragraph length and the sentence length assessments.  
+*   Improves the feedback strings of the *subheading distribution* assessment for better translatability.
+*   Removes extra span tags in the Post/Page overview. Props to [dilipbheda](https://github.com/dilipbheda).
 
 
 ---
