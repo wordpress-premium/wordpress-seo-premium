@@ -1,6 +1,6 @@
 # Yoast SEO Premium
 
-![GitLab Release](https://img.shields.io/gitlab/v/release/wordpress-premium%2Fadvanced-custom-fields-pro) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
+![GitLab Release](https://img.shields.io/gitlab/v/release/wordpress-premium/wordpress-seo-premium) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
 
 [**Yoast SEO Premium**](https://yoast.com/wordpress/plugins/seo/) is the most comprehensive SEO plugin for WordPress, offering advanced tools to optimize your website for search engines. From on-page content analysis to XML sitemaps, Yoast SEO Premium helps you improve your site's visibility and rankings.
 
