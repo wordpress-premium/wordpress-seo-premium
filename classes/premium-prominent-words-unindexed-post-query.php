@@ -111,7 +111,7 @@ class WPSEO_Premium_Prominent_Words_Unindexed_Post_Query {
 	protected function determine_rest_endpoint_for_post_type( $post_type ) {
 		$post_type_object = get_post_type_object( $post_type );
 
-		if ( is_null( $post_type_object ) ) {
+		if ( $post_type_object === null ) {
 			return '';
 		}
 

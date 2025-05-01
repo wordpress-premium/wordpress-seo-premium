@@ -106,7 +106,7 @@ class WPSEO_HTML_Diff_Renderer extends WP_Text_Diff_Renderer_inline {
 		}
 
 		/* Get the diff in inline format. */
-		$renderer = new WPSEO_HTML_Diff_Renderer(
+		$renderer = new self(
 			array_merge(
 				$this->getParams(),
 				[ 'split_level' => ( $this->_split_characters ) ? 'characters' : 'words' ]

@@ -77,7 +77,7 @@ class Sentence_Processor {
 
 		// If the number of open tags is greater than the number of close tags, we close the tag at the end of the sentence.
 		if ( $number_of_open_tags > $number_of_close_tags ) {
-			$text = $text . self::close( $tag );
+			$text .= self::close( $tag );
 			return true;
 		}
 
@@ -107,8 +107,8 @@ class Sentence_Processor {
 	 * @return bool Whether the suggestion should be switched to sentence based
 	 */
 	public function should_switch_to_sentence_based( string $sentence ): bool {
-		if ( ( \count( $this->get_tag_positions( self::open( self::INS_PLACEHOLDER ), $sentence ) ) +
-				\count( $this->get_tag_positions( self::open( self::DEL_PLACEHOLDER ), $sentence ) ) ) < self::DIFF_THRESHOLD ) {
+		if ( ( \count( $this->get_tag_positions( self::open( self::INS_PLACEHOLDER ), $sentence ) )
+				+ \count( $this->get_tag_positions( self::open( self::DEL_PLACEHOLDER ), $sentence ) ) ) < self::DIFF_THRESHOLD ) {
 			return false;
 		}
 		return true;

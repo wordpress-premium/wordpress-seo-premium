@@ -43,10 +43,7 @@ class Index_Now_Ping implements Integration_Interface {
 	 * @param Options_Helper   $options_helper   The option helper.
 	 * @param Post_Type_Helper $post_type_helper The post type helper.
 	 */
-	public function __construct(
-		Options_Helper $options_helper,
-		Post_Type_Helper $post_type_helper
-	) {
+	public function __construct( Options_Helper $options_helper, Post_Type_Helper $post_type_helper ) {
 		$this->options_helper   = $options_helper;
 		$this->post_type_helper = $post_type_helper;
 

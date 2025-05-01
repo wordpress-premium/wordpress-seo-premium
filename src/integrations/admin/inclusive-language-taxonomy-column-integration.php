@@ -56,10 +56,7 @@ class Inclusive_Language_Taxonomy_Column_Integration implements Integration_Inte
 	 * @param Score_Icon_Helper   $score_icon_helper   The score icon helper.
 	 * @param Current_Page_Helper $current_page_helper The Current_Page_Helper.
 	 */
-	public function __construct(
-		Score_Icon_Helper $score_icon_helper,
-		Current_Page_Helper $current_page_helper
-	) {
+	public function __construct( Score_Icon_Helper $score_icon_helper, Current_Page_Helper $current_page_helper ) {
 		$this->score_icon_helper   = $score_icon_helper;
 		$this->current_page_helper = $current_page_helper;
 	}

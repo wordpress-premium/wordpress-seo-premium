@@ -23,9 +23,7 @@ class Elementor_Preview implements Integration_Interface {
 	 *
 	 * @param WPSEO_Admin_Asset_Manager $asset_manager The asset manager.
 	 */
-	public function __construct(
-		WPSEO_Admin_Asset_Manager $asset_manager
-	) {
+	public function __construct( WPSEO_Admin_Asset_Manager $asset_manager ) {
 		$this->asset_manager = $asset_manager;
 	}
 

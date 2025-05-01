@@ -22,7 +22,7 @@ class Wrapper {
 	public static function get_replace_vars() {
 		static $instance;
 
-		if ( \is_null( $instance ) ) {
+		if ( $instance === null ) {
 			$instance = new WPSEO_Replace_Vars();
 		}
 
@@ -37,7 +37,7 @@ class Wrapper {
 	public static function get_prominent_words_unindex_post_query() {
 		static $instance;
 
-		if ( \is_null( $instance ) ) {
+		if ( $instance === null ) {
 			$instance = new WPSEO_Premium_Prominent_Words_Unindexed_Post_Query();
 		}
 
@@ -52,7 +52,7 @@ class Wrapper {
 	public static function get_prominent_words_support() {
 		static $instance;
 
-		if ( \is_null( $instance ) ) {
+		if ( $instance === null ) {
 			$instance = new WPSEO_Premium_Prominent_Words_Support();
 		}
 
@@ -67,7 +67,7 @@ class Wrapper {
 	public static function get_shortlinker() {
 		static $instance;
 
-		if ( \is_null( $instance ) ) {
+		if ( $instance === null ) {
 			$instance = new WPSEO_Shortlinker();
 		}
 

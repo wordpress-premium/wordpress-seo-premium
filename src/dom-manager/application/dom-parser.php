@@ -34,7 +34,7 @@ class DOM_Parser {
 	 * @return string The node html with charset
 	 */
 	public function add_charset( string $html_string, ?string $charset ): string {
-		if ( \is_null( $charset ) ) {
+		if ( $charset === null ) {
 			return $html_string;
 		}
 		return \sprintf( '<html><head><meta content="text/html; charset=%s" http-equiv="Content-Type"></head><body>%s</body></html>', $charset, $html_string );

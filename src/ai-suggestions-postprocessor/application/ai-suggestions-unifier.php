@@ -7,6 +7,7 @@ use DOMXPath;
 use Yoast\WP\SEO\Premium\AI_Suggestions_Postprocessor\Domain\Suggestion_Interface;
 use Yoast\WP\SEO\Premium\DOM_Manager\Application\DOM_Parser;
 use Yoast\WP\SEO\Premium\DOM_Manager\Application\Node_Processor;
+
 /**
  * Class that implements the main flow of the AI suggestions unifier.
  */

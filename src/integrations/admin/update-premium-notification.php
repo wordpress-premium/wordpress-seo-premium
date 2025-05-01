@@ -107,6 +107,10 @@ class Update_Premium_Notification implements Integration_Interface {
 			return;
 		}
 
+		if ( $this->is_doing_plugin_upgrade() ) {
+			return;
+		}
+
 		// Check whether Free is set to a version later than the minimum required and a Premium update is a available.
 		if ( $this->version_helper->is_free_upgraded() && $this->version_helper->is_premium_update_available() ) {
 			$this->admin_asset_manager->enqueue_style( 'monorepo' );
@@ -158,6 +162,16 @@ class Update_Premium_Notification implements Integration_Interface {
 	 */
 	public function dismiss_update_premium_notification() {
 		return $this->options_helper->set( 'dismiss_update_premium_notification', \WPSEO_PREMIUM_VERSION );
+	}
+
+	/**
+	 * Checks if we're on the page where a plugin is being upgraded.
+	 *
+	 * @return bool
+	 */
+	public function is_doing_plugin_upgrade() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are not processing form information.
+		return isset( $_GET['action'] ) && $_GET['action'] === 'do-plugin-upgrade';
 	}
 
 	/**

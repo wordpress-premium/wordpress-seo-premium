@@ -50,9 +50,7 @@ class Organization_Schema_Integration implements Integration_Interface {
 	 *
 	 * @param Options_Helper $options_helper The options helper.
 	 */
-	public function __construct(
-		Options_Helper $options_helper
-	) {
+	public function __construct( Options_Helper $options_helper ) {
 		$this->options_helper = $options_helper;
 	}
 
@@ -70,8 +68,8 @@ class Organization_Schema_Integration implements Integration_Interface {
 	/**
 	 * Filters the organization schema.
 	 *
-	 * @param array<string,array<string|int>> $profiles The organization schema data.
-	 * @return array<string,array<string|int>> The filtered organization schema data.
+	 * @param array<string, array<string|int>> $profiles The organization schema data.
+	 * @return array<string, array<string|int>> The filtered organization schema data.
 	 */
 	public function filter_organization_schema( $profiles ) {
 		$options = [];
@@ -94,9 +92,9 @@ class Organization_Schema_Integration implements Integration_Interface {
 	/**
 	 * Adds employees number to the organization schema tree.
 	 *
-	 * @param array<string,array<string|int>> $profiles  The organization schema tree.
-	 * @param array<string,array<string|int>> $employees The option for employees number.
-	 * @return array<string,array<string|int>> The modified organization schema tree.
+	 * @param array<string, array<string|int>> $profiles  The organization schema tree.
+	 * @param array<string, array<string|int>> $employees The option for employees number.
+	 * @return array<string, array<string|int>> The modified organization schema tree.
 	 */
 	public function add_employees_number( $profiles, $employees ) {
 		if ( ! $employees ) {

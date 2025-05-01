@@ -1,77 +1,93 @@
 {
-  "name": "wordpress-premium/wordpress-seo-premium",
-  "description": "Yoast SEO Premium - The most comprehensive WordPress SEO plugin. Includes advanced features like redirect management and internal linking suggestions.",
-  "license": "GPL-3.0-or-later",
-  "type": "wordpress-plugin",
-  "keywords": ["wordpress", "seo", "premium", "yoast"],
-  "authors": [
-    {
-      "name": "Team Yoast",
-      "email": "support@yoast.com",
-      "homepage": "https://yoast.com"
-    },
-    {
-      "name": "WordPress Premium",
-      "homepage": "https://www.wordpress-premium.net"
-    }
-  ],
-  "homepage": "https://www.wordpress-premium.org/plugins/yoast-seo-premium",
-  "support": {
-    "email": "support@wordpress-premium.org",
-    "forum": "https://community.wordpress-premium.org",
-    "security": "https://www.wordpress-premium.org/security"
-  },
-  "require": {
-    "php": "^7.2.5 || ^8.0",
-    "ext-filter": "*",
-    "ext-json": "*",
-    "composer/installers": "^2.0",
-    "yoast/yoastseo": "24.3"
-  },
-  "require-dev": {
-    "yoast/wp-test-utils": "^1.2",
-    "yoast/yoastcs": "^3.0",
-    "phpunit/phpunit": "^9.5",
-    "humbug/php-scoper": "^0.17.2"
-  },
-  "suggest": {
-    "ext-bcmath": "For advanced content analysis calculations",
-    "ext-dom": "Required for XML sitemap functionality",
-    "ext-libxml": "Enhances sitemap generation performance",
-    "ext-mbstring": "Essential for non-ASCII character support"
-  },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "autoload": {
-    "classmap": ["src/", "admin/", "inc/", "lib/", "vendor_prefixed/"],
-    "files": ["premium.php"]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Yoast\\WP\\SEO\\Tests\\": "tests/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    },
-    "platform": {
-      "php": "7.2.5"
-    },
-    "sort-packages": true
-  },
-  "scripts": {
-    "lint": "phpcs --standard=phpcs.xml",
-    "test": "phpunit --configuration phpunit.xml",
-    "prefix-dependencies": ["@prefix-oauth2-client", "@prefix-symfony"],
-    "post-autoload-dump": [
-      "Yoast\\WP\\SEO\\Composer\\Actions::prefix_dependencies"
-    ]
-  },
-  "scripts-descriptions": {
-    "lint": "Check code against WordPress coding standards",
-    "test": "Run unit tests",
-    "prefix-dependencies": "Namespace external dependencies"
-  }
+	"name": "wordpress-premium/wordpress-seo-premium",
+	"description": "Yoast SEO Premium - The most comprehensive WordPress SEO plugin. Includes advanced features like redirect management and internal linking suggestions.",
+	"license": "GPL-3.0-or-later",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"wordpress",
+		"seo",
+		"premium",
+		"yoast"
+	],
+	"authors": [
+		{
+			"name": "Team Yoast",
+			"email": "support@yoast.com",
+			"homepage": "https://yoast.com"
+		},
+		{
+			"name": "WordPress Premium",
+			"homepage": "https://www.wordpress-premium.net"
+		}
+	],
+	"homepage": "https://www.wordpress-premium.org/plugins/yoast-seo-premium",
+	"support": {
+		"email": "support@wordpress-premium.org",
+		"forum": "https://community.wordpress-premium.org",
+		"security": "https://www.wordpress-premium.org/security"
+	},
+	"require": {
+		"php": "^7.2.5 || ^8.0",
+		"ext-filter": "*",
+		"ext-json": "*",
+		"composer/installers": "^2.0",
+		"yoast/yoastseo": "24.3"
+	},
+	"require-dev": {
+		"yoast/wp-test-utils": "^1.2",
+		"yoast/yoastcs": "^3.0",
+		"phpunit/phpunit": "^9.5",
+		"humbug/php-scoper": "^0.17.2"
+	},
+	"suggest": {
+		"ext-bcmath": "For advanced content analysis calculations",
+		"ext-dom": "Required for XML sitemap functionality",
+		"ext-libxml": "Enhances sitemap generation performance",
+		"ext-mbstring": "Essential for non-ASCII character support"
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true,
+	"autoload": {
+		"classmap": [
+			"src/",
+			"admin/",
+			"inc/",
+			"lib/",
+			"vendor_prefixed/"
+		],
+		"files": [
+			"premium.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Yoast\\WP\\SEO\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"platform": {
+			"php": "7.2.5"
+		},
+		"sort-packages": true
+	},
+	"scripts": {
+		"lint": "phpcs --standard=phpcs.xml",
+		"test": "phpunit --configuration phpunit.xml",
+		"prefix-dependencies": [
+			"@prefix-oauth2-client",
+			"@prefix-symfony"
+		],
+		"post-autoload-dump": [
+			"Yoast\\WP\\SEO\\Composer\\Actions::prefix_dependencies"
+		]
+	},
+	"scripts-descriptions": {
+		"lint": "Check code against WordPress coding standards",
+		"test": "Run unit tests",
+		"prefix-dependencies": "Namespace external dependencies"
+	}
 }

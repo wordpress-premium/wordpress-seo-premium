@@ -96,8 +96,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 			$result = $this->import_redirects_from_loader( $loader );
 
 			$this->set_import_success( $result );
-		}
-		catch ( WPSEO_Redirect_Import_Exception $e ) {
+		} catch ( WPSEO_Redirect_Import_Exception $e ) {
 			$this->set_import_message( $e->getMessage() );
 		}
 	}
@@ -119,8 +118,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 			$result = $this->import_redirects_from_loader( $loader );
 
 			$this->set_import_success( $result );
-		}
-		catch ( WPSEO_Redirect_Import_Exception $e ) {
+		} catch ( WPSEO_Redirect_Import_Exception $e ) {
 			$this->set_import_message( $e->getMessage() );
 		}
 	}
@@ -145,8 +143,7 @@ class WPSEO_Premium_Import_Manager implements WPSEO_WordPress_Integration {
 			$result = $this->import_redirects_from_loader( $loader );
 
 			$this->set_import_success( $result );
-		}
-		catch ( WPSEO_Redirect_Import_Exception $e ) {
+		} catch ( WPSEO_Redirect_Import_Exception $e ) {
 			$this->set_import_message( $e->getMessage() );
 		}
 	}

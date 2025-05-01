@@ -15,6 +15,7 @@
  * @phpcs:disable Yoast.Commenting.FileComment.Unnecessary
  * @phpcs:disable Yoast.Files.FileName.InvalidClassFileName
  */
+
 namespace Yoast\WP\SEO\Premium\Introductions\Application;
 
 use Yoast\WP\SEO\Helpers\Options_Helper;

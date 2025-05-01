@@ -23,7 +23,7 @@ class Addon_Installer {
 	/**
 	 * The minimum Yoast SEO version required.
 	 */
-	public const MINIMUM_YOAST_SEO_VERSION = '24.7';
+	public const MINIMUM_YOAST_SEO_VERSION = '25.0';
 
 	/**
 	 * The base directory for the installer.
@@ -167,7 +167,7 @@ class Addon_Installer {
 	/**
 	 * Returns the notification action to display.
 	 *
-	 * @return false|string The notification action or false if no action should be taken.
+	 * @return string|false The notification action or false if no action should be taken.
 	 */
 	protected function get_notification_action() {
 		$minimum_version_met = \version_compare( $this->yoast_seo_version, self::MINIMUM_YOAST_SEO_VERSION . '-RC0', '>=' );
@@ -263,9 +263,9 @@ class Addon_Installer {
 	 * This uses a separate option from our options framework as it needs to be available
 	 * before Yoast SEO has been loaded.
 	 *
-	 * @return false|string false if the installer hasn't been started.
+	 * @return string|false false if the installer hasn't been started.
 	 *                      "started" if it has but hasn't completed.
-	 *                       "completed" if it has been completed.
+	 *                      "completed" if it has been completed.
 	 */
 	protected function get_status() {
 		return \get_option( self::OPTION_KEY );

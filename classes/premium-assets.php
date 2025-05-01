@@ -383,6 +383,14 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 					WPSEO_Admin_Asset_Manager::PREFIX . 'react-helmet-package',
 				],
 			],
+			[
+				'name'         => 'wp-seo-premium-update-plugins',
+				'path'         => 'assets/js/dist/',
+				'filename'     => 'wp-seo-premium-update-plugins-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
+				'dependencies' => [
+					'jquery',
+				],
+			],
 		];
 	}
 

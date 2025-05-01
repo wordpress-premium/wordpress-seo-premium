@@ -100,7 +100,7 @@ class TranslationsPress implements Integration_Interface {
 	 * @return object The filtered transient value.
 	 */
 	public function site_transient_update_plugins( $value ) {
-		if ( ! $value ) {
+		if ( ! \is_object( $value ) ) {
 			$value = new stdClass();
 		}
 

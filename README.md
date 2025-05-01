@@ -1,6 +1,6 @@
 # Yoast SEO Premium
 
-[![Version](https://img.shields.io/badge/version-24.3-blue)](https://github.com/wordpress-premium/wordpress-seo-premium) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
+![GitLab Release](https://img.shields.io/gitlab/v/release/wordpress-premium%2Fadvanced-custom-fields-pro) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
 
 [**Yoast SEO Premium**](https://yoast.com/wordpress/plugins/seo/) is the most comprehensive SEO plugin for WordPress, offering advanced tools to optimize your website for search engines. From on-page content analysis to XML sitemaps, Yoast SEO Premium helps you improve your site's visibility and rankings.
 
@@ -35,20 +35,24 @@ If [WordPress Premium](https://www.wordpress-premium.net/) helps you access prem
 
 Here is the last update from the Yoast SEO Premium changelog to keep you in the loop.
 
-**Released:** March 18, 2025
+## v25.0
+
+**Released:** April 29, 2025
+
+> Yoast SEO 25.0 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 ### Enhancements
 
-*   Improves the accuracy of assessments measuring character count for Japanese texts by removing common punctuation from the count.
+* Improves the Yoast SEO Premium update process by decluttering the page from unnecessary admin notices.
 
 ### Bugfixes
 
-*   Fixes a bug where the help beacon would be displayed over table pagination on the bulk editor page.
+* Fixes a bug where the AI Generator usage counter would not be correctly styled when retrieving suggestions in the Classic Editor and Elementor.
 
 ### Other
 
-*   Improves the feedback strings of the *subheading distribution* assessment for better translatability.
-*   Removes extra span tags in the Post/Page overview. Props to [dilipbheda](https://github.com/dilipbheda).
+* Bumps the minimum required version of Yoast SEO to 25.0.
+* Drops compatibility with PHP 7.2 and 7.3.
 
 
 ---
