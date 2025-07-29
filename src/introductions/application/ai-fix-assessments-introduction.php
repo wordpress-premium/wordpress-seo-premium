@@ -74,20 +74,11 @@ class Ai_Fix_Assessments_Introduction implements Introduction_Interface {
 
 	/**
 	 * Returns whether this introduction should show.
+	 * We no longer show this introduction, so we always return false.
 	 *
 	 * @return bool Whether this introduction should show.
 	 */
 	public function should_show() {
-		// Get the current user ID, if no user is logged in we bail as this is needed for the next checks.
-		$current_user_id = $this->user_helper->get_current_user_id();
-		if ( $current_user_id === 0 ) {
-			return false;
-		}
-
-		if ( ! $this->is_user_allowed( [ 'edit_posts' ] ) ) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 }

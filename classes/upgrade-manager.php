@@ -132,6 +132,57 @@ class WPSEO_Upgrade_Manager {
 		if ( version_compare( $version_number, '22.6-RC0', '<' ) ) {
 			add_action( 'init', [ $this, 'upgrade_22_6' ], 12 );
 		}
+
+		if ( version_compare( $version_number, '25.3.1-RC0', '<' ) ) {
+			add_action( 'init', [ $this, 'upgrade_25_3_1' ], 12 );
+		}
+	}
+
+	/**
+	 * Enables the AI feature if it was not enabled before.
+	 *
+	 * @return void
+	 */
+	public function upgrade_25_3_1() {
+
+		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) || class_exists( 'WooCommerce' ) ) {
+			$posts = get_posts(
+				[
+					'last_updated' => '2025-05-26',
+					'numberposts'  => '-1',
+					'post_type'    => 'any',
+					'post_status'  => 'any',
+				]
+			);
+
+			foreach ( $posts as $post ) {
+				$to_update = false;
+				$content   = $post->post_content;
+				$tags      = new WP_HTML_Tag_Processor( $content );
+				while ( $tags->next_tag() ) {
+					$class = $tags->get_attribute( 'class' );
+					if ( strpos( $class, 'ai-optimize-' ) !== false ) {
+						// Class found we need to update this post.
+						$to_update = true;
+						$class     = trim( preg_replace( '/\bai-optimize-[^\s]*\b/', '', $class ) );
+						if ( $class === '' ) {
+							$tags->remove_attribute( 'class' );
+						}
+						else {
+							$tags->set_attribute( 'class', $class );
+						}
+					}
+				}
+				if ( $to_update ) {
+					wp_update_post(
+						[
+							'ID'           => $post->ID,
+							'post_content' => $tags->get_updated_html(),
+						]
+					);
+				}
+			}
+		}
 	}
 
 	/**
@@ -196,7 +247,8 @@ class WPSEO_Upgrade_Manager {
 	public function upgrade_17_3() {
 		$workouts_option = WPSEO_Options::get( 'workouts' );
 
-		if ( isset( $workouts_option['orphaned'] )
+		if (
+			isset( $workouts_option['orphaned'] )
 			&& isset( $workouts_option['orphaned']['indexablesByStep'] )
 			&& is_array( $workouts_option['orphaned']['indexablesByStep'] )
 		) {
@@ -369,7 +421,8 @@ class WPSEO_Upgrade_Manager {
 
 	/**
 	 * Performs the 22.6 upgrade routine.
-	 * Schedules another cleanup scheduled action, but starting from the last cleanup action we just added (if there aren't any running cleanups already).
+	 * Schedules another cleanup scheduled action, but starting from the last cleanup action we just added (if there
+	 * aren't any running cleanups already).
 	 *
 	 * @return void
 	 */

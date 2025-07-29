@@ -34,6 +34,8 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 		if ( WPSEO_Premium_Orphaned_Content_Utils::is_feature_enabled() ) {
 			parent::register_hooks();
 		}
+
+		add_action( 'wpseo_related_indexables_incoming_links_updated', [ $this, 'flush_cache_orphaned_counts' ] );
 	}
 
 	/**
@@ -200,5 +202,16 @@ class WPSEO_Premium_Orphaned_Post_Filter extends WPSEO_Abstract_Post_Filter {
 		$orphaned_content_support = new WPSEO_Premium_Orphaned_Content_Support();
 
 		return $orphaned_content_support->get_supported_post_types();
+	}
+
+	/**
+	 * Flushes the orphaned_counts cache group.
+	 *
+	 * @return void
+	 */
+	public function flush_cache_orphaned_counts() {
+		if ( wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( 'orphaned_counts' );
+		}
 	}
 }

@@ -1,60 +1,36 @@
-# Yoast SEO Premium
+# Yoast SEO Pro
 
-![GitLab Release](https://img.shields.io/gitlab/v/release/wordpress-premium/wordpress-seo-premium) [![License](https://img.shields.io/badge/license-GPL--3.0%2B-green)](https://github.com/wordpress-premium/wordpress-seo-premium/blob/main/LICENSE) [![WordPress](https://img.shields.io/badge/WordPress-Compatible-success)](https://wordpress.org/plugins/wordpress-seo/)
+![GitLab Release](https://img.shields.io/gitlab/v/release/wordpress-premium%2Fwordpress-seo-premium) ![GitHub followers](https://img.shields.io/github/followers/wordpress-premium?style=flat&color=lightblue) ![GitHub Repo stars](https://img.shields.io/github/stars/wordpress-premium/wordpress-seo-premium?style=flat&color=orange) ![GitHub forks](https://img.shields.io/github/forks/wordpress-premium/wordpress-seo-premium?style=flat) ![GitHub last commit](https://img.shields.io/github/last-commit/wordpress-premium/wordpress-seo-premium)
 
-[**Yoast SEO Premium**](https://yoast.com/wordpress/plugins/seo/) is the most comprehensive SEO plugin for WordPress, offering advanced tools to optimize your website for search engines. From on-page content analysis to XML sitemaps, Yoast SEO Premium helps you improve your site's visibility and rankings.
+**[Yoast SEO Pro](https://yoast.com/wordpress/plugins/seo/)** is a powerful SEO plugin for WordPress designed to help website owners and digital marketers optimize their online presence for better search engine rankings and increased traffic.
 
 ## Download
 
-[Click here to download Yoast SEO Premium](https://github.com/wordpress-premium/wordpress-seo-premium/archive/refs/heads/main.zip) as a `.zip` file. Follow [SiteGround's detailed description](https://www.siteground.com/tutorials/wordpress/install-plugins/#How_to_Upload_a_WordPress_Plugin_from_a_File) to upload it to your dashboard, or do it via (S)FTP.
+[Click here to download Yoast SEO Pro](https://gitlab.com/wordpress-premium/wordpress-seo-premium/-/archive/main/wordpress-seo-premium-main.zip) as a `.zip` file. Follow [SiteGround's detailed description](https://www.siteground.com/tutorials/wordpress/install-plugins/#How_to_Upload_a_WordPress_Plugin_from_a_File) to upload it to your dashboard, or do it via (S)FTP.
 
 ## Usage
 
-This is the **fully activated premium version** of the plugin provided by [wordpress-premium.net](https://www.wordpress-premium.net). It has been scanned for security issues and is intended **for evaluation purposes only**. To use Yoast SEO Premium on a live website, please [purchase a license](https://yoast.com/wordpress/plugins/seo/#pricing) directly from the official website.
+This is the **fully activated pro version ("nulled")** of the **Yoast SEO Pro**, brought to you by [WordPress Premium](https://www.wordpress-premium.net). We thoroughly **scanned and cleaned it of any malware** and released it to give users access to try this plugin before purchasing it or conducting technical research. If you intend to use this plugin for your website, **you must** [purchase a license](https://yoast.com/wordpress/plugins/seo/buy-yoast-seo/) through the author's official website.
 
-**Important:** Unlicensed ("nulled") usage may violate the developer's terms and will not include official updates or support.
+**Note:** Using activated ("nulled") software may violate the original author's licensing terms, and you may not receive official support or updates.
 
-### Using Premium Features
+## Support
 
-Yoast SEO Premium comes with a range of advanced features, including:
-
-- **Redirect Manager:** Easily manage 301 redirects and fix broken links.
-- **Internal Linking Suggestions:** Get suggestions for internal links to improve your site's structure.
-- **Multiple Focus Keywords:** Optimize your content for up to 5 focus keywords.
-- **Content Insights:** Gain insights into your content's readability and SEO performance.
-
-To access these features, simply activate the plugin and navigate to the **Yoast SEO** section in your WordPress dashboard.
-
-## Donate
-
-If [WordPress Premium](https://www.wordpress-premium.net/) helps you access premium plugins safely, consider [supporting us via PayPal](https://www.paypal.com/paypalme/thaikolja) to keep the service running.
+> [!TIP]
+>
+> If [WordPress Premium](https://www.wordpress-premium.net/) helps you access premium plugins safely, consider [supporting us via PayPal](https://www.paypal.com/paypalme/thaikolja) or via any [cryptocurrency](https://www.wordpress-premium.net/wallets/) to keep the service running.
 
 ---
+
+🚨 **Note:** Keeping all plugins updated and malware-free takes a lot of time and effort. **If we do not receive donations, we are forced to shut down the free repositories and only sell to buying members.**
 
 ## Changelog
 
-Here is the last update from the Yoast SEO Premium changelog to keep you in the loop.
-
-## v25.0
-
-**Released:** April 29, 2025
-
-> Yoast SEO 25.0 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
-
-### Enhancements
-
-* Improves the Yoast SEO Premium update process by decluttering the page from unnecessary admin notices.
-
-### Bugfixes
-
-* Fixes a bug where the AI Generator usage counter would not be correctly styled when retrieving suggestions in the Classic Editor and Elementor.
+**Released:** July 15th, 2025
 
 ### Other
 
-* Bumps the minimum required version of Yoast SEO to 25.0.
-* Drops compatibility with PHP 7.2 and 7.3.
+* Adds an announcement for the Google Docs add-on.
+* Bumps the minimum required version of Yoast SEO to 25.5.
 
-
----
-
-For the full changelog, visit [Yoast SEO Premium Changelog](https://developer.yoast.com/changelog/yoast-seo/).
+For other version changelogs that may have been skipped, please check the [official website](https://yoast.com/wordpress/plugins/seo/change-log/).

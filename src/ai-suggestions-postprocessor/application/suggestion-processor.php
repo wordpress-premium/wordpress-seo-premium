@@ -139,7 +139,7 @@ class Suggestion_Processor {
 	public function mark_new_paragraphs_in_suggestions( string $diff ): string {
 		// Find the paragraph breaks introduced by the AI -- these are inserts containing comments, indicating Gutenberg blocks.
 		// Yes, we are using a regex to parse HTML. We are aware of the risks, see also above.
-		$introduced_blocks = \sprintf( '/<ins class="%s">&lt;\/.*?&gt;&lt;!--.*?--&gt;&lt;.*?&gt;<\/ins>/', self::YST_DIFF_CLASS );
+		$introduced_blocks = \sprintf( '/<ins class="%s">&lt;\/.*?&gt;&lt;.*?&gt;<\/ins>/', self::YST_DIFF_CLASS );
 		$replacement       = static function () {
 			// translators: The text to show when a paragraph break is suggested through AI Optimize.
 			$paragraph_break_text = \__( 'Paragraph break', 'wordpress-seo-premium' );

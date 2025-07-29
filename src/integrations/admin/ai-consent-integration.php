@@ -4,6 +4,7 @@ namespace Yoast\WP\SEO\Premium\Integrations\Admin;
 
 use WPSEO_Addon_Manager;
 use WPSEO_Admin_Asset_Manager;
+use WPSEO_Premium_Asset_JS_L10n;
 use Yoast\WP\SEO\Conditionals\User_Profile_Conditional;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
@@ -117,6 +118,9 @@ class Ai_Consent_Integration implements Integration_Interface {
 				'wistiaEmbedPermission' => $this->wistia_embed_permission_repository->get_value_for_user( $user_id ),
 			]
 		);
+
+		$premium_localization = new WPSEO_Premium_Asset_JS_L10n();
+		$premium_localization->localize_script( 'wp-seo-premium-manage-ai-consent-button' );
 	}
 
 	/**

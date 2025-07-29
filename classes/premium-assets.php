@@ -327,7 +327,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 				],
 			],
 			[
-				'name'         => 'wp-seo-premium-ai-fix-assessments',
+				'name'         => 'wp-seo-premium-ai-optimize',
 				'path'         => 'assets/js/dist/',
 				'filename'     => 'ai-fix-assessments-' . $version . WPSEO_CSSJS_SUFFIX . '.js',
 				'dependencies' => [
@@ -360,6 +360,7 @@ class WPSEO_Premium_Assets implements WPSEO_WordPress_Integration {
 					'wp-element',
 					'wp-hooks',
 					'wp-i18n',
+					WPSEO_Admin_Asset_Manager::PREFIX . 'editor-modules',
 					WPSEO_Admin_Asset_Manager::PREFIX . 'ui-library-package',
 					WPSEO_Admin_Asset_Manager::PREFIX . 'react-helmet-package',
 				],

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
+class ComposerStaticInit2ef5a23bad60581e80d4036ace16c9e6
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -143,6 +143,7 @@ class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
         'Yoast\\WP\\SEO\\Premium\\Actions\\Prominent_Words\\Content_Action' => __DIR__ . '/../..' . '/src/actions/prominent-words/content-action.php',
         'Yoast\\WP\\SEO\\Premium\\Actions\\Prominent_Words\\Save_Action' => __DIR__ . '/../..' . '/src/actions/prominent-words/save-action.php',
         'Yoast\\WP\\SEO\\Premium\\Addon_Installer' => __DIR__ . '/../..' . '/src/addon-installer.php',
+        'Yoast\\WP\\SEO\\Premium\\Conditionals\\Admin_Or_Introductions_Route_Conditional' => __DIR__ . '/../..' . '/src/conditionals/admin-or-introductions-route-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Ai_Editor_Conditional' => __DIR__ . '/../..' . '/src/conditionals/ai-editor-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Algolia_Enabled_Conditional' => __DIR__ . '/../..' . '/src/conditionals/algolia-enabled-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Cornerstone_Enabled_Conditional' => __DIR__ . '/../..' . '/src/conditionals/cornerstone-enabled-conditional.php',
@@ -151,7 +152,6 @@ class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Not_Woo_Order_Conditional' => __DIR__ . '/../..' . '/src/conditionals/not-woo-order-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Plugins_Page_Conditional' => __DIR__ . '/../..' . '/src/conditionals/plugins-page-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Conditionals\\Term_Overview_Or_Ajax_Conditional' => __DIR__ . '/../..' . '/src/conditionals/term-overview-or-ajax-conditional.php',
-        'Yoast\\WP\\SEO\\Premium\\Conditionals\\Yoast_Admin_Or_Introductions_Route_Conditional' => __DIR__ . '/../..' . '/src/conditionals/yoast-admin-or-introductions-route-conditional.php',
         'Yoast\\WP\\SEO\\Premium\\Config\\Badge_Group_Names' => __DIR__ . '/../..' . '/src/config/badge-group-names.php',
         'Yoast\\WP\\SEO\\Premium\\Config\\Migrations\\AddIndexOnIndexableIdAndStem' => __DIR__ . '/../..' . '/src/config/migrations/20210827093024_AddIndexOnIndexableIdAndStem.php',
         'Yoast\\WP\\SEO\\Premium\\DOM_Manager\\Application\\DOM_Parser' => __DIR__ . '/../..' . '/src/dom-manager/application/dom-parser.php',
@@ -183,10 +183,17 @@ class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
         'Yoast\\WP\\SEO\\Premium\\Initializers\\Wp_Cli_Initializer' => __DIR__ . '/../..' . '/src/initializers/wp-cli-initializer.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Abstract_OpenGraph_Integration' => __DIR__ . '/../..' . '/src/integrations/abstract-opengraph-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Ai_Consent_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/ai-consent-integration.php',
-        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Ai_Fix_Assessments_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/ai-fix-assessments-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Ai_Generator_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/ai-generator-integration.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Ai_Optimize_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/ai-optimize-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Cornerstone_Column_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/cornerstone-column-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Cornerstone_Taxonomy_Column_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/cornerstone-taxonomy-column-integration.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Content_Processor' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/content-processor.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\DOM_Processor' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/dom-processor.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Footnote_Processor' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/footnote-processor.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Gutenberg_Converter' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/gutenberg-converter.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Importer' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/importer.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Media_Manager' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/media-manager.php',
+        'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Extension_Importer\\Nested_List_Creator' => __DIR__ . '/../..' . '/src/integrations/admin/extension-importer/nested-list-creator.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Inclusive_Language_Column_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/inclusive-language-column-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Inclusive_Language_Filter_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/inclusive-language-filter-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Admin\\Inclusive_Language_Taxonomy_Column_Integration' => __DIR__ . '/../..' . '/src/integrations/admin/inclusive-language-taxonomy-column-integration.php',
@@ -231,6 +238,7 @@ class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
         'Yoast\\WP\\SEO\\Premium\\Integrations\\User_Profile_Integration' => __DIR__ . '/../..' . '/src/integrations/user-profile-integration.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Watchers\\Prominent_Words_Watcher' => __DIR__ . '/../..' . '/src/integrations/watchers/prominent-words-watcher.php',
         'Yoast\\WP\\SEO\\Premium\\Integrations\\Watchers\\Stale_Cornerstone_Content_Watcher' => __DIR__ . '/../..' . '/src/integrations/watchers/stale-cornerstone-content-watcher.php',
+        'Yoast\\WP\\SEO\\Premium\\Introductions\\Application\\AI_Optimize_Classic_Introduction' => __DIR__ . '/../..' . '/src/introductions/application/ai-optimize-classic-introduction.php',
         'Yoast\\WP\\SEO\\Premium\\Introductions\\Application\\Ai_Fix_Assessments_Introduction' => __DIR__ . '/../..' . '/src/introductions/application/ai-fix-assessments-introduction.php',
         'Yoast\\WP\\SEO\\Premium\\Introductions\\Application\\Ai_Generate_Titles_And_Descriptions_Introduction' => __DIR__ . '/../..' . '/src/deprecated/introductions/application/ai-generate-titles-and-descriptions-introduction.php',
         'Yoast\\WP\\SEO\\Premium\\Main' => __DIR__ . '/../..' . '/src/main.php',
@@ -251,9 +259,9 @@ class ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit84803c6f0542b8aa2b392a7c329d3b4d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2ef5a23bad60581e80d4036ace16c9e6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2ef5a23bad60581e80d4036ace16c9e6::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2ef5a23bad60581e80d4036ace16c9e6::$classMap;
 
         }, null, ClassLoader::class);
     }

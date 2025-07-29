@@ -2,10 +2,10 @@
 
 namespace Yoast\WP\SEO\Premium\Integrations\Admin;
 
-use WP_Screen;
 use WPSEO_Addon_Manager;
 use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Conditionals\Admin\Post_Conditional;
+use Yoast\WP\SEO\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
@@ -14,11 +14,11 @@ use Yoast\WP\SEO\Premium\Helpers\AI_Generator_Helper;
 use Yoast\WP\SEO\Premium\Introductions\Application\Ai_Fix_Assessments_Introduction;
 
 /**
- * Ai_Fix_Assessments_Integration class.
+ * Ai_Optimize_Integration class.
  *
  * @phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
-class Ai_Fix_Assessments_Integration implements Integration_Interface {
+class Ai_Optimize_Integration implements Integration_Interface {
 
 	/**
 	 * Represents the admin asset manager.
@@ -63,6 +63,13 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 	private $introductions_seen_repository;
 
 	/**
+	 * Represents the Current_Page_Helper.
+	 *
+	 * @var Current_Page_Helper $current_page_helper The Current_Page_Helper.
+	 */
+	private $current_page_helper;
+
+	/**
 	 * Returns the conditionals based in which this loadable should be active.
 	 *
 	 * @return array<string>
@@ -80,6 +87,7 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 	 * @param Options_Helper                $options_helper                The options helper.
 	 * @param User_Helper                   $user_helper                   The user helper.
 	 * @param Introductions_Seen_Repository $introductions_seen_repository The introductions seen repository.
+	 * @param Current_Page_Helper           $current_page_helper           The Current_Page_Helper.
 	 */
 	public function __construct(
 		WPSEO_Admin_Asset_Manager $asset_manager,
@@ -87,7 +95,8 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 		AI_Generator_Helper $ai_generator_helper,
 		Options_Helper $options_helper,
 		User_Helper $user_helper,
-		Introductions_Seen_Repository $introductions_seen_repository
+		Introductions_Seen_Repository $introductions_seen_repository,
+		Current_Page_Helper $current_page_helper
 	) {
 		$this->asset_manager                 = $asset_manager;
 		$this->addon_manager                 = $addon_manager;
@@ -95,6 +104,7 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 		$this->options_helper                = $options_helper;
 		$this->user_helper                   = $user_helper;
 		$this->introductions_seen_repository = $introductions_seen_repository;
+		$this->current_page_helper           = $current_page_helper;
 	}
 
 	/**
@@ -109,8 +119,35 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 			return;
 		}
 
+		// Add the assets to the editor, for the default and the classic editor.
 		\add_action( 'enqueue_block_assets', [ $this, 'enqueue_assets' ] );
+		\add_filter( 'mce_css', [ $this, 'enqueue_css_mce' ] );
+
+		// Add the assets to the admin as a whole.
+		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+
 		\add_action( 'admin_head', [ $this, 'render_react_container' ] );
+	}
+
+	/**
+	 * Returns `true` when the page is the Elementor editor.
+	 *
+	 * @return bool `true` when the page is the Elementor editor.
+	 */
+	private function is_elementor_editor() {
+		if ( $this->current_page_helper->get_current_admin_page() !== 'post.php' ) {
+			return false;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are not processing form information.
+		if ( isset( $_GET['action'] ) && \is_string( $_GET['action'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are not processing form information, We are only strictly comparing.
+			if ( \wp_unslash( $_GET['action'] ) === 'elementor' ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -119,11 +156,11 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function render_react_container(): void {
-		if ( ! WP_Screen::get()->is_block_editor() ) {
+		if ( $this->is_elementor_editor() ) {
 			return;
 		}
 
-		echo '<div id="yoast-seo-premium-ai-fix-assessments"></div>';
+		echo '<div id="yoast-seo-premium-ai-optimize"></div>';
 	}
 
 	/**
@@ -146,10 +183,10 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 	public function enqueue_assets() {
 		$user_id = $this->user_helper->get_current_user_id();
 
-		\wp_enqueue_script( 'wp-seo-premium-ai-fix-assessments' );
+		\wp_enqueue_script( 'wp-seo-premium-ai-optimize' );
 		\wp_localize_script(
-			'wp-seo-premium-fix-assessments',
-			'wpseoPremiumAiFixAssessments',
+			'wp-seo-premium-ai-optimize',
+			'wpseoPremiumAiOptimize',
 			[
 				'adminUrl'             => \admin_url( 'admin.php' ),
 				'hasConsent'           => $this->user_helper->get_meta( $user_id, '_yoast_wpseo_ai_consent', true ),
@@ -160,5 +197,25 @@ class Ai_Fix_Assessments_Integration implements Integration_Interface {
 			]
 		);
 		$this->asset_manager->enqueue_style( 'premium-ai-fix-assessments' );
+	}
+
+	/**
+	 * Adds the AI Optimize CSS file to the list of CSS files to be loaded inside the classic editor.
+	 *
+	 * @param string $css_files The CSS files that WordPress currently inside the classic editor.
+	 * @return string The CSS files, including our AI Optimize CSS file.
+	 */
+	public function enqueue_css_mce( $css_files ) {
+		$ai_css = \wp_styles()->registered['yoast-seo-premium-ai-fix-assessments'];
+		$url    = $ai_css->src;
+
+		if ( $css_files === '' ) {
+			$css_files = $url;
+		}
+		else {
+			$css_files .= ',' . $url;
+		}
+
+		return $css_files;
 	}
 }

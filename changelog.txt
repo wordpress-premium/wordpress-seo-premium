@@ -1,9 +1,6 @@
 *** Yoast SEO premium Changelog ***
 
 
-2025-04-29 - version 25.0
-* add -  Improves the Yoast SEO Premium update process by decluttering the page from unnecessary admin notices.
-* fix -  Fixes a bug where the AI Generator usage counter would not be correctly styled when retrieving suggestions in the Classic Editor and Elementor.
-* update -  Drops compatibility with PHP 7.2 and 7.3.
-* update -  Bumps the minimum required version of Yoast SEO to 25.0.
+2025-07-15 - version 25.5
+* update -  Bumps the minimum required version of Yoast SEO to 25.4.
 

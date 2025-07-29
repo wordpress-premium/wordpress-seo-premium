@@ -2,7 +2,7 @@
 
 namespace Yoast\WP\SEO\Premium\Conditionals;
 
-use Yoast\WP\SEO\Conditionals\Admin\Yoast_Admin_Conditional;
+use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Conditionals\Conditional;
 use Yoast\WP\SEO\Main;
 
@@ -11,22 +11,22 @@ use Yoast\WP\SEO\Main;
  *
  * phpcs:disable Yoast.NamingConventions.ObjectNameDepth.MaxExceeded
  */
-class Yoast_Admin_Or_Introductions_Route_Conditional implements Conditional {
+class Admin_Or_Introductions_Route_Conditional implements Conditional {
 
 	/**
-	 * Holds the Yoast_Admin_Conditional.
+	 * Holds the Admin_Conditional.
 	 *
-	 * @var Yoast_Admin_Conditional
+	 * @var Admin_Conditional
 	 */
-	private $yoast_admin_conditional;
+	private $admin_conditional;
 
 	/**
 	 * Constructs the instance.
 	 *
-	 * @param Yoast_Admin_Conditional $yoast_admin_conditional The Yoast_Admin_Conditional.
+	 * @param Admin_Conditional $admin_conditional The Admin_Conditional.
 	 */
-	public function __construct( Yoast_Admin_Conditional $yoast_admin_conditional ) {
-		$this->yoast_admin_conditional = $yoast_admin_conditional;
+	public function __construct( Admin_Conditional $admin_conditional ) {
+		$this->admin_conditional = $admin_conditional;
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Yoast_Admin_Or_Introductions_Route_Conditional implements Conditional {
 	 * @return bool Whether the conditional is met.
 	 */
 	public function is_met() {
-		if ( $this->yoast_admin_conditional->is_met() ) {
+		if ( $this->admin_conditional->is_met() ) {
 			return true;
 		}
 

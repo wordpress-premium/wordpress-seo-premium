@@ -6,7 +6,7 @@ use Yoast\WP\SEO\Helpers\Current_Page_Helper;
 use Yoast\WP\SEO\Initializers\Initializer_Interface;
 use Yoast\WP\SEO\Introductions\Application\Current_Page_Trait;
 use Yoast\WP\SEO\Introductions\Domain\Introduction_Interface;
-use Yoast\WP\SEO\Premium\Conditionals\Yoast_Admin_Or_Introductions_Route_Conditional;
+use Yoast\WP\SEO\Premium\Conditionals\Admin_Or_Introductions_Route_Conditional;
 
 /**
  * Initializes Premium introductions.
@@ -50,7 +50,7 @@ class Introductions_Initializer implements Initializer_Interface {
 	 * @return array<string>
 	 */
 	public static function get_conditionals() {
-		return [ Yoast_Admin_Or_Introductions_Route_Conditional::class ];
+		return [ Admin_Or_Introductions_Route_Conditional::class ];
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Introductions_Initializer implements Initializer_Interface {
 	 *
 	 * @param Introduction_Interface[] $introductions The introductions.
 	 *
-	 * @return array The merged introductions.
+	 * @return Introduction_Interface[] The merged introductions.
 	 */
 	public function add_introductions( $introductions ) {
 		// Safety check and bail.
